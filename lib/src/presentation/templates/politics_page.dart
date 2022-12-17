@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radiounal/src/presentation/partials/app_bar.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 
 class PoliticsPage extends StatelessWidget {
@@ -6,16 +7,12 @@ class PoliticsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const Drawer(
-        child: Menu(),
-      ),
-      appBar: AppBar(
-        title: const Text('Politicas de privacidad'),
-      ),
-      body: const Center(
+    return const Scaffold(
+      drawer: Menu(),
+      appBar: AppBarRadio(),
+      body: Center(
         child:  Text("En construcción ..."),
       ),
-    );;
+    );
   }
 }

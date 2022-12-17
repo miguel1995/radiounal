@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radiounal/src/presentation/partials/app_bar.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 
 class ContentPage extends StatelessWidget {
@@ -7,12 +8,8 @@ class ContentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const Drawer(
-        child: Menu(),
-      ),
-      appBar: AppBar(
-        title: const Text('Content'),
-      ),
+      drawer: const Menu(),
+      appBar: const AppBarRadio(),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

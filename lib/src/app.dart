@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Radio UNAL',
       initialRoute: '/',
       routes: {
@@ -36,9 +37,39 @@ class MyApp extends StatelessWidget {
         '/glossary': (context) => const GlossaryPage()
 
       },
+
+
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ));
+        // Define the default brightness and colors.
+        brightness: Brightness.light,
+        primaryColor: const Color(0xff121C4A),
+
+        // Define the default font family.
+          fontFamily: 'AncizarSans',
+
+        textTheme: const TextTheme(
+          headline1: TextStyle(fontSize: 72.0,
+              fontWeight: FontWeight.bold,
+            color: Colors.red),
+          headline2: TextStyle(color: Colors.red),
+          headline3: TextStyle(color: Colors.red),
+          headline4: TextStyle(color: Colors.red),
+          headline5: TextStyle(color: Colors.red),
+          headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic,
+              color: Colors.red),
+          bodyText1: TextStyle(color: Colors.red),
+          bodyText2: TextStyle(fontSize: 14.0,
+              color: Color(0xff121C4A))
+        ),
+        appBarTheme: const AppBarTheme(
+          color:  Color(0xff121C4A),
+          foregroundColor: Color(0xffFCDC4D)
+        ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Color(0xff121C4A)
+        )
+      ),
+    );
   }
 }
 
