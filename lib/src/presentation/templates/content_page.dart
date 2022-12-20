@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:radiounal/src/presentation/partials/app_bar.dart';
+import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 
 class ContentPage extends StatelessWidget {
@@ -18,6 +19,8 @@ class ContentPage extends StatelessWidget {
           child: const Text('IR A DETALLE'),
         ),
       ),
+      bottomNavigationBar: const BottomNavigationBarRadio(),
+
     );
   }
 }
