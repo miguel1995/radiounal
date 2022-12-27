@@ -103,14 +103,17 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
         builder: (context, snapshot) {
           var value = _controller.value;
 
-          return Stack(
+          return
+            Stack(
             children: [
+
               Positioned(
                   height: lerpDouble(_minHeight, _maxHeight, value),
                   width: size.width,
                   bottom: 0,
-                  child:
-                  _expanded ? audioPlayerExpanded() : audioPlayerMini())
+                  child: _expanded ? audioPlayerExpanded() : audioPlayerMini()
+                  )
+
             ],
           );
         });
@@ -221,7 +224,9 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
   }
 
   Widget audioPlayerExpanded() {
-    return Container(
+    return
+
+      Container(
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
@@ -344,8 +349,9 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            color: Color(0xff121C4A)),
-        child: Column(children: [
+                color: Color(0xff121C4A)
+            ),
+        child:Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
             IconButton(
               color: const Color(0xffFCDC4D),
@@ -414,6 +420,7 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
                     color: Color(0xffFCDC4D)
                 )),
           )
-        ]));
+        ])
+        );
   }
 }
