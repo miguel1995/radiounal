@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -12,23 +13,31 @@ class _MenuState extends State<Menu> {
   bool isHidden = true;
 
   final List<MenuItem> _menuTitles = [
-    MenuItem('Programas Radio UNAL', "/content", null),
-    MenuItem('Series Podcast Radio UNAL', "/content", null),
-    MenuItem('Favoritos ', "/favourites", Icons.favorite_border),
-    MenuItem('Siguiendo', "/followed", null),
-    MenuItem('Configuración', "/configurations", null),
-    MenuItem('Acerca de esta App', "/about", null),
-    MenuItem('Contáctenos', "/contacts", null),
-    MenuItem('Política de privacidad', "/politics", null),
-    MenuItem('Créditos', "/credits", null),
-    MenuItem('Glosario', "/glossary", null)
+    MenuItem('Programas Radio UNAL', "/content", null, ScreenArguments(
+      'SITE',
+      'RADIO',
+      1
+    )),
+    MenuItem('Series Podcast Radio UNAL', "/content", null, ScreenArguments(
+      'SITE',
+      'PODCAST',
+      1
+    )),
+    MenuItem('Favoritos ', "/favourites", Icons.favorite_border, null),
+    MenuItem('Siguiendo', "/followed", null, null),
+    MenuItem('Configuración', "/configurations", null, null),
+    MenuItem('Acerca de esta App', "/about", null, null),
+    MenuItem('Contáctenos', "/contacts", null, null),
+    MenuItem('Política de privacidad', "/politics", null, null),
+    MenuItem('Créditos', "/credits", null, null),
+    MenuItem('Glosario', "/glossary", null, null)
   ];
 
   final List<MenuItem> _menuUrls = [
-    MenuItem('UNIMEDIOS', "https://unimedios.unal.edu.co/", Icons.exit_to_app),
-    MenuItem('Agencia UNAL', "https://agenciadenoticias.unal.edu.co/", null),
-    MenuItem('Periódico UNAL', "https://periodico.unal.edu.co/", null),
-    MenuItem('Televisión UNAL ', "https://television.unal.edu.co/", null)
+    MenuItem('UNIMEDIOS', "https://unimedios.unal.edu.co/", Icons.exit_to_app, null),
+    MenuItem('Agencia UNAL', "https://agenciadenoticias.unal.edu.co/", null, null),
+    MenuItem('Periódico UNAL', "https://periodico.unal.edu.co/", null, null),
+    MenuItem('Televisión UNAL ', "https://television.unal.edu.co/", null, null)
   ];
 
   @override
@@ -81,7 +90,9 @@ class _MenuState extends State<Menu> {
       listItems.add(GestureDetector(
           onTap: () {
             Navigator.popUntil(context, ModalRoute.withName("/"));
-            Navigator.pushNamed(context, _menuTitles[i].url);
+            Navigator.pushNamed(context, _menuTitles[i].url,
+              arguments: _menuTitles[i].arguments
+            );
           },
           child: Padding(
               padding:
@@ -170,8 +181,9 @@ class MenuItem {
   late String _title;
   late String _url;
   late IconData? _iconData;
+  late ScreenArguments? _arguments;
 
-  MenuItem(this._title, this._url, this._iconData);
+  MenuItem(this._title, this._url, this._iconData, this._arguments);
 
   IconData? get iconData => _iconData;
 
@@ -189,5 +201,11 @@ class MenuItem {
 
   set title(String value) {
     _title = value;
+  }
+
+  ScreenArguments? get arguments => _arguments;
+
+  set arguments(ScreenArguments? value) {
+    _arguments = value;
   }
 }

@@ -10,9 +10,12 @@ class EpisodioModel {
   late String _url;
   late String _audio;
   late String _pdf;
+  late String _categoryTitle;
+
 
   EpisodioModel(this._uid, this._title, this._teaser, this._date, this._imagen,
-      this._url, this._audio, this._pdf);
+      this._url, this._audio, this._pdf, this._categoryTitle);
+
 
   String get pdf => _pdf;
 
@@ -62,6 +65,11 @@ class EpisodioModel {
     _uid = value;
   }
 
+  String get categoryTitle => _categoryTitle;
+
+  set categoryTitle(String value) {
+    _categoryTitle = value;
+  }
 
   //Retorna  un EmisionModel a partir de un JSON ingresado
   //Utilizado en el llamado al API de podcast desde los providers
@@ -75,7 +83,7 @@ class EpisodioModel {
     _url = parsedJson["url"];
     _audio = parsedJson["audio"];
     _audio = parsedJson["pdf"];
-
+    _categoryTitle = parsedJson["categoryTitle"];
 
   }
 }

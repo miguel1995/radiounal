@@ -66,7 +66,6 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
 
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
-        print(state);
         isPlaying = state == PlayerState.PLAYING;
       });
     });

@@ -72,8 +72,6 @@ class ProgramacionModel{
   //Utilizado en el llamado al API de podcast desde los providers
   ProgramacionModel.fromJson(Map<String, dynamic> parsedJson) {
 
-    print(parsedJson);
-
     _emisora = parsedJson["emisora"] ?? "";
     _frecuencia = parsedJson["frecuencia"] ?? "";
     _ahoraPrograma = parsedJson["ahora"]!=null?(parsedJson["ahora"]["programa"] ?? "") : "";

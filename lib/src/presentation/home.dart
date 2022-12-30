@@ -394,7 +394,7 @@ class _HomeState extends State<Home> {
                     Container(
                       color: const Color(0xffFCDC4D),
                       child: Text(
-                        element.title,
+                        element.categoryTitle,
                         style: const TextStyle(fontSize: 9),
                       ),
                     )
@@ -444,7 +444,7 @@ class _HomeState extends State<Home> {
 
       AsyncSnapshot<List<ProgramacionModel>> snapshot) {
     List<ProgramacionModel>? list = snapshot.data;
-    print(list![0]);
+    //print(list![0]);
 
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('EEEE dd MMMM yyyy');
@@ -516,7 +516,7 @@ class _HomeState extends State<Home> {
                   bottomLeft: Radius.circular((i == 2) ? 30 : 0)),
             ),
             child: Text(
-              "${list[i].emisora}\n${list[i].frecuencia}",
+              "${list![i].emisora}\n${list[i].frecuencia}",
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold),
@@ -632,7 +632,7 @@ class _HomeState extends State<Home> {
                 margin: const EdgeInsets.only(top: 15),
                 color: const Color(0xffFCDC4D),
                 child: Text(
-                  element.title,
+                  element.categoryTitle,
                   style: const TextStyle(fontSize: 8),
                 ),
               ),
@@ -664,8 +664,7 @@ class _HomeState extends State<Home> {
                   formatted,
                   style: const TextStyle(
                       fontSize: 8,
-                      color: Color(0xff666666),
-
+                      color: Color(0xff666666)
                   ),
                 ),
               ),

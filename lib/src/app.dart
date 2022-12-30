@@ -1,6 +1,7 @@
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
 import 'package:radiounal/src/presentation/templates/about_page.dart';
 import 'package:radiounal/src/presentation/templates/configurations_page.dart';
@@ -26,7 +27,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/content': (context) => const ContentPage(),
         '/detail': (context) => const DetailPage(),
         '/favourites': (context) => const FavouritesPage(),
         '/followed': (context) => const FollowedPage(),
@@ -36,6 +36,25 @@ class MyApp extends StatelessWidget {
         '/politics': (context) => const PoliticsPage(),
         '/credits': (context) => const CreditsPage(),
         '/glossary': (context) => const GlossaryPage()
+      },
+
+      onGenerateRoute: (settings) {
+        if (settings.name == "/content") {
+
+          final args = settings.arguments as ScreenArguments;
+
+          return MaterialPageRoute(
+            builder: (context) {
+              return ContentPage(
+                title: args.title,
+                message: args.message,
+                page: args.page,
+              );
+            },
+          );
+        }
+        assert(false, 'Need to implement ${settings.name}');
+        return null;
       },
 
 
