@@ -2,7 +2,8 @@
 class ScreenArguments {
   final String title;
   final String message;
-  final int page;
+  final int number;
+  final dynamic element;
 
-  ScreenArguments(this.title, this.message, this.page);
+  ScreenArguments(this.title, this.message, this.number, [this.element]);
 }

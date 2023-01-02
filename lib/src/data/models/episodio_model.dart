@@ -75,7 +75,7 @@ class EpisodioModel {
   //Utilizado en el llamado al API de podcast desde los providers
   EpisodioModel.fromJson(Map<String, dynamic> parsedJson) {
 
-    _uid = parsedJson["uid"];
+    _uid = parsedJson["id"];
     _title = parsedJson["title"];
     _teaser = parsedJson["teaser"];
     _date = parsedJson["date"];

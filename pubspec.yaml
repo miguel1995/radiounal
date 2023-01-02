@@ -43,6 +43,11 @@ dependencies:
   rxdart: ^0.27.7
   carousel_slider: ^4.2.1
   cached_network_image: ^3.2.3
+  flutter_svg: ^1.1.6
+  flutter_rating_bar: ^4.0.1
+  share_plus: ^6.3.0
+  url_launcher: ^6.1.7
+
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +59,6 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  url_launcher: ^5.4.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +76,12 @@ flutter:
     - assets/images/logo.png
     - assets/images/Vector.png
     - assets/icons/arrow_page.png
+    - assets/icons/icono_face_svg.svg
+    - assets/icons/icono_instagram_svg.svg
+    - assets/icons/icono_twitter_svg.svg
+    - assets/icons/star.svg
+    - assets/icons/star_border.svg
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

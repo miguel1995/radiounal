@@ -10,6 +10,8 @@ class RadioProvider {
   final _urlDestacados = "rest/noticias/app/destacados/";
   final _urlProgramacion = "rest/noticias/app/programacion";
   final _urlProgramas = "rest/noticias/app/programas/page/";
+  final _urlEmisiones = "rest/noticias/app/emisionesByPrograma";
+  final _urlEmision = "rest/noticias/app/emision/";
 
   List<EmisionModel> parseEmisiones(String responseBody) {
     final parsed = json.decode(responseBody);
@@ -21,7 +23,6 @@ class RadioProvider {
 
   List<ProgramaModel> parseProgramas(String responseBody) {
     final parsed = json.decode(responseBody);
-    print(parsed);
 
     return parsed["results"]
         .map<ProgramaModel>((json) => ProgramaModel.fromJson(json))
@@ -38,9 +39,7 @@ class RadioProvider {
 
   InfoModel parseInfo(String responseBody) {
     final parsed = json.decode(responseBody);
-
     return InfoModel.fromJson(parsed["info"]);
-
   }
 
   //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/destacados/
@@ -89,6 +88,50 @@ class RadioProvider {
 
       return map;
 
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/emisionesByPrograma/
+  Future<Map<String, dynamic>> getEmisiones(int uid, int page) async {
+    var url = Uri.parse('http://$_hostDomain$_urlEmisiones');
+    Map<String, dynamic> map = {};
+    // Await the http get response, then decode the json-formatted response.
+    var body = jsonEncode(<String, dynamic>{'programa': uid, 'page': page});
+
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+
+      List<EmisionModel> result = parseEmisiones(utf8.decode(response.bodyBytes));
+      InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
+
+      map["result"] = result;
+      map["info"] = info;
+
+      return map;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode} -- ${response.body}.');
+    }
+  }
+
+  //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/emision/42969
+  Future<List<EmisionModel>> getEmision(int uid) async {
+    var url = Uri.parse('http://$_hostDomain$_urlEmision${uid.toString()}');
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return parseEmisiones(utf8.decode(response.bodyBytes));
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Request failed with status: ${response.statusCode}.');

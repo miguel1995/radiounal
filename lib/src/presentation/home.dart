@@ -4,16 +4,14 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
-import 'package:radiounal/src/data/models/emisiones_model.dart';
-import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_destacados_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -59,8 +57,15 @@ class _HomeState extends State<Home> {
         )));
   }
 
-  Widget drawDestacados() {
+  @override
+  void dispose() {
+    blocRadioProgramacion.dispose();
+    blocPodcastDestacados.dispose();
+    blocRadioDestacados.dispose();
+    super.dispose();
+  }
 
+  Widget drawDestacados() {
     return Container(
       margin: const EdgeInsets.only(bottom: 20, top: 20),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
@@ -205,108 +210,94 @@ class _HomeState extends State<Home> {
       margin: const EdgeInsets.only(bottom: 20, top: 20),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: Column(
-        children: [          Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            margin: const EdgeInsets.only(left: 20, bottom: 10),
-            child: const Text(
-              "Lo más escuchado",
-              style: TextStyle(
-                color: Color(0xff121C4A),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(0xffFCDC4D),
-                decoration: TextDecoration.underline,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, bottom: 10),
+              child: const Text(
+                "Lo más escuchado",
+                style: TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xffFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
-        ),StreamBuilder(
-            stream: CombineLatestStream.list([
-              blocRadioDestacados.subject.stream,
-              blocPodcastDestacados.subject.stream,
-            ]),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-              Widget child;
+          StreamBuilder(
+              stream: CombineLatestStream.list([
+                blocRadioDestacados.subject.stream,
+                blocPodcastDestacados.subject.stream,
+              ]),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<dynamic>> snapshot) {
+                Widget child;
 
-              if (snapshot.hasData) {
-                child = buildListEscuchados(snapshot);
-              } else if (snapshot.hasError) {
-                child = drawError(snapshot.error);
-              } else {
-                child = Container(
-                  //child: Text("en progreso..."),
-                );
-              }
-              return child;
-            })],
+                if (snapshot.hasData) {
+                  child = buildListEscuchados(snapshot);
+                } else if (snapshot.hasError) {
+                  child = drawError(snapshot.error);
+                } else {
+                  child = Container(
+                      //child: Text("en progreso..."),
+                      );
+                }
+                return child;
+              })
+        ],
       ),
     );
   }
 
   Widget drawSiguenos() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 10, top: 10),
-      padding: const EdgeInsets.only(bottom: 10, top: 10),
-      child: Column(
-        children: [          Align(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            margin: const EdgeInsets.only(left: 20, bottom: 10),
-            child: const Text(
-              "Síguenos",
-              style: TextStyle(
-                color: Color(0xff121C4A),
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(0xffFCDC4D),
-                decoration: TextDecoration.underline,
+        margin: const EdgeInsets.only(bottom: 10, top: 10),
+        padding: const EdgeInsets.only(bottom: 10, top: 10),
+        child: Column(children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, bottom: 10),
+              child: const Text(
+                "Síguenos",
+                style: TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xffFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
-        ),
-
-
-        Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-
-            InkWell(
-                onTap: (){
-                  _launchURL("https://www.facebook.com/RadioUNAL/");
-                },
-                child: CircleAvatar(
-                  radius: 50.0,
+            children: [
+              InkWell(
+                  onTap: () {
+                    _launchURL("https://www.facebook.com/RadioUNAL/");
+                  },
+                  child: SvgPicture.asset(
+                    'assets/icons/icono_face_svg.svg',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  )),
+              InkWell(
+                  onTap: () {
+                    _launchURL("https://www.instagram.com/radiounal/");
+                  },
                   child:
-                    ClipRect(
-
-                                                child:Image.asset('assets/images/Vector.png')),
-            )),
-            InkWell(
-                onTap: (){
-                  _launchURL("https://www.instagram.com/radiounal/");
-                },
-                child: CircleAvatar(
-                  radius: 50.0,
-                  child:
-                  ClipRect(child:Image.asset('assets/images/Vector.png')),
-                )),
-            InkWell(
-                onTap: (){
-                  _launchURL("https://twitter.com/radiounal");
-                },
-                child: CircleAvatar(
-                  radius: 50.0,
-
-                  child:
-                  ClipRect(child:Image.asset('assets/images/Vector.png')),
-                ))
-          ],
-        )
-        ]
-      )
-    );
-
+                      SvgPicture.asset('assets/icons/icono_instagram_svg.svg')),
+              InkWell(
+                  onTap: () {
+                    _launchURL("https://twitter.com/radiounal");
+                  },
+                  child: SvgPicture.asset('assets/icons/icono_twitter_svg.svg'))
+            ],
+          )
+        ]));
   }
 
   Widget drawError(error) {
@@ -347,7 +338,6 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildCard(element) {
-    //print(element.title);
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: Container(
@@ -441,10 +431,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildTableProgramacion(
-
       AsyncSnapshot<List<ProgramacionModel>> snapshot) {
     List<ProgramacionModel>? list = snapshot.data;
-    //print(list![0]);
 
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('EEEE dd MMMM yyyy');
@@ -586,9 +574,11 @@ class _HomeState extends State<Home> {
 
     List<Widget> cardList = [];
 
-    list1?.forEach((element) => {cardList.add(buildCardEscuchados(element, "Radio"))});
+    list1?.forEach(
+        (element) => {cardList.add(buildCardEscuchados(element, "Radio"))});
 
-    list2?.forEach((element) => {cardList.add(buildCardEscuchados(element, "Podcast"))});
+    list2?.forEach(
+        (element) => {cardList.add(buildCardEscuchados(element, "Podcast"))});
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -600,8 +590,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildCardEscuchados(element, String site) {
-
-    final DateTime now = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
+    final DateTime now =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
@@ -638,42 +628,32 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(
-                    element.title,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 5,
-                    style:
-                    TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.bold
-                    )
-                  )),
+                  child: Text(element.title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 5,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold))),
               Container(
                 child: Text(
                   site,
                   style: TextStyle(
                       fontSize: 9,
-                    color: Theme.of(context).primaryColor,
-                    fontStyle: FontStyle.italic
-                  ),
+                      color: Theme.of(context).primaryColor,
+                      fontStyle: FontStyle.italic),
                 ),
               ),
               Container(
                 child: Text(
                   formatted,
-                  style: const TextStyle(
-                      fontSize: 8,
-                      color: Color(0xff666666)
-                  ),
+                  style: const TextStyle(fontSize: 8, color: Color(0xff666666)),
                 ),
               ),
             ],
           )),
     );
-
   }
-
 
   _launchURL(var url) async {
     if (await canLaunch(url)) {
@@ -682,5 +662,4 @@ class _HomeState extends State<Home> {
       throw 'Could not launch $url';
     }
   }
-
 }

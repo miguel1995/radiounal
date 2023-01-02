@@ -57,4 +57,36 @@ class RadioRepository {
 
     return temp;
   }
+
+
+  Future<Map<String, dynamic>> findEmisiones(int uid, int page) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    Map<String, dynamic> temp = {};
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+
+      temp = await radioProvider.getEmisiones(uid, page);
+
+    }
+
+    return temp;
+  }
+
+  Future<List<EmisionModel>> findEmision(int uid) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    List<EmisionModel> temp = [];
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await radioProvider.getEmision(uid);
+
+    }
+
+    return temp;
+  }
 }

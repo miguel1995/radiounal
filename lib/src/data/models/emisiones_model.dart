@@ -75,7 +75,8 @@ class EmisionModel{
   //Utilizado en el llamado al API de radio desde los providers
   EmisionModel.fromJson(Map<String, dynamic> parsedJson) {
 
-    _uid = parsedJson["uid"];
+
+    _uid = parsedJson["id"];
     _title = parsedJson["title"];
     _teaser = parsedJson["teaser"];
     _bodytext = parsedJson["bodytext"];

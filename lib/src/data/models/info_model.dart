@@ -36,8 +36,8 @@ class InfoModel {
 
     _count = parsedJson["count"]??0;
     _pages = parsedJson["pages"]??0;
-    _next = parsedJson["next"]??"";
-    _prev = parsedJson["prev"]??"";
+    _next = (parsedJson["next"]!=null)?parsedJson["next"].toString():"";
+    _prev = (parsedJson["prev"]!=null)?parsedJson["prev"].toString():"";
 
   }
 }

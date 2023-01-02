@@ -1,5 +1,4 @@
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
@@ -12,6 +11,7 @@ import 'package:radiounal/src/presentation/templates/detail_page.dart';
 import 'package:radiounal/src/presentation/templates/favourites_page.dart';
 import 'package:radiounal/src/presentation/templates/followed_page.dart';
 import 'package:radiounal/src/presentation/templates/glossary_page.dart';
+import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
 
 
@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/detail': (context) => const DetailPage(),
         '/favourites': (context) => const FavouritesPage(),
         '/followed': (context) => const FollowedPage(),
         '/configurations': (context) => const ConfigurationsPage(),
@@ -40,15 +39,39 @@ class MyApp extends StatelessWidget {
 
       onGenerateRoute: (settings) {
         if (settings.name == "/content") {
-
           final args = settings.arguments as ScreenArguments;
-
           return MaterialPageRoute(
             builder: (context) {
               return ContentPage(
                 title: args.title,
                 message: args.message,
-                page: args.page,
+                page: args.number,
+              );
+            },
+          );
+        }
+        else if (settings.name == "/detail") {
+          final args = settings.arguments as ScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return DetailPage(
+                title: args.title,
+                message: args.message,
+                uid: args.number,
+                elementContent: args.element,
+              );
+            },
+          );
+        }
+
+        else if (settings.name == "/item") {
+          final args = settings.arguments as ScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return ItemPage(
+                title: args.title,
+                message: args.message,
+                uid: args.number
               );
             },
           );
