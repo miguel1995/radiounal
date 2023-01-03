@@ -82,7 +82,7 @@ class EpisodioModel {
     _imagen = parsedJson["imagen"];
     _url = parsedJson["url"];
     _audio = parsedJson["audio"];
-    _audio = parsedJson["pdf"];
+    _pdf = parsedJson["pdf"];
     _categoryTitle = parsedJson["categoryTitle"];
 
   }
