@@ -6,6 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodios_bloc.dart';
+import 'package:radiounal/src/business_logic/bloc/podcast_seriesyepisodios_bloc.dart';
+import 'package:radiounal/src/business_logic/bloc/radio_programasyemisiones_bloc.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -42,6 +44,9 @@ class _DetailPageState extends State<DetailPage> {
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
+  final blocPodcastSeriesYEpisodios = PodcastSeriesYEpisodiosBloc();
+  final blocRadioProgramasYEmisiones = RadioProgramasYEmisionesBloc();
+
   ScrollController _scrollController = ScrollController();
 
   var size = null;
@@ -60,11 +65,51 @@ class _DetailPageState extends State<DetailPage> {
     page = 1;
     elementContent = widget.elementContent;
 
+    print("$title $message $uid $elementContent");
+
     if (message == "RADIO") {
       blocRadioEmisiones.fetchEmisiones(uid, page);
     } else if (message == "PODCAST") {
       blocPodcastEpisodios.fetchEpisodios(uid, page);
     }
+
+    //elementContent llega en Null desde la vista de home-Masescuchachos y home-destacados
+    if(elementContent == null){
+
+      if (message == "RADIO") {
+        blocRadioProgramasYEmisiones.fetchProgramsaYEmisiones([uid], []);
+        blocRadioProgramasYEmisiones.subject.stream.listen((event) {
+
+          if(event["programas"]!=null){
+                if(event["programas"].length > 0){
+                  print(event["programas"][0]);
+                  setState((){
+                    elementContent = event["programas"][0];
+                  });
+
+                }
+          }
+
+
+        });
+      } else if (message == "PODCAST") {
+        blocPodcastSeriesYEpisodios.fetchSeriesYEpisodios([uid], []);
+        blocPodcastSeriesYEpisodios.subject.stream.listen((event) {
+
+          print(event["series"][0]);
+
+          if(event["series"]!=null){
+            if(event["series"].length > 0){
+              print(event["series"][0]);
+              setState((){
+                elementContent = event["series"][0];
+              });
+
+            }
+          }
+        });      }
+    }
+
   }
 
   @override
@@ -86,6 +131,7 @@ class _DetailPageState extends State<DetailPage> {
               if (snapshot.hasData) {
                 child = Column(
                   children: [
+                    if(elementContent!=null)
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.50,
                         child: drawContentDescription(elementContent)),
@@ -150,10 +196,7 @@ class _DetailPageState extends State<DetailPage> {
           ),
           InkWell(
               onTap: (){
-                //TODO: Comopartir url
-                print("COMPARTIR URL");
                 Share.share(element.url, subject: "Radio UNAL - ${element.title}");
-
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
@@ -324,9 +325,9 @@ class _HomeState extends State<Home> {
 
     List<Widget> cardList = [];
 
-    list1?.forEach((element) => {cardList.add(buildCard(element))});
+    list1?.forEach((element) => {cardList.add(buildCard(element, "RADIO"))});
 
-    list2?.forEach((element) => {cardList.add(buildCard(element))});
+    list2?.forEach((element) => {cardList.add(buildCard(element, "PODCAST"))});
 
     return CarouselSlider(
         options: CarouselOptions(
@@ -337,8 +338,14 @@ class _HomeState extends State<Home> {
         items: cardList);
   }
 
-  Widget buildCard(element) {
-    return SizedBox(
+  Widget buildCard(element, siteName) {
+    return
+      InkWell(
+          onTap: (){
+            Navigator.pushNamed(context, "/item",
+                arguments: ScreenArguments("SITE", siteName, element.uid));
+          },
+          child:SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
       child: Container(
           margin: const EdgeInsets.only(bottom: 20),
@@ -391,7 +398,7 @@ class _HomeState extends State<Home> {
                   ],
                 ))
           ])),
-    );
+    ));
   }
 
   Widget drawFrecuenciaBtn(String texto) {

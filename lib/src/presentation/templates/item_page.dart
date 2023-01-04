@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
@@ -11,19 +17,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-
 class ItemPage extends StatefulWidget {
-
   final String title;
   final String message;
   final int uid; //Indica el id del episodio de podcast o emisora de radio
 
-  const ItemPage({Key? key, required this.title, required this.message, required this.uid}) : super(key: key);
-
+  const ItemPage(
+      {Key? key, required this.title, required this.message, required this.uid})
+      : super(key: key);
 
   @override
   State<ItemPage> createState() => _ItemPageState();
-
 }
 
 class _ItemPageState extends State<ItemPage> {
@@ -33,8 +37,11 @@ class _ItemPageState extends State<ItemPage> {
 
   final blocRadioEmision = RadioEmisionBloc();
   final blocPodcastEpisodio = PodcastEpisodioBloc();
-  late dynamic element =  null;
+  late dynamic element = null;
 
+  late TargetPlatform? platform;
+  late String _localPath;
+  late bool _permissionReady;
 
   @override
   void initState() {
@@ -53,7 +60,6 @@ class _ItemPageState extends State<ItemPage> {
         setState(() {
           element = event[0];
         });
-
       });
     } else if (message == "PODCAST") {
       blocPodcastEpisodio.fetchEpisodio(uid);
@@ -64,16 +70,20 @@ class _ItemPageState extends State<ItemPage> {
       });
     }
 
+    if (Platform.isAndroid) {
+      platform = TargetPlatform.android;
+    } else {
+      platform = TargetPlatform.iOS;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    return  Scaffold(
+    return Scaffold(
       drawer: Menu(),
       appBar: AppBarRadio(),
       body: Center(
-        child: Column(children:[
+        child: Column(children: [
           drawContentDescription(element),
           drawContentBtns(element)
         ]),
@@ -81,16 +91,19 @@ class _ItemPageState extends State<ItemPage> {
       //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
+
   @override
   void dispose() {
     blocPodcastEpisodio.dispose();
     blocRadioEmision.dispose();
     super.dispose();
   }
+
   Widget drawContentDescription(dynamic element) {
     var w = MediaQuery.of(context).size.width;
-    final DateTime now =
-    DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
+    final DateTime now = (element != null)
+        ? DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date)
+        : DateTime.now();
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
@@ -99,20 +112,19 @@ class _ItemPageState extends State<ItemPage> {
         padding: const EdgeInsets.only(top: 20, right: 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           InkWell(
-              onTap: (){
+              onTap: () {
                 //TODO: AGREGAR FAVORITO A LA BASE DE DATOS EN FIREBASE
                 print("FAVORITOS");
               },
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
-                  child: const Icon(Icons.favorite_border))
-          ),
+                  child: const Icon(Icons.favorite_border))),
           InkWell(
-              onTap: (){
+              onTap: () {
                 //TODO: Comopartir url
                 print("COMPARTIR URL");
-                Share.share(element.url, subject: "Radio UNAL - ${element.title}");
-
+                Share.share(element.url,
+                    subject: "Radio UNAL - ${element.title}");
               },
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
@@ -135,7 +147,7 @@ class _ItemPageState extends State<ItemPage> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: CachedNetworkImage(
-              imageUrl: (element.imagen!=null)?element.imagen:"",
+              imageUrl: (element != null) ? element.imagen : "",
               placeholder: (context, url) => CircularProgressIndicator(),
               errorWidget: (context, url, error) => Container(
                   height: w * 0.25,
@@ -144,38 +156,35 @@ class _ItemPageState extends State<ItemPage> {
             ),
           )),
       Container(
-        alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.only(left: 10, right: 10),
-        margin: const EdgeInsets.only(left: 20, top: 30),
-        decoration: BoxDecoration(
-          color: Theme.of(context).appBarTheme.foregroundColor,
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xff121C4A).withOpacity(0.3),
-              spreadRadius: 3,
-              blurRadius: 10,
-              offset: const Offset(
-                  5, 5), // changes position of shadow
+          alignment: Alignment.centerLeft,
+          child: Container(
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            margin: const EdgeInsets.only(left: 20, top: 30),
+            decoration: BoxDecoration(
+              color: Theme.of(context).appBarTheme.foregroundColor,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xff121C4A).withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: const Offset(5, 5), // changes position of shadow
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Text(
-          element.categoryTitle,
-          style: const TextStyle(
-              fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-      )),
+            child: Text(
+              (element != null) ? element.categoryTitle : "",
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+          )),
       Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
         child: Text(
-          element.title,
+          (element != null) ? element.title : "",
           style: const TextStyle(
-            color: Color(0xff121C4A),
-            fontSize: 16,
-            fontWeight: FontWeight.bold
-          ),
+              color: Color(0xff121C4A),
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
         ),
       ),
       Container(
@@ -183,17 +192,7 @@ class _ItemPageState extends State<ItemPage> {
         margin: const EdgeInsets.only(left: 20),
         child: Text(
           formatted,
-          style: const TextStyle(
-              fontSize: 10, color: Color(0xff666666)),
-        ),
-      ),
-      Container(
-        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: Text(
-          (element=="RADIO")?element.description:element.teaser,
-          maxLines: 4,
-          style: const TextStyle(color: Color(0xff121C4A), fontSize: 12
-          ),
+          style: const TextStyle(fontSize: 10, color: Color(0xff666666)),
         ),
       ),
       Container(
@@ -231,7 +230,8 @@ class _ItemPageState extends State<ItemPage> {
           ))
     ]);
   }
-  Widget drawContentBtns(dynamic element){
+
+  Widget drawContentBtns(dynamic element) {
     var w = MediaQuery.of(context).size.width;
 
     return Column(children: [
@@ -239,17 +239,15 @@ class _ItemPageState extends State<ItemPage> {
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
           child: InkWell(
-              onTap: (){
+              onTap: () {
                 //TODO: Reproducir audio
                 print(element.audio);
               },
-              child:Container(
+              child: Container(
                   width: w * 0.35,
                   padding: const EdgeInsets.only(left: 10, right: 10),
-
                   decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                        radius: 1, colors: [
+                    gradient: RadialGradient(radius: 1, colors: [
                       Colors.white54.withOpacity(0.3),
                       const Color(0xff121C4A),
                     ]),
@@ -264,106 +262,37 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                     ],
                   ),
-                  child:
-                  Row(children: const [
-                    Icon(Icons.play_arrow,
-                      color: Colors.white,
-                      size: 40,
-                    ),
-                    Text(
-                      "Reproducir",
-                      style: TextStyle(fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 16
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 40,
                       ),
-                    )],)
-              ))),
+                      Text(
+                        "Reproducir",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 16),
+                      )
+                    ],
+                  )))),
       Container(
-        margin: const EdgeInsets.only(top:20),
-        child: Row(children: [
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: InkWell(
-                  onTap: (){
-                    //TODO: Descargar mp3
-                    print(element.audio);
-                  },
-                  child:Container(
-
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                            radius: 1, colors: [
-                          Colors.white54.withOpacity(0.3),
-                          const Color(0xffFCDC4D)
-                        ]),
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(5, 5),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(Icons.download,
-                        size: 40,
-                      )
-                  ))),
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: InkWell(
-                  onTap: (){
-                    //TODO: Descargar RSS
-                    print(element.pdf);
-                  },
-                  child:Container(
-
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                            radius: 1, colors: [
-                          Colors.white54.withOpacity(0.3),
-                          const Color(0xffFCDC4D)
-                        ]),
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(5, 5),
-                          ),
-                        ],
-                      ),
-                      child:
-                      const Icon(Icons.wifi,
-                        size: 40,
-                      )
-                  ))),
-          if(message=="PODCAST")
+        margin: const EdgeInsets.only(top: 20),
+        child: Row(
+          children: [
             Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: InkWell(
-                    onTap: (){
-                      //TODO: Descargar transcripcion
-                      print(element.pdf);
+                    onTap: () {
+                      downloadFile(element.audio, "audio", "mp3");
                     },
-                    child:Container(
-
+                    child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-
                         decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                              radius: 1, colors: [
+                          gradient: RadialGradient(radius: 1, colors: [
                             Colors.white54.withOpacity(0.3),
                             const Color(0xffFCDC4D)
                           ]),
@@ -378,24 +307,216 @@ class _ItemPageState extends State<ItemPage> {
                             ),
                           ],
                         ),
-                        child:
-                        Row(children: const [
-                          Icon(Icons.arrow_downward,
-                            size: 40,
-                          ),
-                          Text(
-                            "Transcripción",
-                            style: TextStyle(fontWeight: FontWeight.bold,
-                                fontSize: 17
-                            ),
-                          )],)
-                    ))),
+                        child: const Icon(
+                          Icons.download,
+                          size: 40,
+                        )))),
+            Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                child: InkWell(
+                    onTap: () {
 
-        ],),
-      )
+                      downloadFile(element.rss, "rss", "txt");
+
+                    },
+                    child: Container(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        decoration: BoxDecoration(
+                          gradient: RadialGradient(radius: 1, colors: [
+                            Colors.white54.withOpacity(0.3),
+                            const Color(0xffFCDC4D)
+                          ]),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context).appBarTheme.foregroundColor,
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff121C4A).withOpacity(0.3),
+                              spreadRadius: 3,
+                              blurRadius: 10,
+                              offset: const Offset(5, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.wifi,
+                          size: 40,
+                        )))),
+            if (message == "PODCAST")
+              Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                  child: InkWell(
+                      onTap: () {
+                        print(element.pdf);
+                        downloadFile(element.pdf, "transcripcion", "pdf");
+                        },
+                      child: Container(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(radius: 1, colors: [
+                              Colors.white54.withOpacity(0.3),
+                              const Color(0xffFCDC4D)
+                            ]),
+                            borderRadius: BorderRadius.circular(5),
+                            color:
+                                Theme.of(context).appBarTheme.foregroundColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xff121C4A).withOpacity(0.3),
+                                spreadRadius: 3,
+                                blurRadius: 10,
+                                offset: const Offset(5, 5),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.arrow_downward,
+                                size: 40,
+                              ),
+                              Text(
+                                "Transcripción",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                              )
+                            ],
+                          )))),
+          ],
+        ),
+      ),
+      Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+          child: InkWell(
+              onTap: () {
+                Navigator.popUntil(context, ModalRoute.withName("/"));
+                Navigator.pushNamed(context, "/detail",
+                    arguments: ScreenArguments(
+                      title,
+                      message,
+                      element.categoryUid
+                    )
+                );
+              },
+              child: Container(
+                  width: w * 0.40,
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(radius: 1, colors: [
+                      Colors.white54.withOpacity(0.3),
+                      const Color(0xff121C4A),
+                    ]),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).primaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        spreadRadius: 3,
+                        blurRadius: 10,
+                        offset: const Offset(5, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        "Más episodios",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 16),
+                      )
+                    ],
+                  ))))
     ]);
   }
 
+  downloadFile(String urlFile, String media, String extension) async {
+
+    String localPathName = "";
+
+    _permissionReady = await _checkPermission();
+    if (_permissionReady) {
+      await _prepareSaveDir();
+
+      final snackBar = SnackBar(
+        content: Text("Descargando .${extension.toString()} ..."),
+        action: SnackBarAction(
+          label: '',
+          onPressed: () {
+            // Algo de código para ¡deshacer el cambio!
+          },
+        ),
+      );
+
+      // Encuentra el Scaffold en el árbol de widgets y ¡úsalo para mostrar un SnackBar!
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      try {
+        localPathName = "$_localPath/radiounal_$media${element.uid}.$extension";
+        print(urlFile);
+        await Dio()
+            .download(urlFile, localPathName);
+        final snackBar = SnackBar(
+          content: Text('Archivo ${extension.toString()} descargado'),
+          action: SnackBarAction(
+            label: 'Ok',
+            onPressed: () {
+              // Algo de código para ¡deshacer el cambio!
+            },
+          ),
+        );
+
+        // Encuentra el Scaffold en el árbol de widgets y ¡úsalo para mostrar un SnackBar!
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      } catch (e) {
+        print("Download Failed.\n\n" + e.toString());
+
+      }
+    }
+  }
+
+  Future<bool> _checkPermission() async {
+    if (platform == TargetPlatform.android) {
+      final status = await Permission.storage.status;
+      if (status != PermissionStatus.granted) {
+        final result = await Permission.storage.request();
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (platform == TargetPlatform.android) {
+      return "/sdcard/download/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return '${directory.path}${Platform.pathSeparator}Download';
+    }
+  }
 }
-
-

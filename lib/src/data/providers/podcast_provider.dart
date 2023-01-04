@@ -8,6 +8,7 @@ class PodcastProvider {
   final _hostDomain = "podcastradio.unal.edu.co/";
   final _urlDestacados = "rest/noticias/app/destacados/page/1";
   final _urlSeries = "rest/noticias/app/series/page/";
+  final _urlSeriesYEpisodios = "rest/noticias/app/seriesyepisodios";
   final _urlEpisodios = "rest/noticias/app/episodiosBySerie";
   final _urlEpisodio = "rest/noticias/app/episodio/";
 
@@ -26,6 +27,21 @@ class PodcastProvider {
     return parsed["results"]
         .map<SerieModel>((json) => SerieModel.fromJson(json))
         .toList();
+  }
+
+  Map<String, dynamic> parseSeriesyEpisodios(String responseBody) {
+    final parsed = json.decode(responseBody);
+    Map<String, dynamic> map = {};
+    map["series"] = parsed["results"]["series"]
+        .map<SerieModel>((json) => SerieModel.fromJson(json))
+        .toList();
+
+    map["episodios"] = parsed["results"]["episodios"]
+        .map<SerieModel>((json) => EpisodioModel.fromJson(json))
+        .toList();
+
+
+    return map;
   }
 
   InfoModel parseInfo(String responseBody) {
@@ -111,4 +127,29 @@ class PodcastProvider {
       throw Exception('Request failed with status: ${response.statusCode}.');
     }
   }
+
+  //consume todos los contenidos de http://podcastradio.unal.edu.co/rest/noticias/app/seriesyepisodios
+  Future<Map<String, dynamic>> getSeriesYEpisodios(List<int> seriesUidList, List<int> episodiosUidList) async {
+    var url = Uri.parse('http://$_hostDomain$_urlSeriesYEpisodios');
+    Map<String, dynamic> map = {};
+    // Await the http get response, then decode the json-formatted response.
+    var body = jsonEncode(<String, dynamic>{'seriesUidList': seriesUidList, 'episodiosUidList': episodiosUidList});
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+      map = parseSeriesyEpisodios(utf8.decode(response.bodyBytes));
+      return map;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
 }

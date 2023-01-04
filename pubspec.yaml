@@ -47,6 +47,9 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   share_plus: ^6.3.0
   url_launcher: ^6.1.7
+  dio: ^4.0.0
+  path_provider: ^2.0.2
+  permission_handler: ^8.0.0+2
 
 
 dev_dependencies:

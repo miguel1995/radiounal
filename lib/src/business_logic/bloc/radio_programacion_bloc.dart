@@ -1,6 +1,6 @@
 
 
-import 'package:radiounal/src/data/models/emisiones_model.dart';
+import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/data/repositories/radio_repository.dart';
 import 'package:rxdart/rxdart.dart';
