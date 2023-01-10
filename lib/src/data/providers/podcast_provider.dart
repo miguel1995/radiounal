@@ -37,7 +37,7 @@ class PodcastProvider {
         .toList();
 
     map["episodios"] = parsed["results"]["episodios"]
-        .map<SerieModel>((json) => EpisodioModel.fromJson(json))
+        .map<EpisodioModel>((json) => EpisodioModel.fromJson(json))
         .toList();
 
 

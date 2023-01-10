@@ -248,7 +248,7 @@ class _ContentPageState extends State<ContentPage> {
                   title,
                   message,
                   element.uid,
-                  element
+                  element: element
               ));
         },
         child: Container(

@@ -102,5 +102,6 @@ class EpisodioModel {
     _categoryTitle = parsedJson["categoryTitle"];
     _categoryUid = parsedJson["categoryUid"];
 
+
   }
 }

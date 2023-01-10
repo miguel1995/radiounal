@@ -343,7 +343,7 @@ class _HomeState extends State<Home> {
       InkWell(
           onTap: (){
             Navigator.pushNamed(context, "/item",
-                arguments: ScreenArguments("SITE", siteName, element.uid));
+                arguments: ScreenArguments("SITE", siteName, element.uid, from: "HOME_PAGE"));
           },
           child:SizedBox(
       width: MediaQuery.of(context).size.width * 0.5,
@@ -602,7 +602,12 @@ class _HomeState extends State<Home> {
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
-    return SizedBox(
+    return InkWell(
+        onTap: (){
+          Navigator.pushNamed(context, "/item",
+              arguments: ScreenArguments("SITE", site.toUpperCase(), element.uid, from: "HOME_PAGE"));
+        },
+        child:SizedBox(
       width: MediaQuery.of(context).size.width * 0.40,
       child: Container(
           margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
@@ -659,7 +664,7 @@ class _HomeState extends State<Home> {
               ),
             ],
           )),
-    );
+    ));
   }
 
   _launchURL(var url) async {

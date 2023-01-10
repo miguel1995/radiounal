@@ -96,11 +96,8 @@ class _DetailPageState extends State<DetailPage> {
         blocPodcastSeriesYEpisodios.fetchSeriesYEpisodios([uid], []);
         blocPodcastSeriesYEpisodios.subject.stream.listen((event) {
 
-          print(event["series"][0]);
-
           if(event["series"]!=null){
             if(event["series"].length > 0){
-              print(event["series"][0]);
               setState((){
                 elementContent = event["series"][0];
               });
@@ -425,7 +422,7 @@ class _DetailPageState extends State<DetailPage> {
     return InkWell(
         onTap: () {
           Navigator.pushNamed(context, "/item",
-              arguments: ScreenArguments(title, message, element.uid));
+              arguments: ScreenArguments(title, message, element.uid, from: "DETAIL_PAGE"));
         },
         child: Container(
             padding:

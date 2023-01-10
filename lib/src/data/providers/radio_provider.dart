@@ -13,6 +13,7 @@ class RadioProvider {
   final _urlEmisiones = "rest/noticias/app/emisionesByPrograma";
   final _urlEmision = "rest/noticias/app/emision/";
   final _urlProgramasYEmisiones = "rest/noticias/app/programasyemisiones/";
+  final _urlContactoEmail = "rest/noticias/app/contacto";
 
   List<EmisionModel> parseEmisiones(String responseBody) {
     final parsed = json.decode(responseBody);
@@ -41,11 +42,11 @@ class RadioProvider {
   Map<String, dynamic> parseProgramasyEmisiones(String responseBody) {
     final parsed = json.decode(responseBody);
     Map<String, dynamic> map = {};
-    map["programas"] = parsed["results"]["series"]
+    map["programas"] = parsed["results"]["programas"]
         .map<ProgramaModel>((json) => ProgramaModel.fromJson(json))
         .toList();
 
-    map["emisiones"] = parsed["results"]["episodios"]
+    map["emisiones"] = parsed["results"]["emisiones"]
         .map<EmisionModel>((json) => EmisionModel.fromJson(json))
         .toList();
 
@@ -172,6 +173,46 @@ class RadioProvider {
     if (response.statusCode == 200) {
       map = parseProgramasyEmisiones(utf8.decode(response.bodyBytes));
       return map;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  Future<String> postEmail(String nombre, String email, String telefono, String tipo, String mensaje) async {
+    var url = Uri.parse('http://$_hostDomain$_urlContactoEmail');
+    Map<String, dynamic> map = {};
+    // Await the http get response, then decode the json-formatted response.
+    var body = jsonEncode(<String, dynamic>{
+      "nombre":nombre,
+      "email":email,
+      "telefono":telefono,
+      "tipo":tipo,
+      "mensaje":mensaje
+    });
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+
+      final parsed = json.decode(utf8.decode(response.bodyBytes));
+      String string = "";
+
+      if(parsed["info"] != null){
+        if(parsed["info"]["mensaje"] != null){
+          string = parsed["info"]["mensaje"];
+        }
+
+      }
+
+      return string;
+
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Request failed with status: ${response.statusCode}.');

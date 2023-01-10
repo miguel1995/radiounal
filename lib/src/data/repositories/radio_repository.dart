@@ -104,4 +104,19 @@ class RadioRepository {
 
     return temp;
   }
+
+  Future<String> createEmail(String nombre, String email, String telefono, String tipo, String mensaje) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    String temp = "";
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await radioProvider.postEmail(nombre, email, telefono, tipo, mensaje);
+
+    }
+
+    return temp;
+  }
 }

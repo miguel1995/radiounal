@@ -21,9 +21,10 @@ class ItemPage extends StatefulWidget {
   final String title;
   final String message;
   final int uid; //Indica el id del episodio de podcast o emisora de radio
+  final String from; //Indica la página desde lacual fue llamada (home, detail)
 
   const ItemPage(
-      {Key? key, required this.title, required this.message, required this.uid})
+      {Key? key, required this.title, required this.message, required this.uid,  required this.from})
       : super(key: key);
 
   @override
@@ -34,6 +35,7 @@ class _ItemPageState extends State<ItemPage> {
   late String title;
   late String message;
   late int uid;
+  late String from;
 
   final blocRadioEmision = RadioEmisionBloc();
   final blocPodcastEpisodio = PodcastEpisodioBloc();
@@ -53,6 +55,7 @@ class _ItemPageState extends State<ItemPage> {
     title = widget.title;
     message = widget.message;
     uid = widget.uid;
+    from = widget.from;
 
     if (message == "RADIO") {
       blocRadioEmision.fetchEmision(uid);
@@ -311,21 +314,22 @@ class _ItemPageState extends State<ItemPage> {
                           Icons.download,
                           size: 40,
                         )))),
-            Container(
+
+              Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: InkWell(
                     onTap: () {
-
-                      downloadFile(element.rss, "rss", "txt");
-
+                      if (message == "PODCAST"){
+                        downloadFile(element.rss, "rss", "txt");
+                      }
                     },
                     child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1, colors: [
                             Colors.white54.withOpacity(0.3),
-                            const Color(0xffFCDC4D)
+                            Color((message == "PODCAST")?0xffFCDC4D:0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
@@ -342,21 +346,22 @@ class _ItemPageState extends State<ItemPage> {
                           Icons.wifi,
                           size: 40,
                         )))),
-            if (message == "PODCAST")
               Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                   child: InkWell(
                       onTap: () {
-                        print(element.pdf);
-                        downloadFile(element.pdf, "transcripcion", "pdf");
+                        if (message == "PODCAST"){
+                          downloadFile(element.pdf, "transcripcion", "pdf");
+                        }
                         },
                       child: Container(
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           decoration: BoxDecoration(
                             gradient: RadialGradient(radius: 1, colors: [
                               Colors.white54.withOpacity(0.3),
-                              const Color(0xffFCDC4D)
+                              Color((message == "PODCAST")?0xffFCDC4D:0x68FFFFFF)
+
                             ]),
                             borderRadius: BorderRadius.circular(5),
                             color:
@@ -391,14 +396,19 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: InkWell(
               onTap: () {
-                Navigator.popUntil(context, ModalRoute.withName("/"));
-                Navigator.pushNamed(context, "/detail",
-                    arguments: ScreenArguments(
-                      title,
-                      message,
-                      element.categoryUid
-                    )
-                );
+                
+                if(from == "HOME_PAGE") {
+                  Navigator.popUntil(context, ModalRoute.withName("/"));
+                  Navigator.pushNamed(context, "/detail",
+                      arguments: ScreenArguments(
+                          title,
+                          message,
+                          element.categoryUid
+                      )
+                  );
+                } else if(from == "DETAIL_PAGE"){
+                  Navigator.pop(context);
+                }
               },
               child: Container(
                   width: w * 0.40,
@@ -478,7 +488,6 @@ class _ItemPageState extends State<ItemPage> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } catch (e) {
         print("Download Failed.\n\n" + e.toString());
-
       }
     }
   }

@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
 
       title: 'Radio UNAL',
-      initialRoute: '/',
+      initialRoute: '/contacts',
       routes: {
         '/': (context) => const Home(),
         '/favourites': (context) => const FavouritesPage(),
@@ -71,7 +71,8 @@ class MyApp extends StatelessWidget {
               return ItemPage(
                 title: args.title,
                 message: args.message,
-                uid: args.number
+                uid: args.number,
+                from: args.from
               );
             },
           );
