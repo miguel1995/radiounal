@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1053016180282",
+    "project_id": "radiounal",
+    "storage_bucket": "radiounal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053016180282:android:5a6cefc3fb32afbcfd1703",
+        "android_client_info": {
+          "package_name": "co.edu.unal.unimedios.radiounal.radiounal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1053016180282-njk0e64rnqgtoiig1tuk70mjm87g70to.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz69HsuLETt7hXo9-mV6S-ked7Nvfactk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1053016180282-njk0e64rnqgtoiig1tuk70mjm87g70to.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

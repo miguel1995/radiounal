@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodios_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_seriesyepisodios_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programasyemisiones_bloc.dart';
+import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -52,9 +55,17 @@ class _DetailPageState extends State<DetailPage> {
   var size = null;
   double paddingTop = 0;
 
+  String? _deviceId;
+  bool _isFavorito = false;
+  late FirebaseLogic firebaseLogic;
+
   @override
-  void initState() {
+   initState()  {
     super.initState();
+
+    initPlatformState();
+
+    firebaseLogic = FirebaseLogic();
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -64,8 +75,6 @@ class _DetailPageState extends State<DetailPage> {
     uid = widget.uid;
     page = 1;
     elementContent = widget.elementContent;
-
-    print("$title $message $uid $elementContent");
 
     if (message == "RADIO") {
       blocRadioEmisiones.fetchEmisiones(uid, page);
@@ -104,7 +113,8 @@ class _DetailPageState extends State<DetailPage> {
 
             }
           }
-        });      }
+        });
+      }
     }
 
   }
@@ -115,8 +125,8 @@ class _DetailPageState extends State<DetailPage> {
     paddingTop = size.width * 0.30;
 
     return Scaffold(
-        drawer: Menu(),
-        appBar: AppBarRadio(),
+        drawer: const Menu(),
+        appBar: const AppBarRadio(),
         body: StreamBuilder(
             stream: (message == "RADIO")
                 ? blocRadioEmisiones.subject.stream
@@ -184,12 +194,42 @@ class _DetailPageState extends State<DetailPage> {
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           InkWell(
               onTap: (){
-                //TODO: AGREGAR FAVORITO A LA BASE DE DATOS EN FIREBASE
-                print("FAVORITOS");
+
+                if(_isFavorito == true){
+                  firebaseLogic.eliminarFavorite(uid, _deviceId).then((value) => {
+                    setState((){
+                      _isFavorito = false;
+                    })
+                  });
+                }else{
+                  firebaseLogic.agregarFavorito(uid, message, (message == "RADIO") ? "PROGRAMA" : "SERIE", _deviceId).then(
+                          (value) => {
+                            if(value == true){
+                              //print('DocumentSnapshot added with ID: ${doc.id}');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Agregado a mis favoritos"))
+                              ),
+                              setState((){
+                                _isFavorito = true;
+                              })
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text("Se ha presentado un problema, intentelo más tarde"))
+                              )
+                            }
+                          });
+                }
+
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),
-              child: const Icon(Icons.favorite_border))
+              child:  (_isFavorito==true)?Icon(Icons.favorite,
+                color: Theme.of(context).primaryColor
+              ):Icon(Icons.favorite_border,
+                  color: Theme.of(context).primaryColor
+              )
+
+              )
           ),
           InkWell(
               onTap: (){
@@ -197,7 +237,9 @@ class _DetailPageState extends State<DetailPage> {
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),
-              child: const Icon(Icons.share)))
+              child: Icon(Icons.share,
+                  color: Theme.of(context).primaryColor
+    )))
         ]),
       ),
       Container(
@@ -500,4 +542,36 @@ class _DetailPageState extends State<DetailPage> {
                   ]))
             ])));
   }
+
+
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String? deviceId;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get deviceId.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _deviceId = deviceId;
+    });
+    print("deviceId->$_deviceId");
+
+    firebaseLogic.validateFavorite(uid, _deviceId).then(
+            (value) => {
+              setState(()=>{
+                _isFavorito = value
+              })
+            });
+
+  }
+
 }

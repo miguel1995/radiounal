@@ -34,6 +34,9 @@ class _ContactPageState extends State<ContactsPage> {
   String? dropdownValue = "TIPO1";
 
 
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -89,7 +92,7 @@ class _ContactPageState extends State<ContactsPage> {
                 },
                 onChanged: (value){
                   setState(() {
-                    nombre = value;
+                    email = value;
                   });
                 }
               ),

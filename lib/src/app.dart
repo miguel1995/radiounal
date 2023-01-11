@@ -13,18 +13,34 @@ import 'package:radiounal/src/presentation/templates/followed_page.dart';
 import 'package:radiounal/src/presentation/templates/glossary_page.dart';
 import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options.dart';
 
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+     Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
+
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
 
+    return MaterialApp(
       title: 'Radio UNAL',
-      initialRoute: '/contacts',
+      initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
         '/favourites': (context) => const FavouritesPage(),
@@ -80,8 +96,6 @@ class MyApp extends StatelessWidget {
         assert(false, 'Need to implement ${settings.name}');
         return null;
       },
-
-
       theme: ThemeData(
         // Define the default brightness and colors.
         brightness: Brightness.light,
@@ -114,6 +128,8 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
 
