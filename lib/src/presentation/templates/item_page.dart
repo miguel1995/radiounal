@@ -469,7 +469,7 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: InkWell(
               onTap: () {
-                if (from == "HOME_PAGE") {
+                if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE") {
                   Navigator.popUntil(context, ModalRoute.withName("/"));
                   Navigator.pushNamed(context, "/detail",
                       arguments: ScreenArguments(

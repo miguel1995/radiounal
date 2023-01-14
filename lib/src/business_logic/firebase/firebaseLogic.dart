@@ -85,4 +85,24 @@ class FirebaseLogic{
 
   }
 
+  Future<List<Map<String, dynamic>>> findFavoriteByUserUid(userId)  async {
+    List<Map<String, dynamic>> listDocs = [];
+
+    //Busca todos los favoritos de un usuario
+    await db
+        .collection("favoritos")
+        .where("userId", isEqualTo: userId)
+        .get()
+        .then(
+          (snapshot) async => {
+          listDocs = snapshot.docs.map((doc) => doc.data()).toList()
+
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return listDocs;
+
+  }
+
 }

@@ -91,8 +91,6 @@ class _ContentPageState extends State<ContentPage> {
     super.dispose();
   }
 
-
-
   Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot){
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
@@ -208,7 +206,6 @@ class _ContentPageState extends State<ContentPage> {
             ))
     ]);
   }
-
 
   Widget drawError(error) {
     return Container(
