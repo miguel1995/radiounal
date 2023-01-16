@@ -57,6 +57,7 @@ class _DetailPageState extends State<DetailPage> {
 
   String? _deviceId;
   bool _isFavorito = false;
+  bool _isSeguido = false;
   late FirebaseLogic firebaseLogic;
 
   @override
@@ -326,8 +327,32 @@ class _DetailPageState extends State<DetailPage> {
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
           child: InkWell(
               onTap: (){
-                //TODO: Llamar al metodo de agragar programa seguido en Firebase y notificaciones
-                print("AGREGAR A LISTADO DE SEGUIDOS");
+
+                if(_isSeguido == true){
+                  firebaseLogic.eliminarSeguido(uid, _deviceId).then((value) => {
+                    setState((){
+                      _isSeguido = false;
+                    })
+                  });
+                }else{
+                  firebaseLogic.agregarSeguido(uid, message, (message == "RADIO") ? "PROGRAMA" : "SERIE", _deviceId).then(
+                          (value) => {
+                        if(value == true){
+                          //print('DocumentSnapshot added with ID: ${doc.id}');
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Ahora está siguiendo este contenido"))
+                          ),
+                          setState((){
+                            _isSeguido = true;
+                          })
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Se ha presentado un problema, intentelo más tarde"))
+                          )
+                        }
+                      });
+                }
+
               },
           child:Container(
               padding: const EdgeInsets.only(left: 10, right: 10),
@@ -344,8 +369,8 @@ class _DetailPageState extends State<DetailPage> {
                 ],
               ),
               child:
-              const Text(
-                "Seguir",
+              Text(
+                (_isSeguido)?"Dejar de Seguir":"Seguir",
                 style: TextStyle(fontWeight: FontWeight.bold),
               )))),
     ]);
@@ -571,6 +596,13 @@ class _DetailPageState extends State<DetailPage> {
                 _isFavorito = value
               })
             });
+
+    firebaseLogic.validateSeguido(uid, _deviceId).then(
+            (value) => {
+          setState(()=>{
+            _isSeguido = value
+          })
+        });
 
   }
 

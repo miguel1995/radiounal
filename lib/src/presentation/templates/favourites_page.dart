@@ -52,7 +52,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
     return Scaffold(
       drawer: const Menu(),
       appBar: const AppBarRadio(),
-      body: StreamBuilder(
+      body:
+      StreamBuilder(
           stream: CombineLatestStream.list([
             blocRadio.subject.stream,
             blocPodcast.subject.stream,
@@ -66,8 +67,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = Container(
-                  //child: Text("en progreso..."),
+              child = const Center(
+                  child: CircularProgressIndicator(),
                   );
             }
             return child;
@@ -139,7 +140,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
   Widget drawContentList(AsyncSnapshot<List<dynamic>> snapshot) {
     Map<String, dynamic> listRadio = snapshot.data![0];
     Map<String, dynamic> listPodcast = snapshot.data![1];
-
     List<Widget> cardList = [];
 
     listRadio?["programas"]
@@ -152,18 +152,32 @@ class _FavouritesPageState extends State<FavouritesPage> {
         .forEach((element) => cardList.add(buildCard(element, "Podcast")));
 
     listPodcast?["episodios"]
-        .forEach((element) => {cardList.add(buildCard(element, "Podcast"))});
+        .forEach((element) => cardList.add(buildCard(element, "Podcast")));
 
-    return SingleChildScrollView(
-        child: SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: cardList,
+
+    Widget  widgetResult;
+
+    if(cardList.length>0){
+      widgetResult = SingleChildScrollView(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: cardList,
+            ),
+          ));
+    }else{
+      widgetResult =  Center(child: Text("Su listado de contenidos favoritos está vacío.",
+      style: TextStyle(
+        color: Theme.of(context).primaryColor,
+        fontSize: 20
       ),
-    ));
+      )
+      );
+    }
 
-    //return Container(child: Text("En la lista"));
+    return widgetResult;
+
   }
 
   Widget drawError(error) {
@@ -341,6 +355,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       color: Theme.of(context).appBarTheme.foregroundColor)),
               onPressed: () {
                 Navigator.of(context).pop();
+
                 firebaseLogic
                     .eliminarFavorite(element.uid, _deviceId)
                     .then((value) => {
