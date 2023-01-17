@@ -17,6 +17,7 @@ import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
+import '../../business_logic/firebase/push_notifications.dart';
 
 class FollowedPage extends StatefulWidget {
   const FollowedPage({Key? key}) : super(key: key);
@@ -28,6 +29,8 @@ class FollowedPage extends StatefulWidget {
 class _FollowedPageState extends State<FollowedPage> {
   String? _deviceId;
   late FirebaseLogic firebaseLogic;
+  late PushNotification pushNotification;
+
 
   final blocRadio = RadioProgramasYEmisionesBloc();
   final blocPodcast = PodcastSeriesYEpisodiosBloc();
@@ -40,6 +43,7 @@ class _FollowedPageState extends State<FollowedPage> {
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();
+    pushNotification = PushNotification();
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -312,11 +316,12 @@ class _FollowedPageState extends State<FollowedPage> {
                 firebaseLogic
                     .eliminarSeguido(element.uid, _deviceId)
                     .then((value) => {
+                  pushNotification.removeNotificationItem("${site.toUpperCase()}-${element.uid}"),
+
                   //actualiza el listado
                   initPlatformState()
 
                   //TODO: eliminar el elemento de la lista, en lugar de recargar todo el listo
-                  //TODO: AGRAGAR UN LOADING
                   /*if(site.toUpperCase() == "RADIO"){
 
                       }else if(site.toUpperCase() == "PODCAST"){

@@ -37,21 +37,23 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   audioplayers: ^0.20.1
-  intl: ^0.18.0
-  http: ^0.13.5
-  connectivity_plus: ^3.0.2
-  rxdart: ^0.27.7
-  carousel_slider: ^4.2.1
-  cached_network_image: ^3.2.3
-  flutter_svg: ^1.1.6
-  flutter_rating_bar: ^4.0.1
+  intl: ^0.18.0 # Caracteristicas adicionales para el manejo de fechas
+  http: ^0.13.5 # Permite el consumo de los servicios que expone el backend de radio y podccast
+  connectivity_plus: ^3.0.2 #verifica la coneccion a internet
+  rxdart: ^0.27.7 # Permite el manejo de datos de forma asincrona
+  carousel_slider: ^4.2.1 # Slider usado para mostrar el listado de contenidos destacados en Home
+  cached_network_image: ^3.2.3 # Manejo de errores en caso de no encontrar un imagen desde url
+  flutter_svg: ^1.1.6 # Permite el manejo de imagenes con formato SVG
+  flutter_rating_bar: ^4.0.1 # Muestra un calificador de estrellas para el uso de estadisticas
   share_plus: ^6.3.0
-  url_launcher: ^6.1.7
+  url_launcher: ^6.1.7 # Abre una url en el navegador del movil
   dio: ^4.0.0
-  path_provider: ^2.0.2
+  path_provider: ^2.0.2 #complemento para descargar los archivos .mp3. Accede a la ubicacion de directorios de android y iOS
   permission_handler: ^8.0.0+2
-  cloud_firestore: ^4.3.1
-  platform_device_id: ^1.0.1
+  cloud_firestore: ^4.3.1 #Caracteristicas de firebase para el manejo de storage
+  platform_device_id: ^1.0.1 #Identifica un ID unico del smartphone
+  firebase_messaging: ^14.2.1 #Permite la administraciòn de push notifications con firebase
+  flutter_launcher_icons: ^0.11.0 # Agrega el icono de arranque o launcher
 
 
 dev_dependencies:
@@ -64,6 +66,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/icon_launcher.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -20,6 +20,8 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../business_logic/bloc/radio_emisiones_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../business_logic/firebase/push_notifications.dart';
+
 class DetailPage extends StatefulWidget {
   final String title;
   final String message;
@@ -59,6 +61,8 @@ class _DetailPageState extends State<DetailPage> {
   bool _isFavorito = false;
   bool _isSeguido = false;
   late FirebaseLogic firebaseLogic;
+  late PushNotification pushNotification;
+
 
   @override
    initState()  {
@@ -67,6 +71,7 @@ class _DetailPageState extends State<DetailPage> {
     initPlatformState();
 
     firebaseLogic = FirebaseLogic();
+    pushNotification = PushNotification();
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -207,7 +212,8 @@ class _DetailPageState extends State<DetailPage> {
                           (value) => {
                             if(value == true){
                               //print('DocumentSnapshot added with ID: ${doc.id}');
-                              ScaffoldMessenger.of(context).showSnackBar(
+
+                  ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text("Agregado a mis favoritos"))
                               ),
                               setState((){
@@ -330,6 +336,7 @@ class _DetailPageState extends State<DetailPage> {
 
                 if(_isSeguido == true){
                   firebaseLogic.eliminarSeguido(uid, _deviceId).then((value) => {
+                    pushNotification.removeNotificationItem("${message.toUpperCase()}-$uid"),
                     setState((){
                       _isSeguido = false;
                     })
@@ -339,6 +346,8 @@ class _DetailPageState extends State<DetailPage> {
                           (value) => {
                         if(value == true){
                           //print('DocumentSnapshot added with ID: ${doc.id}');
+                          pushNotification.addNotificationItem("${message.toUpperCase()}-$uid"),
+
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text("Ahora está siguiendo este contenido"))
                           ),

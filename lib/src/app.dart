@@ -1,4 +1,5 @@
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
@@ -15,6 +16,7 @@ import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import '../firebase_options.dart';
+import 'business_logic/firebase/push_notifications.dart';
 
 
 class MyApp extends StatefulWidget {
@@ -30,9 +32,44 @@ class _MyAppState extends State<MyApp> {
   void initState() {
      Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    );
+    ).then((value) => {
+       initPushNotifications()
+     });
+
+
+
+
+
   }
 
+  void initPushNotifications() {
+    final pushNotification = new PushNotification();
+    pushNotification.initNotifications();
+
+    //Cuando el usuario presiona la push Notification se llema este bloque de código
+    // Llega el Uid de la serie o programa enviado desde el backend de radio y podcast
+    pushNotification.mensajes.listen((uid) {
+
+      print("PUSH NOTI -> $uid");
+/*
+      if (eventUid != null) {
+        blocDetail.getEventById(int.parse(eventUid));
+
+        bool firstTime = true;
+
+        blocDetail.circularEventSubject.stream.listen((event) {
+          if (event != null) {
+            if (firstTime) {
+              firstTime = false;
+
+              navigatorKey.currentState.push(MaterialPageRoute(
+                  builder: (context) => EventDetailPage(circularEvent: event)));
+            }
+          }
+        });
+      }*/
+    });
+  }
 
   // This widget is the root of your application.
   @override
@@ -40,6 +77,7 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       title: 'Radio UNAL',
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),

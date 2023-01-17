@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 class FirebaseLogic{
 
-  late final FirebaseFirestore db;
+  late final FirebaseFirestore db; //Gestiona el uso de firestore database
+  late final FirebaseMessaging _fcm; // Gestiona el uso de FirebaseMessagin (push notifications)
+
 
   FirebaseLogic(){
     db = FirebaseFirestore.instance;
+    _fcm = FirebaseMessaging.instance;
   }
 
   Future<bool> agregarFavorito(uid, message, tipo, userId)async{
@@ -199,6 +203,9 @@ class FirebaseLogic{
     return flag;
 
   }
+
+
+
 
 
 
