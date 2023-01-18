@@ -49,33 +49,26 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const Menu(),
-      appBar: const AppBarRadio(),
-      body:
-      StreamBuilder(
-          stream: CombineLatestStream.list([
-            blocRadio.subject.stream,
-            blocPodcast.subject.stream,
-          ]),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-            Widget child;
+    return StreamBuilder(
+        stream: CombineLatestStream.list([
+          blocRadio.subject.stream,
+          blocPodcast.subject.stream,
+        ]),
+        builder:
+            (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+          Widget child;
 
-            if (snapshot.hasData) {
-              child = drawContentList(snapshot);
-            } else if (snapshot.hasError) {
-              child = drawError(snapshot.error);
-            } else {
-              child = const Center(
-                  child: CircularProgressIndicator(),
-                  );
-            }
-            return child;
-          }),
-
-      //bottomNavigationBar: BottomNavigationBarRadio(),
-    );
+          if (snapshot.hasData) {
+            child = drawContentList(snapshot);
+          } else if (snapshot.hasError) {
+            child = drawError(snapshot.error);
+          } else {
+            child = const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return child;
+        });
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.

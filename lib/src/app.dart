@@ -15,6 +15,7 @@ import 'package:radiounal/src/presentation/templates/glossary_page.dart';
 import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:radiounal/src/presentation/templates/tab_menu.dart';
 import '../firebase_options.dart';
 import 'business_logic/firebase/push_notifications.dart';
 
@@ -35,10 +36,6 @@ class _MyAppState extends State<MyApp> {
     ).then((value) => {
        initPushNotifications()
      });
-
-
-
-
 
   }
 
@@ -81,8 +78,8 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/favourites': (context) => const FavouritesPage(),
-        '/followed': (context) => const FollowedPage(),
+        '/favourites': (context) => const TabMenuPage(),
+        '/followed': (context) => const TabMenuPage(),
         '/configurations': (context) => const ConfigurationsPage(),
         '/about': (context) => const AboutPage(),
         '/contacts': (context) => const ContactsPage(),
