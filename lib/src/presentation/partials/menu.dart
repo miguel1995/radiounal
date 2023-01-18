@@ -23,8 +23,16 @@ class _MenuState extends State<Menu> {
       'PODCAST',
       1
     )),
-    MenuItem('Favoritos ', "/favourites", Icons.favorite_border, null),
-    MenuItem('Siguiendo', "/followed", null, null),
+    MenuItem('Favoritos ', "/favourites", Icons.favorite_border, ScreenArguments(
+        'NONE',
+        'NONE',
+        0
+    )),
+    MenuItem('Siguiendo', "/followed", null, ScreenArguments(
+        'NONE',
+        'NONE',
+        1
+    )),
     MenuItem('Configuración', "/configurations", null, null),
     MenuItem('Acerca de esta App', "/about", null, null),
     MenuItem('Contáctenos', "/contacts", null, null),

@@ -78,8 +78,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
-        '/favourites': (context) => const TabMenuPage(),
-        '/followed': (context) => const TabMenuPage(),
         '/configurations': (context) => const ConfigurationsPage(),
         '/about': (context) => const AboutPage(),
         '/contacts': (context) => const ContactsPage(),
@@ -124,6 +122,28 @@ class _MyAppState extends State<MyApp> {
                 message: args.message,
                 uid: args.number,
                 from: args.from
+              );
+            },
+          );
+        }
+
+        else if (settings.name == "/favourites") {
+          final args = settings.arguments as ScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return TabMenuPage(
+                  tabIndex: args.number,
+              );
+            },
+          );
+        }
+
+        else if (settings.name == "/followed") {
+          final args = settings.arguments as ScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return TabMenuPage(
+                tabIndex: args.number,
               );
             },
           );

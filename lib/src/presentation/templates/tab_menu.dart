@@ -7,7 +7,10 @@ import 'package:radiounal/src/presentation/templates/followed_page.dart';
 
 
 class TabMenuPage extends StatefulWidget {
-  const TabMenuPage({Key? key}) : super(key: key);
+
+  int tabIndex;
+
+  TabMenuPage({Key? key, required this.tabIndex}) : super(key: key);
 
   @override
   State<TabMenuPage> createState() => _TabMenuPageState();
@@ -16,18 +19,21 @@ class TabMenuPage extends StatefulWidget {
 class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin{
 
   late TabController _tabController;
+  int tabIndex = 0;
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+    tabIndex = widget.tabIndex;
+    _tabController.animateTo(tabIndex);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+      drawer: const Menu(),
+      appBar: const AppBarRadio(),
       body:   Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,11 +67,11 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
             ),
             Expanded(
               child: TabBarView(
-                children: [
+                controller: _tabController,
+                children: const [
                   FavouritesPage(),
                   FollowedPage(),
                 ],
-                controller: _tabController,
               ),
             ),
           ],
@@ -74,7 +80,14 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
       //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 }
+
 
 
 class TabMenu extends StatefulWidget {
