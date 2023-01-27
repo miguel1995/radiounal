@@ -54,6 +54,7 @@ dependencies:
   platform_device_id: ^1.0.1 #Identifica un ID unico del smartphone
   firebase_messaging: ^14.2.1 #Permite la administraciòn de push notifications con firebase
   flutter_launcher_icons: ^0.11.0 # Agrega el icono de arranque o launcher
+  country_state_city_picker: ^1.2.8
 
 
 dev_dependencies:

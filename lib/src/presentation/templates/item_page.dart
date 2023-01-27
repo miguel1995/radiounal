@@ -21,6 +21,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
+import '../../business_logic/bloc/radio_califica_bloc.dart';
+import '../partials/download_form_dialog.dart';
+
 class ItemPage extends StatefulWidget {
   final String title;
   final String message;
@@ -42,7 +45,9 @@ class _ItemPageState extends State<ItemPage> {
   late String from;
 
   final blocRadioEmision = RadioEmisionBloc();
+  final blocRadioCalifica = RadioCalificaBloc();
   final blocPodcastEpisodio = PodcastEpisodioBloc();
+
   late dynamic element = null;
 
   late TargetPlatform? platform;
@@ -90,6 +95,9 @@ class _ItemPageState extends State<ItemPage> {
     } else {
       platform = TargetPlatform.iOS;
     }
+
+
+
   }
 
   @override
@@ -270,7 +278,7 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
           alignment: Alignment.centerLeft,
           child: RatingBar(
-            initialRating: 1,
+            initialRating: 0,
             direction: Axis.horizontal,
             allowHalfRating: true,
             itemCount: 5,
@@ -282,8 +290,10 @@ class _ItemPageState extends State<ItemPage> {
             ),
             itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
             onRatingUpdate: (rating) {
-              //TODO: Este valor se debe enviar al servicio de Estadisticas
-              print(rating);
+              DateTime today = DateTime.now();
+              String dateStr = "${today.day}-${today.month}-${today.year}";
+              blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"EMISION":"EPISODIO", rating.toInt(), dateStr);
+              _showMyDialog();
             },
           ))
     ]);
@@ -349,8 +359,9 @@ class _ItemPageState extends State<ItemPage> {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: InkWell(
-                    onTap: () {
-                      downloadFile(element.audio, "audio", "mp3");
+                    onTap: ()
+                    {
+                      showFormDialog(context);
                     },
                     child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
@@ -632,4 +643,63 @@ class _ItemPageState extends State<ItemPage> {
 
   }
 
+  Future<void> _showMyDialog() async {
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Text(''),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Gracias por calificar nuestro contenido',
+                    style: TextStyle(
+                        fontSize: 20,
+                        color: Theme.of(context).appBarTheme.foregroundColor))
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).appBarTheme.foregroundColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showFormDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return DownloadFormDialog(callBackFormDialog);
+      }
+    );
+  }
+
+  callBackFormDialog(bool status){
+    if(status==true){
+      downloadFile(element.audio, "audio", "mp3");
+    }
+  }
+
+
 }
+
+
+
+
+

@@ -14,6 +14,9 @@ class RadioProvider {
   final _urlEmision = "rest/noticias/app/emision/";
   final _urlProgramasYEmisiones = "rest/noticias/app/programasyemisiones/";
   final _urlContactoEmail = "rest/noticias/app/contacto";
+  final _urlEstadistica = "rest/noticias/app/estadistica";
+  final _urlDescarga = "rest/noticias/app/descarga";
+
 
   List<EmisionModel> parseEmisiones(String responseBody) {
     final parsed = json.decode(responseBody);
@@ -209,6 +212,104 @@ class RadioProvider {
           string = parsed["info"]["mensaje"];
         }
 
+      }
+
+      return string;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+  /*
+  * itemUid: uid de la serie, programa, episodio o emision
+    nombre: nombre del elemento
+    sitio: RADIO o PODCAST
+    tipo: SERIE, PROGRAMA, EPISODIO o EMISION
+    score: int. calificacion de estrellas
+    date: "20-01-2023"
+  * */
+  Future<String> postEstadistica(int itemUid, String nombre, String sitio, String tipo, int score, String date) async {
+    var url = Uri.parse('http://$_hostDomain$_urlEstadistica');
+    String string = "";
+    // Await the http get response, then decode the json-formatted response.
+    var body = jsonEncode(<String, dynamic>{
+      "itemUid":itemUid,
+      "nombre":nombre,
+      "sitio":sitio,
+      "tipo":tipo,
+      "score":score,
+      "date":date
+    });
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+
+      final parsed = json.decode(utf8.decode(response.bodyBytes));
+
+      if(parsed["info"] != null){
+        if(parsed["info"]["mensaje"] != null){
+          string = parsed["info"]["mensaje"];
+        }
+
+      }
+
+      return string;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+
+  }
+
+  /*
+  *
+    nombre: nombre del elemento
+    edad: string
+    genero: masculino o femenino
+    pais: string
+    ciudad: string
+    email: string
+  * */
+
+  Future<String> postDescarga(String nombre, String edad, String genero, String pais, String departamento, String ciudad, String email) async {
+    var url = Uri.parse('http://$_hostDomain$_urlDescarga');
+    String string = "";
+    // Await the http get response, then decode the json-formatted response.
+    var body = jsonEncode(<String, dynamic>{
+      "nombre":nombre,
+      "edad":edad,
+      "genero":genero,
+      "pais":pais,
+      "departamento":departamento,
+      "ciudad":ciudad,
+      "email":email
+    });
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+
+    if (response.statusCode == 200) {
+
+      final parsed = json.decode(utf8.decode(response.bodyBytes));
+
+      if(parsed["info"] != null){
+        if(parsed["info"]["mensaje"] != null){
+          string = parsed["info"]["mensaje"];
+        }
       }
 
       return string;

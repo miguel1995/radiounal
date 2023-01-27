@@ -119,4 +119,35 @@ class RadioRepository {
 
     return temp;
   }
+
+  Future<String> createEstadistica(int itemUid, String nombre, String sitio, String tipo, int score, String date) async {
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    String temp = "";
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await radioProvider.postEstadistica(itemUid, nombre, sitio, tipo, score, date );
+
+    }
+
+    return temp;
+  }
+
+  Future<String> createDescarga(String nombre, String edad, String genero, String pais, String departamento, String ciudad, String email) async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    String temp = "";
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await radioProvider.postDescarga(nombre, edad, genero, pais, departamento, ciudad, email);
+
+    }
+
+    return temp;
+  }
 }
