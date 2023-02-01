@@ -16,8 +16,8 @@ class AppBarRadio extends StatelessWidget   with PreferredSizeWidget{
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              //TODO: redirect to find_page
-            },
+              Navigator.pushNamed(context, '/browser');
+            }
           )
         ]);
   }

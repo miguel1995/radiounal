@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +11,12 @@ import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
 import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-
 import '../../business_logic/bloc/radio_califica_bloc.dart';
 import '../partials/download_form_dialog.dart';
 

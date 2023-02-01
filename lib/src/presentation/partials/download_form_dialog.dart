@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
 import '../../business_logic/bloc/departamento_bloc.dart';
 import '../../business_logic/bloc/pais_bloc.dart';
@@ -28,12 +29,12 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
     "masculino": "masculino",
     "femenino": "femenino"
   };
-  String? dropdownValue = "masculino";
+  String? dropdownValue = "";
 
   Map<String, String> listPais = SplayTreeMap<String, String>((a, b) => a.compareTo(b));
   String? dropdownValuePais = "";
   Map<String, String> listDepartamentos = SplayTreeMap<String, String>((a, b) => a.compareTo(b));
-  String? dropdownValueDepartamento = "Cundinamarca Department";
+  String? dropdownValueDepartamento = "";
   Map<String, String> listCiudades = SplayTreeMap<String, String>((a, b) => a.compareTo(b));
   String? dropdownValueCiudad= "";
 
@@ -43,15 +44,23 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
   String departamento ="";
   String ciudad = "";
   String email = "";
-  String genero = "";
+  String genero = "masculino";
 
   final blocPais = PaisBloc();
   final blocDepartamento = DepartamentoBloc();
   final blocCiudad = CiudadBloc();
   final blocRadioDescarga = RadioDescargaBloc();
 
+  late SharedPreferences prefs;
+  final TextEditingController _controllerNombre = TextEditingController();
+  final TextEditingController _controllerEdad = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
+
   @override
   void initState() {
+
+    initializePreference();
+
     blocPais.fetchPaises();
     blocPais.subject.stream.listen((value) {
       if(value != null && value.length > 0){
@@ -62,11 +71,11 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
 
         setState(() {
           listPais = listPais;
-          dropdownValuePais = listPais["Colombia"];
-          pais = listPais["Colombia"]!;
+          pais = ((pais =="")?listPais["Colombia"]:pais)!;
+          dropdownValuePais = pais;
         });
 
-        updateDepartments(pais);
+        updateDepartments(pais, true);
       }
     });
   }
@@ -103,8 +112,8 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             style: getTextStyle(),
                           )),
                       TextFormField(
-                        decoration:
-                        getFieldDecoration("Ingrese sus Nombres y Apellidos"),
+                        controller: _controllerNombre,
+                        decoration: getFieldDecoration("Ingrese sus Nombres y Apellidos"),
                         style: const TextStyle(decoration: TextDecoration.none),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -116,6 +125,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             setState(() {
                               nombre = value;
                             });
+                            prefs.setString('nombre', nombre);
                           }
                       ),
                       Container(
@@ -124,9 +134,10 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             style: getTextStyle(),
                           )),
                       TextFormField(
+                        controller: _controllerEdad,
                           keyboardType: TextInputType.number,
                         decoration: getFieldDecoration("Edad"),
-                        style: TextStyle(decoration: TextDecoration.none),
+                        style: const TextStyle(decoration: TextDecoration.none),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, ingrese un texto';
@@ -137,6 +148,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             setState(() {
                               edad = value.toString();
                             });
+                            prefs.setString('edad', edad);
                           }
                       ),
                       Container(
@@ -169,6 +181,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                               dropdownValue = value;
                               genero = value!;
                             });
+                            prefs.setString('genero', genero);
                           },
                           items:
                           list.keys.map<DropdownMenuItem<String>>((String value) {
@@ -210,7 +223,8 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                               dropdownValuePais = value;
                               pais = value!;
                             });
-                            updateDepartments(pais);
+                            prefs.setString('pais', pais);
+                            updateDepartments(pais, false);
                           },
                           items:
                           (listPais.length>0)?listPais.keys.map<DropdownMenuItem<String>>((String value) {
@@ -252,7 +266,8 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                               dropdownValueDepartamento = value;
                               departamento = value!;
                             });
-                              updateCities(pais, departamento);
+                            prefs.setString('departamento', departamento);
+                            updateCities(pais, departamento, false);
                           },
                           items:
                           (listDepartamentos.isNotEmpty)?listDepartamentos.keys.map<DropdownMenuItem<String>>((String value) {
@@ -292,8 +307,9 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             setState(() {
                               dropdownValueCiudad = value;
                               ciudad = value!;
-
                             });
+                            prefs.setString('ciudad', ciudad);
+
                           },
                           items:
                           (listCiudades.isNotEmpty)?listCiudades.keys.map<DropdownMenuItem<String>>((String value) {
@@ -310,6 +326,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                               style: getTextStyle()
                           )),
                       TextFormField(
+                        controller: _controllerEmail,
                           decoration: getFieldDecoration("Ingrese su correo electrónico"),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -321,6 +338,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             setState(() {
                               email = value;
                             });
+                            prefs.setString('email', email);
                           }
                       ),
                       Container(
@@ -453,7 +471,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
     return Colors.white;
   }
 
-  void updateDepartments(String pais){
+  void updateDepartments(String pais, bool isFirstLoad){
     blocDepartamento.fetchDepartamentos(pais);
     blocDepartamento.subject.stream.listen((value) {
       if(value != null && value.length > 0){
@@ -467,18 +485,18 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
 
         setState(() {
           listDepartamentos = listDepartamentos;
-          dropdownValueDepartamento = listDepartamentos[value[0].name];
-          departamento = listDepartamentos[value[0].name]!;
+          departamento = (isFirstLoad)?departamento:listDepartamentos[value[0].name]!;
+          dropdownValueDepartamento = departamento;
 
         });
 
-        updateCities(pais, departamento);
+        updateCities(pais, departamento, isFirstLoad);
 
       }
     });
   }
 
-  void updateCities(pais, departamento){
+  void updateCities(String pais, String departamento, bool isFirstLoad){
     blocCiudad.fetchCiudades(pais, departamento);
     blocCiudad.subject.stream.listen((value) {
       if(value != null && value.length > 0){
@@ -491,12 +509,38 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
 
         setState(() {
           listCiudades = listCiudades;
-          dropdownValueCiudad = listCiudades[value[0].name];
-          ciudad = listCiudades[value[0].name]!;
+          ciudad = (isFirstLoad==true)?ciudad:listCiudades[value[0].name]!;
+          dropdownValueCiudad = ciudad;
         });
       }
     });
 
   }
 
+  initializePreference() async{
+    // obtain shared preferences
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      /**Actualiza variables de estado*/
+        nombre = prefs.getString('nombre') ?? "";
+        edad = prefs.getString('edad') ?? "";
+        genero = prefs.getString('genero') ?? "masculino";
+        pais = prefs.getString('pais') ?? "Colombia";
+        departamento = prefs.getString('departamento') ?? "Cundinamarca Department";
+        ciudad = prefs.getString('ciudad') ?? "Bogota";
+        email = prefs.getString('email') ?? "";
+
+        /**Actualiza los valores de los dropdown del formulario*/
+        dropdownValue = genero;
+        dropdownValuePais = pais;
+        dropdownValueDepartamento = departamento;
+        dropdownValueCiudad = ciudad;
+      }
+    );
+
+    _controllerNombre.text = nombre;
+    _controllerEdad.text = edad;
+    _controllerEmail.text = email;
+
+  }
 }

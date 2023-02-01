@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
 import 'package:radiounal/src/presentation/templates/about_page.dart';
+import 'package:radiounal/src/presentation/templates/browser_page.dart';
 import 'package:radiounal/src/presentation/templates/configurations_page.dart';
 import 'package:radiounal/src/presentation/templates/contacts_page.dart';
 import 'package:radiounal/src/presentation/templates/content_page.dart';
@@ -78,6 +79,7 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         '/': (context) => const Home(),
+        '/browser': (context) => const BrowserPage(),
         '/configurations': (context) => const ConfigurationsPage(),
         '/about': (context) => const AboutPage(),
         '/contacts': (context) => const ContactsPage(),
