@@ -65,7 +65,8 @@ Container(
         ),
         errorBorder: OutlineInputBorder(
           borderSide:
-          BorderSide(width: 2, color: Theme.of(context).primaryColor),
+          BorderSide(width: 2, color: Theme.of(
+              context).primaryColor),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide:
