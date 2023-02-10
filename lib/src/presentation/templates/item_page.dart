@@ -314,9 +314,9 @@ class _ItemPageState extends State<ItemPage> {
                   width: w * 0.35,
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   decoration: BoxDecoration(
-                    gradient: RadialGradient(radius: 1, colors: [
-                      Colors.white54.withOpacity(0.3),
-                      const Color(0xff121C4A),
+                    gradient: const RadialGradient(radius: 1, colors: [
+                      Color(0xff1b4564),
+                      Color(0xff121C4A),
                     ]),
                     borderRadius: BorderRadius.circular(5),
                     color: Theme
@@ -362,9 +362,9 @@ class _ItemPageState extends State<ItemPage> {
                     child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         decoration: BoxDecoration(
-                          gradient: RadialGradient(radius: 1, colors: [
-                            Colors.white54.withOpacity(0.3),
-                            const Color(0xffFCDC4D)
+                          gradient: const RadialGradient(radius: 0.7, colors: [
+                            Color(0xfffcdf5b),
+                            Color(0xffffcc17)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme
@@ -398,9 +398,10 @@ class _ItemPageState extends State<ItemPage> {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1, colors: [
-                            Colors.white54.withOpacity(0.3),
+
+                            (message == "PODCAST")?const Color(0xfffcdf5b):Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
-                                ? 0xffFCDC4D
+                                ? 0xffffcc17
                                 : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
@@ -434,9 +435,9 @@ class _ItemPageState extends State<ItemPage> {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1, colors: [
-                            Colors.white54.withOpacity(0.3),
+                            (message == "PODCAST")?const Color(0xfffcdf5b):Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
-                                ? 0xffFCDC4D
+                                ? 0xffffcc17
                                 : 0x68FFFFFF)
 
                           ]),
@@ -494,9 +495,9 @@ class _ItemPageState extends State<ItemPage> {
                   padding: const EdgeInsets.only(
                       left: 10, right: 10, top: 5, bottom: 5),
                   decoration: BoxDecoration(
-                    gradient: RadialGradient(radius: 1, colors: [
-                      Colors.white54.withOpacity(0.3),
-                      const Color(0xff121C4A),
+                    gradient: const RadialGradient(radius: 1, colors: [
+                      Color(0xff1b4564),
+                      Color(0xff121C4A),
                     ]),
                     borderRadius: BorderRadius.circular(5),
                     color: Theme

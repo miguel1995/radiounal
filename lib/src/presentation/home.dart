@@ -416,10 +416,9 @@ class _HomeState extends State<Home> {
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              gradient: RadialGradient(radius: 0.75, colors: [
-                Colors.white54.withOpacity(0.3),
-                //Colors.white,
-                const Color(0xff121C4A),
+              gradient: const RadialGradient(radius: 0.75, colors: [
+                Color(0xff1b4564),
+                Color(0xff121C4A),
               ]),
               boxShadow: [
                 BoxShadow(
