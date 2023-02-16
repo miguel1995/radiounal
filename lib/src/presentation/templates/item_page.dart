@@ -164,29 +164,22 @@ class _ItemPageState extends State<ItemPage> {
                         }
                       });
                 }
-
               },
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
-                  child:  (_isFavorito==true)?Icon(Icons.favorite,
-                      color: Theme.of(context).primaryColor
-                  ):Icon(Icons.favorite_border,
-                      color: Theme.of(context).primaryColor
-                  )
-
+                  child:  (_isFavorito==true)? SvgPicture.asset('assets/icons/icono_corazon_completo.svg') :
+                  SvgPicture.asset('assets/icons/icono_corazon_borde.svg')
               )
 
           ),
           InkWell(
               onTap: () {
-                //TODO: Comopartir url
-                print("COMPARTIR URL");
                 Share.share(element.url,
                     subject: "Radio UNAL - ${element.title}");
               },
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
-                  child: const Icon(Icons.share)))
+                  child: SvgPicture.asset('assets/icons/icono_compartir_redes.svg')))
         ]),
       ),
       Container(
@@ -284,9 +277,9 @@ class _ItemPageState extends State<ItemPage> {
             itemCount: 5,
             itemSize: 20.0,
             ratingWidget: RatingWidget(
-              full: SvgPicture.asset('assets/icons/star.svg'),
-              half: SvgPicture.asset('assets/icons/star.svg'),
-              empty: SvgPicture.asset('assets/icons/star_border.svg'),
+              full: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
+              half: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
+              empty: SvgPicture.asset('assets/icons/icono_estrellita_borde.svg'),
             ),
             itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
             onRatingUpdate: (rating) {
@@ -364,7 +357,7 @@ class _ItemPageState extends State<ItemPage> {
                       showFormDialog(context);
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
                           gradient: const RadialGradient(radius: 0.7, colors: [
                             Color(0xfffcdf5b),
@@ -384,10 +377,10 @@ class _ItemPageState extends State<ItemPage> {
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.download,
-                          size: 40,
-                        )))),
+                        child: SvgPicture.asset(
+                            'assets/icons/icono_flecha_descarga.svg',
+                            width: MediaQuery.of(context).size.width * 0.1)
+                    ))),
 
             Container(
                 alignment: Alignment.centerLeft,
@@ -399,7 +392,7 @@ class _ItemPageState extends State<ItemPage> {
                       }
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1, colors: [
 
@@ -422,10 +415,12 @@ class _ItemPageState extends State<ItemPage> {
                             ),
                           ],
                         ),
-                        child: const Icon(
-                          Icons.wifi,
-                          size: 40,
-                        )))),
+                        child:
+                        SvgPicture.asset(
+                              "assets/icons/icono_rss.svg",
+                              width: MediaQuery.of(context).size.width * 0.1)
+
+                    ))),
             Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -436,7 +431,7 @@ class _ItemPageState extends State<ItemPage> {
                       }
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding: const EdgeInsets.only(top:5, bottom:5, left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1, colors: [
                             (message == "PODCAST")?const Color(0xfffcdf5b):Colors.white54.withOpacity(0.3),
@@ -461,13 +456,12 @@ class _ItemPageState extends State<ItemPage> {
                           ],
                         ),
                         child: Row(
-                          children: const [
-                            Icon(
-                              Icons.arrow_downward,
-                              size: 40,
-                            ),
-                            Text(
-                              "Transcripción",
+                          children: [
+                            SvgPicture.asset(
+                                'assets/icons/icono_flechita_transcripcion.svg',
+                                width: MediaQuery.of(context).size.width * 0.08),
+                            const Text(
+                              "  Transcripción",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 17),
                             )

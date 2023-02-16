@@ -89,12 +89,8 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/Vector.png
-    - assets/icons/arrow_page.png
-    - assets/icons/icono_face_svg.svg
-    - assets/icons/icono_instagram_svg.svg
-    - assets/icons/icono_twitter_svg.svg
-    - assets/icons/star.svg
-    - assets/icons/star_border.svg
+    - assets/images/splash.png
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

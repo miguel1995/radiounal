@@ -230,12 +230,8 @@ class _DetailPageState extends State<DetailPage> {
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),
-              child:  (_isFavorito==true)?Icon(Icons.favorite,
-                color: Theme.of(context).primaryColor
-              ):Icon(Icons.favorite_border,
-                  color: Theme.of(context).primaryColor
-              )
-
+              child:   (_isFavorito==true)? SvgPicture.asset('assets/icons/icono_corazon_completo.svg') :
+              SvgPicture.asset('assets/icons/icono_corazon_borde.svg')
               )
           ),
           InkWell(
@@ -244,9 +240,8 @@ class _DetailPageState extends State<DetailPage> {
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),
-              child: Icon(Icons.share,
-                  color: Theme.of(context).primaryColor
-    )))
+              child: SvgPicture.asset('assets/icons/icono_compartir_redes.svg')
+              ))
         ]),
       ),
       Container(
@@ -318,9 +313,9 @@ class _DetailPageState extends State<DetailPage> {
             itemCount: 5,
             itemSize: 20.0,
             ratingWidget: RatingWidget(
-              full: SvgPicture.asset('assets/icons/star.svg'),
-              half: SvgPicture.asset('assets/icons/star.svg'),
-              empty: SvgPicture.asset('assets/icons/star_border.svg'),
+              full: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
+              half: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
+              empty: SvgPicture.asset('assets/icons/icono_estrellita_borde.svg'),
             ),
             itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
             onRatingUpdate: (rating) {

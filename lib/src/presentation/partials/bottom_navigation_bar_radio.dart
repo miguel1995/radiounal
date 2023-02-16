@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -234,16 +235,21 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
           children: [
             Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                IconButton(
-                  color: const Color(0xffFCDC4D),
-                  icon: const Icon(Icons.keyboard_arrow_down_outlined),
-                  onPressed: () {
+                InkWell(
+                  onTap: (){
                     setState(() {
                       _expanded = !_expanded;
                     });
                     _controller.reverse();
                   },
+                  child:Container(
+                    margin: const EdgeInsets.only(right: 20, top:20, bottom: 10),
+                    child:SvgPicture.asset(
+                        'assets/icons/icono_flechita_down.svg',
+                        width: MediaQuery.of(context).size.width * 0.05)
+                  )
                 )
+
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -352,15 +358,19 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
             ),
         child:Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            IconButton(
-              color: const Color(0xffFCDC4D),
-              icon: const Icon(Icons.keyboard_arrow_up),
-              onPressed: () {
-                setState(() {
-                  _expanded = !_expanded;
-                });
-                _controller.forward();
-              },
+            InkWell(
+                onTap: (){
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                  _controller.forward();
+                },
+                child:Container(
+                    margin: const EdgeInsets.only(right: 20, top:20, bottom: 10),
+                    child:SvgPicture.asset(
+                        'assets/icons/icono_flechita_up.svg',
+                        width: MediaQuery.of(context).size.width * 0.05)
+                )
             )
           ]),
           Row(children: [

@@ -289,7 +289,7 @@ class _HomeState extends State<Home> {
                     _launchURL("https://www.facebook.com/RadioUNAL/");
                   },
                   child: SvgPicture.asset(
-                    'assets/icons/icono_face_svg.svg',
+                    'assets/icons/icono_facebook.svg',
                     width: MediaQuery.of(context).size.width * 0.2,
                   )),
               InkWell(
@@ -297,12 +297,14 @@ class _HomeState extends State<Home> {
                     _launchURL("https://www.instagram.com/radiounal/");
                   },
                   child:
-                      SvgPicture.asset('assets/icons/icono_instagram_svg.svg')),
+                      SvgPicture.asset('assets/icons/icono_instagram_svg.svg',
+                        width: MediaQuery.of(context).size.width * 0.2)),
               InkWell(
                   onTap: () {
                     _launchURL("https://twitter.com/radiounal");
                   },
-                  child: SvgPicture.asset('assets/icons/icono_twitter_svg.svg'))
+                  child: SvgPicture.asset('assets/icons/icono_twitter.svg',
+                    width: MediaQuery.of(context).size.width * 0.2))
             ],
           )
         ]));

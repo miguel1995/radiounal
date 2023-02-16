@@ -17,6 +17,7 @@ import 'package:radiounal/src/presentation/templates/glossary_page.dart';
 import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:radiounal/src/presentation/splash.dart';
 import 'package:radiounal/src/presentation/templates/tab_menu.dart';
 import '../firebase_options.dart';
 import 'business_logic/firebase/push_notifications.dart';
@@ -79,7 +80,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: {
-        '/': (context) => const Home(),
+        '/': (context) => Splash(),
+        '/home': (context) => const Home(),
         '/browser': (context) => const BrowserPage(),
         '/configurations': (context) => const ConfigurationsPage(),
         '/about': (context) => const AboutPage(),
@@ -193,7 +195,7 @@ class _MyAppState extends State<MyApp> {
         ),
         appBarTheme: const AppBarTheme(
           color:  Color(0xff121C4A),
-          foregroundColor: Color(0xffFCDC4D)
+          foregroundColor: Color(0xFFFCDC4D)
         ),
         drawerTheme: const DrawerThemeData(
           backgroundColor: Color(0xff121C4A)
