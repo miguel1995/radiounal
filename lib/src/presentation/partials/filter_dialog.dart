@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:radiounal/src/business_logic/bloc/radio_sedes_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
 import '../../business_logic/bloc/departamento_bloc.dart';
@@ -8,7 +9,7 @@ import '../../business_logic/bloc/pais_bloc.dart';
 import '../../business_logic/bloc/radio_descarga_bloc.dart';
 
 class FilterDialog extends StatefulWidget {
-  final Function(String sede, String canal, String area) callBackDialog;
+  final Function(int sede, String canal, String area) callBackDialog;
 
   const FilterDialog(this.callBackDialog, {super.key});
 
@@ -18,14 +19,6 @@ class FilterDialog extends StatefulWidget {
 
 class FilterDialogState extends State<FilterDialog> {
   final _formKey = GlobalKey<FormState>();
-
-  Map<String, String> listSedes = {
-    "AMAZONIA": "AMAZONIA",
-    "MANIZALES": "MANIZALES",
-    "ORINOQUIA": "ORINOQUIA",
-    "PALMIRA": "PALMIRA"
-  };
-  String? dropdownValueSedes = "AMAZONIA";
 
   Map<String, String> listCanales = {
     "TODOS": "Todas",
@@ -44,32 +37,29 @@ class FilterDialogState extends State<FilterDialog> {
   };
   String? dropdownValueAreas = "TODOS";
 
-  //TODO:
-  //Map<String, String> listSedes =
-  //  SplayTreeMap<String, String>((a, b) => a.compareTo(b));
+  Map<int, String> listSedes = SplayTreeMap<int, String>((a, b) => a.compareTo(b));
+  final blocSedes = RadioSedesBloc();
+  int? dropdownValueSedes = 0;
 
-  //TODO:
-  //final blocSedes = SedesBloc();
 
   @override
   void initState() {
-/*
-    blocPais.fetchPaises();
-    blocPais.subject.stream.listen((value) {
-      if (value != null && value.length > 0) {
-        for (var e in value) {
-          listPais[e.name] = e.name;
+
+    blocSedes.fetchSedes();
+    blocSedes.subject.stream.listen((value) {
+      print(value);
+
+      if (value["result"] != null && value["result"].length > 0) {
+        for (var e in value["result"]) {
+          listSedes[e.uid] = e.title;
         }
+        listSedes[0] = "Todas";
 
         setState(() {
-          listPais = listPais;
-          pais = ((pais == "") ? listPais["Colombia"] : pais)!;
-          dropdownValuePais = pais;
+          listSedes= listSedes;
         });
-
-
       }
-    });*/
+    });
   }
 
   @override
@@ -95,7 +85,13 @@ class FilterDialogState extends State<FilterDialog> {
                   Row(children: [
                     InkWell(
                         onTap: () {
-                          //TODO:
+                          setState(() {
+
+                            dropdownValueSedes=listSedes.keys.first;
+                            dropdownValueCanales="TODOS";
+                            dropdownValueAreas="TODOS";
+
+                          });
                         },
                         child: Container(
                             padding: const EdgeInsets.only(
@@ -131,7 +127,8 @@ class FilterDialogState extends State<FilterDialog> {
                             ))),
                     InkWell(
                         onTap: () {
-                          //TODO:
+                          Navigator.pop(context);
+                          widget.callBackDialog(dropdownValueSedes!, dropdownValueCanales!, dropdownValueAreas!);
                         },
                         child: Container(
                             padding: const EdgeInsets.only(
@@ -184,7 +181,7 @@ class FilterDialogState extends State<FilterDialog> {
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: DropdownButton<String>(
+                    child: DropdownButton<int>(
                       isExpanded: true,
                       value: dropdownValueSedes,
                       icon: const Icon(
@@ -194,14 +191,14 @@ class FilterDialogState extends State<FilterDialog> {
                       underline: Container(
                         color: Colors.white,
                       ),
-                      onChanged: (String? value) {
+                      onChanged: (int? value) {
                         setState(() {
                           dropdownValueSedes = value;
                         });
                       },
                       items: listSedes.keys
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
+                          .map<DropdownMenuItem<int>>((int value) {
+                        return DropdownMenuItem<int>(
                           value: value,
                           child: Text(listSedes[value]!),
                         );
@@ -314,8 +311,8 @@ class FilterDialogState extends State<FilterDialog> {
   }
 
   TextStyle getTextStyle() {
-    return const TextStyle(
-        color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold);
+    return  TextStyle(
+        color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.bold);
   }
 
   Color? getColor(Set<MaterialState> states) {

@@ -83,7 +83,6 @@ class EmisionModel{
   //Utilizado en el llamado al API de radio desde los providers
   EmisionModel.fromJson(Map<String, dynamic> parsedJson) {
 
-
     _uid = parsedJson["id"];
     _title = parsedJson["title"];
     _teaser = parsedJson["teaser"];
@@ -93,7 +92,7 @@ class EmisionModel{
     _url = parsedJson["url"];
     _audio = parsedJson["audio"];
     _categoryTitle = parsedJson["categoryTitle"];
-    _categoryUid = parsedJson["categoryUid"];
+    _categoryUid = (parsedJson["categoryUid"]=="" || parsedJson["categoryUid"]==1)?0:parsedJson["categoryUid"];
 
 
   }

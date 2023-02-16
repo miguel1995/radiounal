@@ -499,6 +499,8 @@ class _DetailPageState extends State<DetailPage> {
         onTap: () {
           Navigator.pushNamed(context, "/item",
               arguments: ScreenArguments(title, message, element.uid, from: "DETAIL_PAGE"));
+
+
         },
         child: Container(
             padding:

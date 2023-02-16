@@ -14,6 +14,9 @@ import 'package:rxdart/rxdart.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../business_logic/bloc/podcast_masescuchados_bloc.dart';
+import '../business_logic/bloc/radio_masescuchados_bloc.dart';
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -25,6 +28,8 @@ class _HomeState extends State<Home> {
   final blocRadioDestacados = RadioDestacadosBloc();
   final blocPodcastDestacados = PodcastDestacadosBloc();
   final blocRadioProgramacion = RadioProgramacionBloc();
+  final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
+  final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
 
   @override
   void initState() {
@@ -36,6 +41,8 @@ class _HomeState extends State<Home> {
     blocRadioDestacados.fetchDestacados();
     blocPodcastDestacados.fetchDestacados();
     blocRadioProgramacion.fetchProgramacion();
+    blocRadioMasEscuchados.fetchMasEscuchados();
+    blocPodcastMasEscuchados.fetchMasEscuchados();
   }
 
   @override
@@ -230,8 +237,8 @@ class _HomeState extends State<Home> {
           ),
           StreamBuilder(
               stream: CombineLatestStream.list([
-                blocRadioDestacados.subject.stream,
-                blocPodcastDestacados.subject.stream,
+                blocRadioMasEscuchados.subject.stream,
+                blocPodcastMasEscuchados.subject.stream,
               ]),
               builder: (BuildContext context,
                   AsyncSnapshot<List<dynamic>> snapshot) {

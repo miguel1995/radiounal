@@ -7,6 +7,7 @@ import 'package:radiounal/src/data/models/serie_model.dart';
 class PodcastProvider {
   final _hostDomain = "podcastradio.unal.edu.co/";
   final _urlDestacados = "rest/noticias/app/destacados/page/1";
+  final _urlMasEscuchados = "rest/noticias/app/mas-escuchado/page/1";
   final _urlSeries = "rest/noticias/app/series/page/";
   final _urlSeriesYEpisodios = "rest/noticias/app/seriesyepisodios";
   final _urlEpisodios = "rest/noticias/app/episodiosBySerie";
@@ -52,6 +53,20 @@ class PodcastProvider {
   //consume todos los cintenidos de http://podcastradio.unal.edu.co/rest/noticias/app/destacados/page/1
   Future<List<EpisodioModel>> getDestacados() async {
     var url = Uri.parse('http://$_hostDomain$_urlDestacados');
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return parseEpisodios(utf8.decode(response.bodyBytes));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  //consume todos los cintenidos de http://podcastradio.unal.edu.co/rest/noticias/app/mas-escuchado/page/1
+  Future<List<EpisodioModel>> getMasEscuchados() async {
+    var url = Uri.parse('http://$_hostDomain$_urlMasEscuchados');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 

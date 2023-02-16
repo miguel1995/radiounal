@@ -5,6 +5,7 @@ import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
 import 'package:radiounal/src/presentation/templates/about_page.dart';
 import 'package:radiounal/src/presentation/templates/browser_page.dart';
+import 'package:radiounal/src/presentation/templates/browser_result_page.dart';
 import 'package:radiounal/src/presentation/templates/configurations_page.dart';
 import 'package:radiounal/src/presentation/templates/contacts_page.dart';
 import 'package:radiounal/src/presentation/templates/content_page.dart';
@@ -124,6 +125,21 @@ class _MyAppState extends State<MyApp> {
                 message: args.message,
                 uid: args.number,
                 from: args.from
+              );
+            },
+          );
+        }
+
+        else if (settings.name == "/browser-result") {
+          final args = settings.arguments as ScreenArguments;
+          return MaterialPageRoute(
+            builder: (context) {
+              return BrowserResultPage(
+                title: args.title,
+                message: args.message,
+                page: args.number,
+                element: args.element
+
               );
             },
           );

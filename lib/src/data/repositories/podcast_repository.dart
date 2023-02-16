@@ -21,6 +21,22 @@ class PodcastRepository {
     return temp;
   }
 
+  Future<List<EpisodioModel>> findMasEscuchados() async {
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    List<EpisodioModel> temp = [];
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await podcastProvider.getMasEscuchados();
+
+    }
+
+    return temp;
+  }
+
 
   Future<Map<String, dynamic>> findSeries(int page) async {
 

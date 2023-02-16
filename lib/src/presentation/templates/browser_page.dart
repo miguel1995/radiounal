@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
+import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 
 import '../partials/filter_dialog.dart';
 
@@ -13,6 +14,14 @@ class BrowserPage extends StatefulWidget {
 }
 
 class _BrowserPageState extends State<BrowserPage> {
+
+  final TextEditingController _controllerQuery = TextEditingController();
+
+  @override
+  void dispose() {
+    _controllerQuery.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,58 +53,65 @@ class _BrowserPageState extends State<BrowserPage> {
     );
   }
 
+
   Widget drawSearchField() {
     return Row(
       children: [
         Expanded(
             child: TextField(
+                controller: _controllerQuery,
                 decoration: getFieldDecoration("Ingrese su busqueda"))),
         Container(
-          margin: EdgeInsets.only(left: 5),
+            margin: EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 border: Border.all(
                     color: Theme.of(context).primaryColor, width: 3)),
             child: IconButton(
                 onPressed: () {
                   showFilterDialog(context);
-                }, icon: const Icon(Icons.filter_alt_outlined, size: 40)))
+                },
+                icon: const Icon(Icons.filter_alt_outlined, size: 40)))
       ],
     );
   }
 
   Widget drawMainFilters() {
-    return      Expanded(
-      child: GridView.count(
-        crossAxisCount: 2,
-        children: [
-          drawFrecuenciaBtn("Series Podcast"),
-          drawFrecuenciaBtn("Programas Bogotá 98.5 fm"),
-          drawFrecuenciaBtn("Programas Medellín 100.4 fm"),
-          drawFrecuenciaBtn("Programas Radio Web"),
-          drawFrecuenciaBtn("Programas Temáticos"),
-          drawFrecuenciaBtn("Programas de Actualidad"),
-          drawFrecuenciaBtn("Programas Musicales"),
-          drawFrecuenciaBtn("Centro de Producción Amazonia"),
-          drawFrecuenciaBtn("Centro de Producción Manizales"),
-          drawFrecuenciaBtn("Centro de Producción Orinoquia"),
-          drawFrecuenciaBtn("Centro de Producción Palmira"),
-          drawFrecuenciaBtn("Lo más Escuchado")
-        ]
-      ),
+    return Expanded(
+      child: GridView.count(crossAxisCount: 2, children: [
+        drawFrecuenciaBtn("Series Podcast", {"query":"", "contentType":"SERIES"}),
+        drawFrecuenciaBtn("Programas Bogotá 98.5 fm",{"query":"","sede": 0, "canal": "BOG", "area": "TODOS", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Programas Medellín 100.4 fm", {"query":"","sede": 0, "canal": "MED", "area": "TODOS", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Programas Radio Web", {"query":"","sede": 0, "canal": "WEB", "area": "TODOS", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Programas Temáticos", {"query":"","sede": 0, "canal": "TODOS", "area": "TEMATICOS", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Programas de Actualidad", {"query":"","sede": 0, "canal": "TODOS", "area": "ACTUALIDAD", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Programas Musicales", {"query":"","sede": 0, "canal": "TODOS", "area": "MUSICALES", "contentType":"PROGRAMAS"}),
+        drawFrecuenciaBtn("Centro de Producción Amazonia", {"query":"","sede": 490, "canal": "TODOS", "area": "TODOS", "contentType":"EMISIONES"}),
+        drawFrecuenciaBtn("Centro de Producción Manizales", {"query":"","sede": 492, "canal": "TODOS", "area": "TODOS", "contentType":"EMISIONES"}),
+        drawFrecuenciaBtn("Centro de Producción Orinoquia", {"query":"","sede": 493, "canal": "TODOS", "area": "TODOS", "contentType":"EMISIONES"}),
+        drawFrecuenciaBtn("Centro de Producción Palmira", {"query":"","sede": 489, "canal": "TODOS", "area": "TODOS", "contentType":"EMISIONES"}),
+        drawFrecuenciaBtn("Lo más Escuchado", {"contentType":"MASESCUCHADO"})
+      ]),
     );
-
-
   }
-
 
   InputDecoration getFieldDecoration(String hintText) {
     return InputDecoration(
         hintText: hintText,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15),
-       ),
-        suffixIcon: Icon(Icons.search),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        suffixIcon: InkWell(
+          onTap: (){
+            if( _controllerQuery.value.text.isNotEmpty){
+              Navigator.pushNamed(context, "/browser-result",
+                  arguments: ScreenArguments('NONE', "Resultados", 1,
+                      element: {"query":_controllerQuery.value.text, "contentType":"ELASTIC"}));
+            }
+
+          },
+          child: Icon(Icons.search)
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide:
@@ -117,25 +133,30 @@ class _BrowserPageState extends State<BrowserPage> {
         context: context,
         builder: (BuildContext context) {
           return FilterDialog(callBackDialog);
-        }
-    );
+        });
   }
 
-  callBackDialog(String sede, String canal, String area){
-    //TODO://
+  callBackDialog(int sede, String canal, String area) {
+
+    Navigator.pushNamed(context, "/browser-result",
+        arguments: ScreenArguments('NONE', 'Resultados', 1,
+            element: {"query":_controllerQuery.value.text,"sede": sede, "canal": canal, "area": area, "contentType": "EMISIONES"}));
   }
 
-  Widget drawFrecuenciaBtn(String texto) {
-
+  Widget drawFrecuenciaBtn(String texto, Map<String, dynamic> mapFilter) {
     return InkWell(
         onTap: () {
-          //TODO: realizar busqeuda por filtro
+          Navigator.pushNamed(context, "/browser-result",
+              arguments: ScreenArguments('NONE', texto, 1,
+                  element: mapFilter));
+
         },
         child: Container(
             alignment: Alignment.center,
             padding:
-            const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-            margin: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+            margin:
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               gradient: const RadialGradient(radius: 0.40, colors: [
@@ -156,8 +177,6 @@ class _BrowserPageState extends State<BrowserPage> {
               texto,
               style: const TextStyle(color: Colors.white, fontSize: 15),
               textAlign: TextAlign.center,
-
             )));
   }
-
 }

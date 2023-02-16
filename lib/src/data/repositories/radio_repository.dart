@@ -23,6 +23,23 @@ class RadioRepository {
     return temp;
   }
 
+  Future<List<EmisionModel>> findMasEscuchados() async {
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    List<EmisionModel> temp = [];
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+
+      temp = await radioProvider.getMasEscuchados();
+
+    }
+
+    return temp;
+  }
+
   Future<List<ProgramacionModel>> findProgramacion() async {
 
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -89,6 +106,7 @@ class RadioRepository {
     return temp;
   }
 
+
   Future<Map<String, dynamic>> findProgramasYEmisiones(List<int> programasUidList, List<int> emisionesUidList) async {
 
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -104,6 +122,7 @@ class RadioRepository {
 
     return temp;
   }
+
 
   Future<String> createEmail(String nombre, String email, String telefono, String tipo, String mensaje) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
@@ -145,6 +164,53 @@ class RadioRepository {
 
       // Si hay conexion por wifi o Si hay conexion por datos
       temp = await radioProvider.postDescarga(nombre, edad, genero, pais, departamento, ciudad, email);
+
+    }
+
+    return temp;
+  }
+
+  Future<Map<String, dynamic>> findSedes() async {
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    Map<String, dynamic> temp = {};
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+
+      temp = await radioProvider.getSedes();
+
+    }
+
+    return temp;
+  }
+
+  Future<Map<String, dynamic>> findSearch(
+      String query,
+      int page,
+      int sede,
+      String canal,
+      String area,
+      String contentType
+      ) async {
+
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    Map<String, dynamic> temp = {};
+
+    if (connectivityResult == ConnectivityResult.wifi ||
+        connectivityResult == ConnectivityResult.mobile) {
+
+      // Si hay conexion por wifi o Si hay conexion por datos
+      temp = await radioProvider.getSearch(
+          query,
+          page,
+          sede,
+          canal,
+          area,
+          contentType
+      );
 
     }
 

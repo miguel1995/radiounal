@@ -17,7 +17,8 @@ class _MenuState extends State<Menu> {
       'SITE',
       'RADIO',
       1
-    )),
+    )
+    ),
     MenuItem('Series Podcast Radio UNAL', "/content", null, ScreenArguments(
       'SITE',
       'PODCAST',

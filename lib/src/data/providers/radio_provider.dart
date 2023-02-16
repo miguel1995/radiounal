@@ -8,6 +8,7 @@ import 'package:radiounal/src/data/models/programacion_model.dart';
 class RadioProvider {
   final _hostDomain = "radio.unal.edu.co/";
   final _urlDestacados = "rest/noticias/app/destacados/";
+  final _urlMasEscuchados = "rest/noticias/app/mas-escuchado/page/1";
   final _urlProgramacion = "rest/noticias/app/programacion";
   final _urlProgramas = "rest/noticias/app/programas/page/";
   final _urlEmisiones = "rest/noticias/app/emisionesByPrograma";
@@ -16,6 +17,8 @@ class RadioProvider {
   final _urlContactoEmail = "rest/noticias/app/contacto";
   final _urlEstadistica = "rest/noticias/app/estadistica";
   final _urlDescarga = "rest/noticias/app/descarga";
+  final _urlSedes = "rest/noticias/app/sedes";
+  final _urlSearch = "rest/noticias/app/search";
 
 
   List<EmisionModel> parseEmisiones(String responseBody) {
@@ -67,6 +70,22 @@ class RadioProvider {
     var url = Uri.parse('http://$_hostDomain$_urlDestacados');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return parseEmisiones(utf8.decode(response.bodyBytes));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/mas-escuchado/page/1
+  Future<List<EmisionModel>> getMasEscuchados() async {
+    var url = Uri.parse('http://$_hostDomain$_urlMasEscuchados');
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+    print(">>> URLLLLLLLLL !!!!");
+    print(url);
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -320,5 +339,83 @@ class RadioProvider {
     }
   }
 
+  //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/sedes
+  Future<Map<String, dynamic>> getSedes() async {
+    var url = Uri.parse('http://$_hostDomain$_urlSedes');
+    Map<String, dynamic> map = {};
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<ProgramaModel> result = parseProgramas(utf8.decode(response.bodyBytes));
+      InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
+
+      map["result"] = result;
+      map["info"] = info;
+
+      return map;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  //consume todos los contenidos de http://radio.unal.edu.co/rest/noticias/app/search
+  Future<Map<String, dynamic>> getSearch(
+      String query,
+      int page,
+      int sede,
+      String canal,
+      String area,
+      String contentType
+      ) async {
+    var url = Uri.parse('http://$_hostDomain$_urlSearch');
+    Map<String, dynamic> map = {};
+
+    var body = jsonEncode(<String, dynamic>{
+      "query":query,
+      "page":page,
+      "filters":{
+        "sede":(sede!=0)?sede:"TODOS",
+        "canal":canal,
+        "area":area,
+        "contentType":contentType
+      }
+    });
+
+    print(url);
+    print(body);
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+    List<EmisionModel> resultForEmisiones = [];
+    List<ProgramaModel> resultForProgramas = [];
+    if (response.statusCode == 200) {
+      if(contentType == "EMISIONES") {
+         resultForEmisiones = parseEmisiones(
+            utf8.decode(response.bodyBytes));
+         map["result"] = resultForEmisiones;
+      }else if(contentType == "PROGRAMAS"){
+          resultForProgramas = parseProgramas(
+            utf8.decode(response.bodyBytes));
+          map["result"] = resultForProgramas;
+      }
+
+      InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
+      map["info"] = info;
+
+      return map;
+
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
 
 }
