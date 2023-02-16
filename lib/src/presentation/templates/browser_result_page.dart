@@ -393,8 +393,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 ));
           }
 
-
-
         },
         child: Container(
             padding:

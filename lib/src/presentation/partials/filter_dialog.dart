@@ -19,6 +19,7 @@ class FilterDialog extends StatefulWidget {
 
 class FilterDialogState extends State<FilterDialog> {
   final _formKey = GlobalKey<FormState>();
+  bool isPodcast = false;
 
   Map<String, String> listCanales = {
     "TODOS": "Todas",
@@ -182,6 +183,7 @@ class FilterDialogState extends State<FilterDialog> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: DropdownButton<int>(
+
                       isExpanded: true,
                       value: dropdownValueSedes,
                       icon: const Icon(
@@ -191,7 +193,7 @@ class FilterDialogState extends State<FilterDialog> {
                       underline: Container(
                         color: Colors.white,
                       ),
-                      onChanged: (int? value) {
+                      onChanged: (isPodcast) ? null : (int? value) {
                         setState(() {
                           dropdownValueSedes = value;
                         });
@@ -231,9 +233,19 @@ class FilterDialogState extends State<FilterDialog> {
                       underline: Container(
                         color: Colors.white,
                       ),
+
                       onChanged: (String? value) {
                         setState(() {
                           dropdownValueCanales = value;
+                          if(dropdownValueCanales == "POD"){
+                              setState(() {
+                                isPodcast = true;
+                              });
+                          }else{
+                            setState(() {
+                              isPodcast = false;
+                            });
+                          }
                         });
                       },
                       items: listCanales.keys
@@ -271,7 +283,7 @@ class FilterDialogState extends State<FilterDialog> {
                       underline: Container(
                         color: Colors.white,
                       ),
-                      onChanged: (String? value) {
+                      onChanged: (isPodcast) ? null :  (String? value) {
                         setState(() {
                           dropdownValueAreas = value;
                         });
