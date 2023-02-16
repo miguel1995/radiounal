@@ -384,8 +384,6 @@ class RadioProvider {
       }
     });
 
-    print(url);
-    print(body);
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(

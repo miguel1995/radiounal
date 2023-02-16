@@ -12,6 +12,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
 import '../../business_logic/bloc/podcast_masescuchados_bloc.dart';
+import '../../business_logic/bloc/podcast_search_bloc.dart';
 import '../../business_logic/bloc/podcast_series_bloc.dart';
 import '../../business_logic/bloc/radio_masescuchados_bloc.dart';
 import '../../data/models/info_model.dart';
@@ -45,6 +46,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
   final blocPodcastSeries = PodcastSeriesBloc();
   final blocElasticSearch = ElasticSearchBloc();
+  final blocPodcastSearch = PodcastSearchBloc();
 
   var size = null;
   double paddingTop = 0;
@@ -74,7 +76,9 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           elementFilters["contentType"]);
     } else if (elementFilters["contentType"] == "SERIES") {
       blocPodcastSeries.fetchSeries(page);
-    } else if (elementFilters["contentType"] == "ELASTIC") {
+    } else if (elementFilters["contentType"] == "EPISODIOS") {
+      blocPodcastSearch.fetchSearch(elementFilters["query"],page);
+    }else if (elementFilters["contentType"] == "ELASTIC") {
       querySize = 10;
       start = page * querySize;
       blocElasticSearch.fetchSearch(elementFilters["query"], page, start);
@@ -97,8 +101,11 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   @override
   void dispose() {
     blocRadioSearch.dispose();
-    blocPodcastMasEscuchados.dispose();
     blocRadioMasEscuchados.dispose();
+    blocPodcastMasEscuchados.dispose();
+    blocPodcastSeries.dispose();
+    blocElasticSearch.dispose();
+    blocPodcastSearch.dispose();
 
     super.dispose();
   }
@@ -142,10 +149,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             return child;
           });
     } else {
+      var blocStream = null;
+      if(elementFilters["contentType"] == "SERIES"){
+        blocStream = blocPodcastSeries.subject.stream;
+      }else if(elementFilters["contentType"] == "EPISODIOS"){
+        blocStream = blocPodcastSearch.subject.stream;
+      }else{
+        blocStream = blocRadioSearch.subject.stream;
+      }
       widget = StreamBuilder(
-          stream: (elementFilters["contentType"] == "SERIES")
-              ? blocPodcastSeries.subject.stream
-              : blocRadioSearch.subject.stream,
+          stream: blocStream,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -239,6 +252,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                               elementFilters["query"], page, start);
                         } else if(elementFilters["contentType"] == "SERIES"){
                           blocPodcastSeries.fetchSeries(page);
+                        }else if (elementFilters["contentType"] == "EPISODIOS") {
+                          blocPodcastSearch.fetchSearch(elementFilters["query"],page);
                         }
                       },
                       child: Container(
@@ -285,6 +300,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                       elementFilters["query"], page, start);
                 } else if(elementFilters["contentType"] == "SERIES"){
                   blocPodcastSeries.fetchSeries(page);
+                }else if (elementFilters["contentType"] == "EPISODIOS") {
+                  blocPodcastSearch.fetchSearch(elementFilters["query"],page);
                 }
 
               },
@@ -357,6 +374,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     element.uid,
                     element: element
                 ));
+          }else if(elementFilters["contentType"] == "EPISODIOS"){
+            Navigator.pushNamed(context, "/item",
+                arguments: ScreenArguments(
+                    "SITE",
+                    "PODCAST",
+                    element.uid,
+                    from: "BROWSER_RESULT_PAGE"
+                ));
           }else if(elementFilters["contentType"] == "MASESCUCHADO"){
 
             Navigator.pushNamed(context, "/item",
@@ -364,7 +389,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     "SITE",
                     (element is EpisodioModel)?"PODCAST":"RADIO",
                     element.uid,
-                    element: element
+                    from: "BROWSER_RESULT_PAGE"
                 ));
           }
 

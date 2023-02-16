@@ -58,6 +58,7 @@ class _ItemPageState extends State<ItemPage> {
   void initState() {
     super.initState();
 
+
     initPlatformState();
 
     firebaseLogic = FirebaseLogic();
@@ -78,6 +79,9 @@ class _ItemPageState extends State<ItemPage> {
         });
       });
     } else if (message == "PODCAST") {
+      print(" ####### PODCAST ${uid}");
+
+
       blocPodcastEpisodio.fetchEpisodio(uid);
       blocPodcastEpisodio.subject.stream.listen((event) {
         setState(() {
@@ -477,7 +481,7 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: InkWell(
               onTap: () {
-                if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE") {
+                if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE" || from == "BROWSER_RESULT_PAGE") {
                   Navigator.popUntil(context, ModalRoute.withName("/"));
                   Navigator.pushNamed(context, "/detail",
                       arguments: ScreenArguments(

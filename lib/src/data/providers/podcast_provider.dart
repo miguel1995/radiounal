@@ -12,6 +12,7 @@ class PodcastProvider {
   final _urlSeriesYEpisodios = "rest/noticias/app/seriesyepisodios";
   final _urlEpisodios = "rest/noticias/app/episodiosBySerie";
   final _urlEpisodio = "rest/noticias/app/episodio/";
+  final _urlSearch = "rest/noticias/app/search";
 
 
   List<EpisodioModel> parseEpisodios(String responseBody) {
@@ -161,6 +162,46 @@ class PodcastProvider {
     if (response.statusCode == 200) {
       map = parseSeriesyEpisodios(utf8.decode(response.bodyBytes));
       return map;
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Request failed with status: ${response.statusCode}.');
+    }
+  }
+
+  //http://podcastradio.unal.edu.co/rest/noticias/app/search
+  Future<Map<String, dynamic>> getSearch(
+      String query,
+      int page
+      ) async {
+    var url = Uri.parse('http://$_hostDomain$_urlSearch');
+    Map<String, dynamic> map = {};
+
+    var body = jsonEncode(<String, dynamic>{
+      "query":query,
+      "page":page
+    });
+
+    print(url);
+    print(body);
+
+    // Await the http get response, then decode the json-formatted response.
+    var response = await http.post(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: body);
+    List<EpisodioModel> resultForEpisodios = [];
+
+    if (response.statusCode == 200) {
+
+      resultForEpisodios = parseEpisodios(utf8.decode(response.bodyBytes));
+        map["result"] = resultForEpisodios;
+      InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
+      map["info"] = info;
+
+      return map;
+
     } else {
       // If that call was not successful, throw an error.
       throw Exception('Request failed with status: ${response.statusCode}.');

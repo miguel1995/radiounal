@@ -16,6 +16,7 @@ class BrowserPage extends StatefulWidget {
 class _BrowserPageState extends State<BrowserPage> {
 
   final TextEditingController _controllerQuery = TextEditingController();
+  bool isFiltro = false;
 
   @override
   void dispose() {
@@ -60,7 +61,13 @@ class _BrowserPageState extends State<BrowserPage> {
         Expanded(
             child: TextField(
                 controller: _controllerQuery,
+                  onChanged: (String value) async {
+                      setState(() {
+                        isFiltro = value.isNotEmpty;
+                      });
+                  },
                 decoration: getFieldDecoration("Ingrese su busqueda"))),
+        if(isFiltro)
         Container(
             margin: EdgeInsets.only(left: 5),
             decoration: BoxDecoration(
@@ -69,7 +76,9 @@ class _BrowserPageState extends State<BrowserPage> {
                     color: Theme.of(context).primaryColor, width: 3)),
             child: IconButton(
                 onPressed: () {
-                  showFilterDialog(context);
+                  if(_controllerQuery.value.text.isNotEmpty) {
+                    showFilterDialog(context);
+                  }
                 },
                 icon: const Icon(Icons.filter_alt_outlined, size: 40)))
       ],
@@ -137,10 +146,15 @@ class _BrowserPageState extends State<BrowserPage> {
   }
 
   callBackDialog(int sede, String canal, String area) {
-
+    String contentType = "";
+    if(canal=="POD"){
+      contentType = "EPISODIOS";
+    }else{
+      contentType = "EMISIONES";
+    }
     Navigator.pushNamed(context, "/browser-result",
         arguments: ScreenArguments('NONE', 'Resultados', 1,
-            element: {"query":_controllerQuery.value.text,"sede": sede, "canal": canal, "area": area, "contentType": "EMISIONES"}));
+            element: {"query":_controllerQuery.value.text,"sede": sede, "canal": canal, "area": area, "contentType": contentType}));
   }
 
   Widget drawFrecuenciaBtn(String texto, Map<String, dynamic> mapFilter) {
