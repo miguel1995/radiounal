@@ -382,12 +382,28 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                         style: getTextStyle(),
 
                       ),
+                      Align(
+                          alignment: Alignment.centerRight,
+                          child:
                       Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.only(right: 10),
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        alignment: Alignment.center,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            gradient: RadialGradient(
+                                radius: 0.8,
+                                colors: [
+
+                                  Color(0xffFCDC4D),
+                                  Color(0xffFFCC17 )
+                            ]),
+
+                        ),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              primary: Theme.of(context).appBarTheme.foregroundColor),
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
+                              foregroundColor: Theme.of(context).appBarTheme.foregroundColor),
                           onPressed: () {
                             //Validate returns true if the form is valid, or false otherwise.
                             if (isChecked == false) {
@@ -418,7 +434,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                      )
+                      ))
                     ],
                   ),
                 )),

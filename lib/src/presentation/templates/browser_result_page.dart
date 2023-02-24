@@ -93,7 +93,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     return Scaffold(
       drawer: Menu(),
       appBar: AppBarRadio(),
-      body: drawContent(),
+      body:
+      DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child:
+      drawContent()),
       //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
@@ -192,11 +201,17 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   padding: const EdgeInsets.only(left: 20, top: 20),
                   child: Text(
                     message,
-                    style: const TextStyle(
-                      color: Color(0xff121C4A),
+                    style: TextStyle(
+                      shadows: [
+                        Shadow(
+                            color: Theme.of(context).primaryColor,
+                            offset: const Offset(0, -5))
+                      ],
+                      color: Colors.transparent,
+                      decorationThickness: 2,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(0xFFFCDC4D),
+                      decorationColor: const  Color(0xFFFCDC4D),
                       decoration: TextDecoration.underline,
                     ),
                   ),

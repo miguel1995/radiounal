@@ -34,7 +34,16 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
     return   Scaffold(
       drawer: const Menu(),
       appBar: const AppBarRadio(),
-      body:   Container(
+      body:
+      DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child:
+      Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -76,7 +85,7 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
             ),
           ],
         ),
-      ),
+      )),
       //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }

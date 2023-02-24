@@ -11,6 +11,7 @@ import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
 import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -53,6 +54,9 @@ class _ItemPageState extends State<ItemPage> {
   String? _deviceId;
   bool _isFavorito = false;
   late FirebaseLogic firebaseLogic;
+
+  final GlobalKey<BottomNavigationBarRadioState> _key = GlobalKey();
+
 
   @override
   void initState() {
@@ -102,16 +106,28 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return
+      Scaffold(
       drawer: Menu(),
       appBar: AppBarRadio(),
-      body: Center(
+      body:
+      DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child:
+      Center(
         child: Column(children: [
           drawContentDescription(element),
           drawContentBtns(element)
         ]),
+      )),
+      bottomNavigationBar: BottomNavigationBarRadio(
+          key: _key
       ),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
 
@@ -304,16 +320,28 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
           child: InkWell(
               onTap: () {
-                //TODO: Reproducir audio
-                print(element.audio);
+
+                print(element);
+
+                _key.currentState!.playMusic(
+                    element.audio,
+                    element.imagen,
+                    element.categoryTitle,
+                    element.title,
+                    element.bodytext,
+                    element.date,
+                    message,
+                    false
+                );
+
               },
               child: Container(
                   width: w * 0.35,
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   decoration: BoxDecoration(
-                    gradient: const RadialGradient(radius: 1, colors: [
-                      Color(0xff1b4564),
-                      Color(0xff121C4A),
+                    gradient: const RadialGradient(radius: 2, colors: [
+                      Color( 0xff216278),
+                      Color(0xff121C4A)
                     ]),
                     borderRadius: BorderRadius.circular(5),
                     color: Theme
@@ -359,9 +387,9 @@ class _ItemPageState extends State<ItemPage> {
                     child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
-                          gradient: const RadialGradient(radius: 0.7, colors: [
-                            Color(0xfffcdf5b),
-                            Color(0xffffcc17)
+                          gradient: const RadialGradient(radius: 0.8, colors: [
+                            Color(0xffFCDC4D),
+                            Color(0xffFFCC17)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme
@@ -380,7 +408,8 @@ class _ItemPageState extends State<ItemPage> {
                         child: SvgPicture.asset(
                             'assets/icons/icono_flecha_descarga.svg',
                             width: MediaQuery.of(context).size.width * 0.1)
-                    ))),
+                    )))
+            ,
 
             Container(
                 alignment: Alignment.centerLeft,
@@ -394,11 +423,11 @@ class _ItemPageState extends State<ItemPage> {
                     child: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
-                          gradient: RadialGradient(radius: 1, colors: [
+                          gradient: RadialGradient(radius: 0.8, colors: [
 
-                            (message == "PODCAST")?const Color(0xfffcdf5b):Colors.white54.withOpacity(0.3),
+                            (message == "PODCAST")?const Color(0xffFCDC4D):Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
-                                ? 0xffffcc17
+                                ? 0xffFFCC17
                                 : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
@@ -433,12 +462,11 @@ class _ItemPageState extends State<ItemPage> {
                     child: Container(
                         padding: const EdgeInsets.only(top:5, bottom:5, left: 10, right: 10),
                         decoration: BoxDecoration(
-                          gradient: RadialGradient(radius: 1, colors: [
-                            (message == "PODCAST")?const Color(0xfffcdf5b):Colors.white54.withOpacity(0.3),
+                          gradient: RadialGradient(radius: 1.5, colors: [
+                            (message == "PODCAST")?const Color(0xffFCDC4D):Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
-                                ? 0xffffcc17
+                                ? 0xffFFCC17
                                 : 0x68FFFFFF)
-
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color:
@@ -476,7 +504,7 @@ class _ItemPageState extends State<ItemPage> {
           child: InkWell(
               onTap: () {
                 if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE" || from == "BROWSER_RESULT_PAGE") {
-                  Navigator.popUntil(context, ModalRoute.withName("/"));
+                  Navigator.popUntil(context, ModalRoute.withName("/home"));
                   Navigator.pushNamed(context, "/detail",
                       arguments: ScreenArguments(
                           title,
@@ -493,9 +521,9 @@ class _ItemPageState extends State<ItemPage> {
                   padding: const EdgeInsets.only(
                       left: 10, right: 10, top: 5, bottom: 5),
                   decoration: BoxDecoration(
-                    gradient: const RadialGradient(radius: 1, colors: [
-                      Color(0xff1b4564),
-                      Color(0xff121C4A),
+                    gradient: const RadialGradient(radius: 2, colors: [
+                      Color( 0xff216278),
+                      Color(0xff121C4A)
                     ]),
                     borderRadius: BorderRadius.circular(5),
                     color: Theme

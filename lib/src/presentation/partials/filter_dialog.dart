@@ -99,9 +99,9 @@ class FilterDialogState extends State<FilterDialog> {
                                 left: 10, right: 10, top: 10, bottom: 10),
                             decoration: BoxDecoration(
                               gradient:
-                                  const RadialGradient(radius: 1, colors: [
-                                Color(0xff1b4564),
-                                Color(0xff121C4A),
+                                  const RadialGradient(radius: 1.5, colors: [
+                                    Color( 0xff216278),
+                                    Color(0xff121C4A)
                               ]),
                               borderRadius: BorderRadius.circular(5),
                               color: Theme.of(context).primaryColor,
@@ -137,10 +137,10 @@ class FilterDialogState extends State<FilterDialog> {
                             margin: const EdgeInsets.only(left: 50),
                             decoration: BoxDecoration(
                               gradient: const RadialGradient(
-                                  radius: 1,
+                                  radius: 0.5,
                                   colors: [
-                                    Color(0xfffcdf5b),
-                                    Color(0xffffcc17)
+                                    Color(0xffFCDC4D),
+                                    Color(0xffFFCC17 )
                                   ]),
                               borderRadius: BorderRadius.circular(5),
                               color: Theme.of(context).primaryColor,
@@ -155,12 +155,12 @@ class FilterDialogState extends State<FilterDialog> {
                               ],
                             ),
                             child: Row(
-                              children: const [
+                              children: [
                                 Text(
                                   "Buscar",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color: Theme.of(context).primaryColor,
                                       fontSize: 16),
                                 )
                               ],

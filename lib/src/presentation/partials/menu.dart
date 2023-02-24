@@ -14,40 +14,36 @@ class _MenuState extends State<Menu> {
   bool isHidden = true;
 
   final List<MenuItem> _menuTitles = [
-    MenuItem('Programas Radio UNAL', "/content", "", ScreenArguments(
-      'SITE',
-      'RADIO',
-      1
-    )
+    MenuItem('Programas Radio UNAL', "/content", "",
+        ScreenArguments('SITE', 'RADIO', 1)),
+    MenuItem('Series Podcast Radio UNAL', "/content", "",
+        ScreenArguments('SITE', 'PODCAST', 1)),
+    MenuItem(
+        'Favoritos ',
+        "/favourites",
+        "assets/icons/icono_corazon_blanco.svg",
+        ScreenArguments('NONE', 'NONE', 0)
     ),
-    MenuItem('Series Podcast Radio UNAL', "/content", "", ScreenArguments(
-      'SITE',
-      'PODCAST',
-      1
-    )),
-    MenuItem('Favoritos ', "/favourites", "assets/icons/icono_corazon_blanco.svg", ScreenArguments(
-        'NONE',
-        'NONE',
-        0
-    )),
-    MenuItem('Siguiendo', "/followed", "", ScreenArguments(
-        'NONE',
-        'NONE',
-        1
-    )),
+    MenuItem('Siguiendo', "/followed", "", ScreenArguments('NONE', 'NONE', 1)),
     MenuItem('Configuración', "/configurations", "", null),
     MenuItem('Acerca de esta App', "/about", "", null),
     MenuItem('Contáctenos', "/contacts", "", null),
     MenuItem('Política de privacidad', "/politics", "", null),
-    MenuItem('Créditos', "/credits", "", null),
-    MenuItem('Glosario', "/glossary", "", null)
+    MenuItem('Créditos', "/credits", "", null)
   ];
 
   final List<MenuItem> _menuUrls = [
     MenuItem('UNIMEDIOS  ', "https://unimedios.unal.edu.co/", "assets/icons/icono_links_externos.svg", null),
     MenuItem('Agencia UNAL', "https://agenciadenoticias.unal.edu.co/", "", null),
     MenuItem('Periódico UNAL', "https://periodico.unal.edu.co/", "", null),
-    MenuItem('Televisión UNAL ', "https://television.unal.edu.co/", "", null)
+    MenuItem('Televisión UNAL ', "https://television.unal.edu.co/", "", null),
+    MenuItem("Radio UNAL", "http://radio.unal.edu.co/", "", null),
+    MenuItem("Podcast UNAL", "https://podcastradio.unal.edu.co/", "", null),
+    MenuItem("Circular UNAL", "http://circular.unal.edu.co/", "", null),
+    MenuItem("Orgullo UNAL", "http://orgullo.unal.edu.co/", "", null),
+    MenuItem("Debates UNAL", "http://www.debates.unal.edu.co/", "", null),
+    MenuItem("Identidad visual", "http://identidad.unal.edu.co/identidad-visual/", "", null),
+    MenuItem("Solicitudes Unimedios", "http://solicitudesunimedios.unal.edu.co/", "", null)
   ];
 
   @override
@@ -97,13 +93,11 @@ class _MenuState extends State<Menu> {
     final listItems = <Widget>[];
 
     for (var i = 0; i < _menuTitles.length; ++i) {
-
       listItems.add(GestureDetector(
           onTap: () {
-            Navigator.popUntil(context, ModalRoute.withName("/"));
+            Navigator.popUntil(context, ModalRoute.withName("/home"));
             Navigator.pushNamed(context, _menuTitles[i].url,
-              arguments: _menuTitles[i].arguments
-            );
+                arguments: _menuTitles[i].arguments);
           },
           child: Padding(
               padding:
@@ -116,10 +110,8 @@ class _MenuState extends State<Menu> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   if (_menuTitles[i].iconPath != "")
-                    SvgPicture.asset(
-                        _menuTitles[i].iconPath,
+                    SvgPicture.asset(_menuTitles[i].iconPath,
                         width: MediaQuery.of(context).size.width * 0.05)
-
                 ],
               ))));
     }
@@ -145,10 +137,8 @@ class _MenuState extends State<Menu> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   if (_menuUrls[i].iconPath != "")
-                    SvgPicture.asset(
-                        _menuUrls[i].iconPath,
+                    SvgPicture.asset(_menuUrls[i].iconPath,
                         width: MediaQuery.of(context).size.width * 0.05)
-
                 ])),
           ),
           IconButton(
@@ -160,8 +150,7 @@ class _MenuState extends State<Menu> {
               icon: const Icon(
                 Icons.keyboard_arrow_down,
                 color: Colors.white,
-              )
-          )
+              ))
         ]));
       } else {
         if (!isHidden) {
@@ -177,12 +166,9 @@ class _MenuState extends State<Menu> {
                     textAlign: TextAlign.left,
                     style: const TextStyle(color: Colors.white),
                   ),
-
                   if (_menuUrls[i].iconPath != "")
-                    SvgPicture.asset(
-                        _menuUrls[i].iconPath,
+                    SvgPicture.asset(_menuUrls[i].iconPath,
                         width: MediaQuery.of(context).size.width * 0.05)
-
                 ])),
           ));
         }

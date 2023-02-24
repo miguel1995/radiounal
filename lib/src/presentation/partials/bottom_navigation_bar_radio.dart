@@ -10,10 +10,12 @@ class BottomNavigationBarRadio extends StatefulWidget {
   const BottomNavigationBarRadio({Key? key}) : super(key: key);
 
   @override
-  State<BottomNavigationBarRadio> createState() => _BottomNavigationBarRadioState();
+  State<BottomNavigationBarRadio> createState() =>
+      BottomNavigationBarRadioState();
 }
 
-class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  with SingleTickerProviderStateMixin {
+class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _expanded = false;
 
@@ -27,8 +29,10 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
   var textContent =
       "• Noticia 1: En China, durante el Congreso del Partido Comunista, el presidente Xi Jinping obtuvo un histórico tercer mandato consecutivo.\r\nEspecialista invitado: Javier Sánchez Segura, profesor de Ciencia Política en la Universidad de Antioquia y experto en temas de Asia.\r\n\r\n• Noticia 2: Reino Unido ya tiene sucesor de Liz Truss. Se trata de Rishi Sunak, el nuevo primer ministro quien fue aprobado por el Rey Carlos III.\r\nEspecialista invitada: Natalia Encalada, máster en Relaciones Internacionales y coordinadora académica de la Escuela de Relaciones Internacionales en la Universidad Internacional de Ecuador.\r\n\r\n• Noticia 3: Después de un año del golpe de estado en Sudán, la incertidumbre continúa en el país africano.\r\nEspecialista invitado: Beatriz Escobar, Licenciada en Relaciones Internacionales, doctora en Estudios de Asia y África y profesora de la Facultad de Ciencias Políticas y Sociales de la UNAM.\r\n\r\n• Noticia 4: El presidente de Rusia, Vladimir Putin, supervisó unos ejercicios militares de las fuerzas de disuasión nuclear en los que se ensayó un ataque “masivo” que, según el Gobierno, se produciría como respuesta a una hipotética agresión externa.\r\nEspecialista invitado: Javier Gil, licenciado en Ciencias Políticas y de la Administración. Doctor en Seguridad y Defensa Internacional. Profesor de la Universidad Pontificia Comillas.\r\n\r\n• Noticia 5: En un nuevo intento de integrar a los países de la región, se llevó a cabo en Bogotá la Cumbre de Integración Latinoamericana y Caribeña.\r\nEspecialista invitado: Giacomo Finzi, licenciado en Relaciones Internacionales, magister en Ciencias Internacionales y Diplomáticas y Doctorando en estudios políticos y relaciones internacionales.\r\n\r\nLocución: Ángela Sánchez.\r\nProducción sonora: Edgar Guasca y Alejandra Carvajal.\r\nInvestigación periodística: Eliana Escandón.\r\nWeb Máster: Carlos Fabián Rodríguez Navarrete.";
   var date =
-  DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
-  var type = "podcast";
+      DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
+  var type = "";
+  var canExpand = false;
+  var hasDuration = false;
 
   late AudioPlayer audioPlayer;
   bool isPlaying = false;
@@ -38,16 +42,13 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
   bool showSpeedList = true;
   double currentVolumen = 1.0;
   var speedListItems = const [
-    DropdownMenuItem<double>(
-        value: 0.5, child: Text("0.5x", style: TextStyle(color: Colors.white))),
-    DropdownMenuItem<double>(
-        value: 1.0, child: Text("1.0x", style: TextStyle(color: Colors.white))),
-    DropdownMenuItem<double>(
-        value: 1.5, child: Text("1.5x", style: TextStyle(color: Colors.white))),
-    DropdownMenuItem<double>(
-        value: 2.0, child: Text("2.0x", style: TextStyle(color: Colors.white)))
+    DropdownMenuItem<double>(value: 0.5, child: Text("0.5x")),
+    DropdownMenuItem<double>(value: 1.0, child: Text("1.0x")),
+    DropdownMenuItem<double>(value: 1.5, child: Text("1.5x")),
+    DropdownMenuItem<double>(value: 2.0, child: Text("2.0x"))
   ];
   var dropDownValue = 1.0;
+  var speedListItemsBuilder = <Widget>[];
 
   var _maxHeight = 0.0;
   var _minHeight = 0.0;
@@ -55,8 +56,29 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 800));
+
+    //Estación de bogotá
+    audioUrl = "http://streaming.unradio.unal.edu.co:8010/;stream.mp3";
+    //audioUrl = "http://podcastradio.unal.edu.co/fileadmin/Radio/Audio-imagenes/2022/11/RGU_E68-Politicas_urbana_y_social-1.mp3";
+    imagenUrl = "";
+    textParent = "";
+    title = "Bogotá 98.5 fm";
+    textContent = "";
+    date =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
+    type = "";
+    canExpand = false;
+    hasDuration = false;
+
+    speedListItemsBuilder = const [
+      Text("0.5x", style: TextStyle(color: Colors.white)),
+      Text("1.0x", style: TextStyle(color: Colors.white)),
+      Text("1.5x", style: TextStyle(color: Colors.white)),
+      Text("2.0x", style: TextStyle(color: Colors.white))
+    ];
 
     audioPlayer = AudioPlayer();
     audioPlayer.setVolume(currentVolumen);
@@ -72,15 +94,19 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
     });
 
     audioPlayer.onDurationChanged.listen((newDuration) {
-      setState(() {
-        duration = newDuration;
-      });
+      if (hasDuration) {
+        setState(() {
+          duration = newDuration;
+        });
+      }
     });
 
     audioPlayer.onAudioPositionChanged.listen((newPosition) {
-      setState(() {
-        position = newPosition;
-      });
+      if (hasDuration) {
+        setState(() {
+          position = newPosition;
+        });
+      }
     });
   }
 
@@ -91,39 +117,35 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-
-    final size = MediaQuery.of(context).size;
-    _maxHeight = MediaQuery.of(context).size.height * 0.88;
-    _minHeight = MediaQuery.of(context).size.height * 0.18;
-
-    return AnimatedBuilder(
-        animation: _controller,
-        builder: (context, snapshot) {
-          var value = _controller.value;
-
-          return
-            Stack(
-            children: [
-
-              Positioned(
-                  height: lerpDouble(_minHeight, _maxHeight, value),
-                  width: size.width,
-                  bottom: 0,
-                  child: _expanded ? audioPlayerExpanded() : audioPlayerMini()
-                  )
-
-            ],
-          );
-        });
-  }
-
   String formatDateString(DateTime date) {
     final DateFormat formatter = DateFormat('dd MMMM yyyy | HH:mm');
     final String formatted = formatter.format(date);
 
     return formatted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    _maxHeight = size.height * 0.88;
+    _minHeight = size.height * 0.18;
+
+    return AnimatedBuilder(
+        animation: _controller,
+        builder: (context, snapshot) {
+          final value = _controller.value;
+
+          return Stack(
+            children: [
+              Container(
+                  height: lerpDouble(_minHeight, _maxHeight, value),
+                  child: Container(
+                      child: _expanded
+                          ? audioPlayerExpanded()
+                          : audioPlayerMini()))
+            ],
+          );
+        });
   }
 
   String formatTimeString(Duration duration) {
@@ -189,11 +211,16 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
                     }),
                 DropdownButtonHideUnderline(
                     child: DropdownButton(
-                        dropdownColor: const Color(0xff121C4A),
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                        dropdownColor: Colors.white,
                         focusColor: const Color(0xffFCDC4D),
                         iconSize: 0.0,
                         items: speedListItems,
                         value: dropDownValue,
+                        selectedItemBuilder: (BuildContext context) {
+                          //<-- SEE HERE
+                          return speedListItemsBuilder;
+                        },
                         onChanged: (value) {
                           setState(() {
                             dropDownValue = value!;
@@ -211,8 +238,7 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
                       onChanged: (value) async {
-                        audioPlayer
-                            .seek(Duration(seconds: value.toInt()));
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
                       })),
               Text(
                   "${formatTimeString(position)}/${formatTimeString(duration)}",
@@ -224,9 +250,7 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
   }
 
   Widget audioPlayerExpanded() {
-    return
-
-      Container(
+    return Container(
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
@@ -236,20 +260,18 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
             Column(children: [
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 InkWell(
-                  onTap: (){
-                    setState(() {
-                      _expanded = !_expanded;
-                    });
-                    _controller.reverse();
-                  },
-                  child:Container(
-                    margin: const EdgeInsets.only(right: 20, top:20, bottom: 10),
-                    child:SvgPicture.asset(
-                        'assets/icons/icono_flechita_down.svg',
-                        width: MediaQuery.of(context).size.width * 0.05)
-                  )
-                )
-
+                    onTap: () {
+                      setState(() {
+                        _expanded = !_expanded;
+                      });
+                      _controller.reverse();
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.only(
+                            right: 20, top: 20, bottom: 10),
+                        child: SvgPicture.asset(
+                            'assets/icons/icono_flechita_down.svg',
+                            width: MediaQuery.of(context).size.width * 0.05)))
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -279,52 +301,51 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
                           child: Container(
                               margin: const EdgeInsets.only(
                                   top: 20, bottom: 20, left: 60, right: 60),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  child: Image.network(imagenUrl))),
+                              child: getImageExpand()),
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: const EdgeInsets.only(left: 30, right: 30),
-                          child: Container(
-                              padding:
-                              const EdgeInsets.only(left: 10, right: 10),
-                              color: const Color(0xffFCDC4D),
-                              child: Text(textParent)),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.only(
-                                top: 20, left: 30, right: 30),
-                            child: Text(title,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold))),
-                        Container(
+                        if (textParent != null && textParent != "")
+                          Container(
                             alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.only(
-                                top: 10, left: 30, right: 30),
-                            child: Text(formatDateString(date),
-                                style: const TextStyle(color: Colors.white))),
-                        Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.only(
-                                top: 10, left: 30, right: 30),
-                            child: Text(type,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontStyle: FontStyle.italic)))
+                            margin: const EdgeInsets.only(left: 30, right: 30),
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
+                                color: const Color(0xffFCDC4D),
+                                child: Text(textParent)),
+                          ),
+                        if (title != null && title != "")
+                          Container(
+                              margin: const EdgeInsets.only(
+                                  top: 20, left: 30, right: 30),
+                              child: Text(title,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold))),
+                        if (date != null)
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 30, right: 30),
+                              child: Text(formatDateString(date),
+                                  style: const TextStyle(color: Colors.white))),
+                        if (type != null && type != "")
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(
+                                  top: 10, left: 30, right: 30),
+                              child: Text(type,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontStyle: FontStyle.italic)))
                       ]))),
               drawAudioPlayer(),
               const Center(
                 child: Text("Universidad Nacional de Colombia",
-
                     style: TextStyle(
                         fontSize: 20,
                         fontStyle: FontStyle.italic,
-                        color: Color(0xffFCDC4D)
-                    )),
+                        color: Color(0xffFCDC4D))),
               )
-
             ]),
             if (showVolumenSlider)
               Positioned(
@@ -354,39 +375,38 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-                color: Color(0xff121C4A)
-            ),
-        child:Column(children: [
+            color: Color(0xff121C4A)),
+        child: Column(children: [
           Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            InkWell(
-                onTap: (){
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                  _controller.forward();
-                },
-                child:Container(
-                    margin: const EdgeInsets.only(right: 20, top:20, bottom: 10),
-                    child:SvgPicture.asset(
-                        'assets/icons/icono_flechita_up.svg',
-                        width: MediaQuery.of(context).size.width * 0.05)
-                )
-            )
+            Container(
+                margin: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
+                child: (canExpand)
+                    ? InkWell(
+                        onTap: () {
+                          setState(() {
+                            _expanded = !_expanded;
+                          });
+                          _controller.forward();
+                        },
+                        child: SvgPicture.asset(
+                            'assets/icons/icono_flechita_up.svg',
+                            width: MediaQuery.of(context).size.width * 0.05))
+                    : null)
           ]),
           Row(children: [
-            Container(
-                padding: const EdgeInsets.only(left: 10),
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(imagenUrl))),
+            getImageMini(),
             Column(
               children: [
-                Container(
-                    margin: const EdgeInsets.only(left: 30, right: 30),
-                    child: Text("${title.substring(1, 40)}...",
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold))),
+                if (title != null && title != "")
+                  Container(
+                      margin: const EdgeInsets.only(left: 30, right: 30),
+                      child: Text(
+                          (title.length > 40)
+                              ? "${title.substring(1, 40)}..."
+                              : title,
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold))),
                 Row(children: [
                   IconButton(
                     color: const Color(0xffFCDC4D),
@@ -400,19 +420,15 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
                       }
                     },
                   ),
-
                   Slider(
                       activeColor: const Color(0xffFCDC4D),
                       min: 0,
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
                       onChanged: (value) async {
-                        audioPlayer
-                            .seek(Duration(seconds: value.toInt()));
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
                       }),
-
-                  Text(
-                      formatTimeString(position),
+                  Text(formatTimeString(position),
                       style: const TextStyle(
                           color: Color(0xffFCDC4D),
                           fontStyle: FontStyle.italic))
@@ -422,14 +438,98 @@ class _BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>  wi
           ]),
           const Center(
             child: Text("Universidad Nacional de Colombia",
-
                 style: TextStyle(
                     fontSize: 20,
                     fontStyle: FontStyle.italic,
-                    color: Color(0xffFCDC4D)
-                )),
+                    color: Color(0xffFCDC4D))),
           )
-        ])
-        );
+        ]));
+  }
+
+  playMusic(audioUrlParam, imagenUrlParam, textParentParam, titleParam,
+      textContentParam, dateParam, typeParam, isFrecuencia) {
+    if (dateParam == "") {
+      setState(() {
+        date = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+            .parse("2022-10-29T07:00:00+00:00");
+      });
+    } else {
+      setState(() {
+        date = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(dateParam);
+      });
+    }
+
+    setState(() {
+      imagenUrl = imagenUrlParam;
+      textParent = textParentParam;
+      title = titleParam.replaceAll("\n", " ");
+      textContent = textContentParam;
+      type = typeParam;
+    });
+
+    //En el caso que sean alguna de las cuantro frecuencias
+    if (isFrecuencia) {
+      setState(() {
+        canExpand = false;
+        hasDuration = false;
+      });
+    } else {
+      setState(() {
+        canExpand = true;
+        hasDuration = true;
+      });
+    }
+    setState(() {
+      audioUrl = audioUrlParam;
+    });
+    print(audioUrlParam);
+    updateAudioUrl(audioUrlParam);
+  }
+
+  updateAudioUrl(url) async {
+    //await audioPlayer.pause();
+    await audioPlayer.play(url);
+  }
+
+  Widget getImageMini() {
+    Widget widget;
+    Widget widgetImg;
+
+    if (imagenUrl != null && imagenUrl != "") {
+      widgetImg = Image.network(imagenUrl);
+    } else {
+      widgetImg = Image.asset('assets/images/default_audio_image.png');
+    }
+
+    widget = Container(
+        padding: const EdgeInsets.only(left: 10),
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0), child: widgetImg));
+
+    return widget;
+  }
+
+  Widget getImageExpand() {
+    Widget widget;
+    Widget widgetImg;
+
+    if (imagenUrl != null && imagenUrl != "") {
+      widgetImg = ClipRRect(
+          borderRadius: BorderRadius.circular(30.0),
+          child: Image.network(imagenUrl));
+    } else {
+      widgetImg = ClipRRect(
+          borderRadius: BorderRadius.circular(30.0),
+          child: Image.asset('assets/images/default_audio_image.png'));
+    }
+
+    widget = Container(
+        padding: const EdgeInsets.only(left: 10),
+        width: MediaQuery.of(context).size.width * 0.2,
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0), child: widgetImg));
+
+    return widget;
   }
 }

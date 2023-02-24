@@ -61,7 +61,14 @@ class _ContentPageState extends State<ContentPage> {
     return Scaffold(
       drawer: const Menu(),
       appBar: const AppBarRadio(),
-      body: StreamBuilder(
+      body:  DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child:StreamBuilder(
           stream: (message == "RADIO")
               ? blocRadioProgramas.subject.stream
               : blocPodcastSeries.subject.stream,
@@ -79,7 +86,7 @@ class _ContentPageState extends State<ContentPage> {
                   );
             }
             return child;
-          }),
+          })),
       //bottomNavigationBar: const BottomNavigationBarRadio(),
     );
   }
@@ -91,7 +98,7 @@ class _ContentPageState extends State<ContentPage> {
     super.dispose();
   }
 
-  Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot){
+  Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
 
@@ -108,8 +115,14 @@ class _ContentPageState extends State<ContentPage> {
                     (message == "RADIO")
                         ? ("Programas Radio UNAL")
                         : ("Series Podcast Radio UNAL"),
-                    style: const TextStyle(
-                      color: Color(0xff121C4A),
+                    style: TextStyle(
+                      shadows: [
+                        Shadow(
+                            color: Theme.of(context).primaryColor,
+                            offset: const Offset(0, -5))
+                      ],
+                      color: Colors.transparent,
+                      decorationThickness: 2,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       decorationColor: Color(0xFFFCDC4D),
@@ -148,10 +161,8 @@ class _ContentPageState extends State<ContentPage> {
                           page--;
                         });
                         _scrollController.animateTo(
-                            _scrollController
-                                .position.minScrollExtent,
-                            duration:
-                            const Duration(milliseconds: 300),
+                            _scrollController.position.minScrollExtent,
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeOut);
                         if (message == "RADIO") {
                           blocRadioProgramas.fetchProgramas(page);
@@ -160,23 +171,18 @@ class _ContentPageState extends State<ContentPage> {
                         }
                       },
                       child: Container(
-                        padding:
-                        const EdgeInsets.only(top: 5, bottom: 5),
+                        padding: const EdgeInsets.only(top: 5, bottom: 5),
                         width: size.width,
                         height: size.width * 0.1,
                         child: Transform.rotate(
                             angle: 180 * pi / 180,
-                            child: Image.asset(
-                                "assets/icons/arrow_page.png")),
+                            child: Image.asset("assets/icons/arrow_page.png")),
                       ))
               ])),
       Container(
           padding: EdgeInsets.only(
-              top: (page == 1)
-                  ? (size.width * 0.2)
-                  : (size.width * 0.3),
-              bottom:
-              (page == infoModel.pages) ? 0 : (size.width * 0.1)),
+              top: (page == 1) ? (size.width * 0.2) : (size.width * 0.3),
+              bottom: (page == infoModel.pages) ? 0 : (size.width * 0.1)),
           child: buildList(snapshot)),
       if (page < infoModel.pages)
         Positioned(
@@ -241,12 +247,8 @@ class _ContentPageState extends State<ContentPage> {
     return InkWell(
         onTap: () {
           Navigator.pushNamed(context, "/detail",
-              arguments: ScreenArguments(
-                  title,
-                  message,
-                  element.uid,
-                  element: element
-              ));
+              arguments: ScreenArguments(title, message, element.uid,
+                  element: element));
         },
         child: Container(
             padding:

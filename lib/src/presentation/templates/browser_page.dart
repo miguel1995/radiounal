@@ -29,7 +29,16 @@ class _BrowserPageState extends State<BrowserPage> {
     return Scaffold(
       drawer: Menu(),
       appBar: AppBarRadio(),
-      body: Container(
+      body:
+      DecoratedBox(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child:
+      Container(
         padding: EdgeInsets.only(left: 10, right: 10, top: 20),
         child: Column(children: [
           drawSearchField(),
@@ -39,8 +48,13 @@ class _BrowserPageState extends State<BrowserPage> {
             child: Text(
               "Explorando el contenido",
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
-                fontSize: 18,
+                shadows: [
+                  Shadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: const Offset(0, -5))
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
@@ -49,7 +63,7 @@ class _BrowserPageState extends State<BrowserPage> {
           ),
           drawMainFilters()
         ]),
-      ),
+      )),
       //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
@@ -247,8 +261,8 @@ class _BrowserPageState extends State<BrowserPage> {
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               gradient: const RadialGradient(radius: 0.40, colors: [
-                Color(0xff1b4564),
-                Color(0xff121C4A),
+                Color( 0xff216278),
+                Color(0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(

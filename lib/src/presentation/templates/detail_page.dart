@@ -105,7 +105,6 @@ class _DetailPageState extends State<DetailPage> {
                 }
           }
 
-
         });
       } else if (message == "PODCAST") {
         blocPodcastSeriesYEpisodios.fetchSeriesYEpisodios([uid], []);
@@ -130,10 +129,21 @@ class _DetailPageState extends State<DetailPage> {
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
-    return Scaffold(
+    return
+
+      Scaffold(
         drawer: const Menu(),
         appBar: const AppBarRadio(),
-        body: StreamBuilder(
+        body:
+        DecoratedBox(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child:
+        StreamBuilder(
             stream: (message == "RADIO")
                 ? blocRadioEmisiones.subject.stream
                 : blocPodcastEpisodios.subject.stream,
@@ -161,7 +171,7 @@ class _DetailPageState extends State<DetailPage> {
                     );
               }
               return child;
-            })
+            }))
         //bottomNavigationBar: BottomNavigationBarRadio(),
         );
   }
@@ -272,8 +282,15 @@ class _DetailPageState extends State<DetailPage> {
         padding: const EdgeInsets.only(left: 20, top: 20),
         child: Text(
           element.title,
-          style: const TextStyle(
-            color: Color(0xff121C4A),
+          style: TextStyle(
+
+            shadows: [
+              Shadow(
+                  color: Theme.of(context).primaryColor,
+                  offset: const Offset(0, -5))
+            ],
+            color: Colors.transparent,
+            decorationThickness: 2,
             fontSize: 20,
             fontWeight: FontWeight.bold,
             decorationColor: Color(0xFFFCDC4D),

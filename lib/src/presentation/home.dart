@@ -7,6 +7,7 @@ import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_destacados_bloc.dart';
@@ -30,6 +31,8 @@ class _HomeState extends State<Home> {
   final blocRadioProgramacion = RadioProgramacionBloc();
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
+  final GlobalKey<BottomNavigationBarRadioState> _key = GlobalKey();
+
 
   @override
   void initState() {
@@ -50,19 +53,30 @@ class _HomeState extends State<Home> {
     return Scaffold(
         drawer: const Menu(),
         appBar: const AppBarRadio(),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            drawDestacados(),
-            drawFrecuencias(),
-            drawFavouriteBtn(),
-            drawProgramacion(),
-            drawMasEscuchado(),
-            drawSiguenos()
-          ],
+        body: DecoratedBox(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SingleChildScrollView(
+                child: Column(
+              children: [
+                drawDestacados(),
+                drawFrecuencias(),
+                drawFavouriteBtn(),
+                drawProgramacion(),
+                drawMasEscuchado(),
+                drawSiguenos()
+              ],
 
-          //bottomNavigationBar: const BottomNavigationBarRadio(),
-        )));
+
+            ))),
+      bottomNavigationBar:  BottomNavigationBarRadio(
+        key: _key
+      )
+    );
   }
 
   @override
@@ -75,7 +89,7 @@ class _HomeState extends State<Home> {
 
   Widget drawDestacados() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 20),
+      margin: const EdgeInsets.only(bottom: 20, top: 40),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: StreamBuilder(
           stream: CombineLatestStream.list([
@@ -110,10 +124,16 @@ class _HomeState extends State<Home> {
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.only(top: 20, bottom: 20, left: 20),
-              child: const Text(
+              child: Text(
                 "Escuchanos en",
                 style: TextStyle(
-                  color: Color(0xff121C4A),
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: const Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   decorationColor: Color(0xffFCDC4D),
@@ -123,12 +143,12 @@ class _HomeState extends State<Home> {
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            drawFrecuenciaBtn("Bogotá\n98.5 fm"),
-            drawFrecuenciaBtn("Medellín\n100.4 fm"),
+            drawFrecuenciaBtn("Bogotá\n98.5 fm", "http://streaming.unradio.unal.edu.co:8010/;stream.mp3"),
+            drawFrecuenciaBtn("Medellín\n100.4 fm", "http://streaming.unradio.unal.edu.co:8012/;stream.mp3"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            drawFrecuenciaBtn("Radio web"),
-            drawFrecuenciaBtn("Podcast"),
+            drawFrecuenciaBtn("Radio web", "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
+            drawFrecuenciaBtn("Podcast", "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
           ])
         ],
       ),
@@ -142,21 +162,30 @@ class _HomeState extends State<Home> {
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.8,
-          decoration: BoxDecoration(boxShadow: [
+          decoration: BoxDecoration(
+
+              gradient: const RadialGradient(radius: 2, colors: [
+                Color(0xffFCDC4D),
+                Color(0xffFFCC17 )
+              ]),
+
+              boxShadow: [
             BoxShadow(
               color: const Color(0xff121C4A).withOpacity(0.3),
               spreadRadius: 3,
               blurRadius: 10,
               offset: const Offset(10, 10), // changes position of shadow
             ),
-          ], borderRadius: const BorderRadius.all(Radius.circular(30))),
+          ], borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xffffcc17),
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
                 foregroundColor: Theme.of(context).primaryColor),
             icon: const Icon(Icons.favorite),
             onPressed: () async {
-              Navigator.pushNamed(context, '/favourites');
+              Navigator.pushNamed(context, '/favourites',
+                  arguments: ScreenArguments('NONE', 'NONE', 0));
             },
             label: Text("Favoritos",
                 style: TextStyle(
@@ -185,14 +214,21 @@ class _HomeState extends State<Home> {
                   child: Container(
                     margin:
                         const EdgeInsets.only(top: 20, bottom: 20, left: 20),
-                    child: const Text(
+                    child:  Text(
                       "Programación",
                       style: TextStyle(
-                        color: Color(0xff121C4A),
+                        shadows: [
+                          Shadow(
+                              color: Theme.of(context).primaryColor,
+                              offset: Offset(0, -5))
+                        ],
+                        color: Colors.transparent,
+                        decorationThickness: 2,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         decorationColor: Color(0xffFCDC4D),
                         decoration: TextDecoration.underline,
+
                       ),
                     ),
                   ),
@@ -223,10 +259,16 @@ class _HomeState extends State<Home> {
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.only(left: 20, bottom: 10),
-              child: const Text(
+              child: Text(
                 "Lo más escuchado",
                 style: TextStyle(
-                  color: Color(0xff121C4A),
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   decorationColor: Color(0xffFCDC4D),
@@ -269,10 +311,16 @@ class _HomeState extends State<Home> {
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.only(left: 20, bottom: 10),
-              child: const Text(
+              child:  Text(
                 "Síguenos",
                 style: TextStyle(
-                  color: Color(0xff121C4A),
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   decorationColor: Color(0xffFCDC4D),
@@ -290,21 +338,21 @@ class _HomeState extends State<Home> {
                   },
                   child: SvgPicture.asset(
                     'assets/icons/icono_facebook.svg',
-                    width: MediaQuery.of(context).size.width * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.18,
                   )),
               InkWell(
                   onTap: () {
                     _launchURL("https://www.instagram.com/radiounal/");
                   },
-                  child:
-                      SvgPicture.asset('assets/icons/icono_instagram_svg.svg',
-                        width: MediaQuery.of(context).size.width * 0.2)),
+                  child: SvgPicture.asset(
+                      'assets/icons/icono_instagram_svg.svg',
+                      width: MediaQuery.of(context).size.width * 0.18)),
               InkWell(
                   onTap: () {
                     _launchURL("https://twitter.com/radiounal");
                   },
                   child: SvgPicture.asset('assets/icons/icono_twitter.svg',
-                    width: MediaQuery.of(context).size.width * 0.2))
+                      width: MediaQuery.of(context).size.width * 0.18))
             ],
           )
         ]));
@@ -348,74 +396,84 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildCard(element, siteName) {
-    return
-      InkWell(
-          onTap: (){
-            Navigator.pushNamed(context, "/item",
-                arguments: ScreenArguments("SITE", siteName, element.uid, from: "HOME_PAGE"));
-          },
-          child:SizedBox(
-      width: MediaQuery.of(context).size.width * 0.5,
-      child: Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff121C4A).withOpacity(0.3),
-                spreadRadius: 3,
-                blurRadius: 10,
-                offset: const Offset(10, 10), // changes position of shadow
-              ),
-            ],
-            borderRadius: const BorderRadius.all(Radius.circular(30)),
-            image: DecorationImage(
-              image: NetworkImage(element.imagen),
-              fit: BoxFit.fitWidth,
-              alignment: Alignment.topCenter,
-            ),
-          ),
-          child: Stack(children: [
-            Container(
-              width: MediaQuery.of(context).size.width * 0.5,
+    return InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, "/item",
+              arguments: ScreenArguments("SITE", siteName, element.uid,
+                  from: "HOME_PAGE"));
+        },
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.5,
+          child: Container(
+              margin: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: const Offset(10, 10), // changes position of shadow
+                  ),
+                ],
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
-                color: const Color(0xff121C4A).withOpacity(0.3),
+                image: DecorationImage(
+                  image: NetworkImage(element.imagen),
+                  fit: BoxFit.fitWidth,
+                  alignment: Alignment.topCenter,
+                ),
               ),
-            ),
-            Positioned(
-                bottom: 15,
-                left: 15,
-                right: 15,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Text(
-                          element.title,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 5,
-                          style: const TextStyle(color: Colors.white),
-                        )),
-                    Container(
-                      color: const Color(0xffFCDC4D),
-                      child: Text(
-                        element.categoryTitle,
-                        style: const TextStyle(fontSize: 9),
-                      ),
-                    )
-                  ],
-                ))
-          ])),
-    ));
+              child: Stack(children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(30)),
+                    color: const Color(0xff121C4A).withOpacity(0.3),
+                  ),
+                ),
+                Positioned(
+                    bottom: 15,
+                    left: 15,
+                    right: 15,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Text(
+                              element.title,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 5,
+                              style: const TextStyle(color: Colors.white),
+                            )),
+                        Container(
+                          color: const Color(0xffFCDC4D),
+                          child: Text(
+                            element.categoryTitle,
+                            style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ))
+              ])),
+        ));
   }
 
-  Widget drawFrecuenciaBtn(String texto) {
+  Widget drawFrecuenciaBtn(String texto, String urlFrecuencia) {
     var widthBox = MediaQuery.of(context).size.width * 0.35;
     return InkWell(
         onTap: () {
-          //TODO: agregar frecuencias radiales al reprodcutor de audios
+          _key.currentState!.playMusic(
+              urlFrecuencia,
+              "",
+              "",
+              texto,
+              "",
+              "",
+              "",
+              true
+          );
         },
+
         child: Container(
             alignment: Alignment.center,
             width: widthBox,
@@ -425,9 +483,9 @@ class _HomeState extends State<Home> {
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              gradient: const RadialGradient(radius: 0.75, colors: [
-                Color(0xff1b4564),
-                Color(0xff121C4A),
+              gradient: const RadialGradient(
+                  radius: 1, colors: [
+                    Color( 0xff216278), Color(0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
@@ -442,7 +500,8 @@ class _HomeState extends State<Home> {
             child: Text(
               texto,
               style: const TextStyle(color: Colors.white, fontSize: 15),
-            )));
+            )
+        ));
   }
 
   Widget buildTableProgramacion(
@@ -457,6 +516,7 @@ class _HomeState extends State<Home> {
     var widthBox = MediaQuery.of(context).size.width * 0.35;
 
     rowList.add(Container(
+      padding: const EdgeInsets.only(top:5, bottom: 5),
         width: widthBox * 4,
         decoration: const BoxDecoration(
           color: Color(0xffCFCFCF),
@@ -465,8 +525,8 @@ class _HomeState extends State<Home> {
         ),
         child: Center(
             child: Text(
-          formatted,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              formatted[0].toUpperCase() + formatted.substring(1),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ))));
 
     rowList.add(Row(children: [
@@ -611,68 +671,72 @@ class _HomeState extends State<Home> {
     String formatted = formatter.format(now);
 
     return InkWell(
-        onTap: (){
+        onTap: () {
           Navigator.pushNamed(context, "/item",
-              arguments: ScreenArguments("SITE", site.toUpperCase(), element.uid, from: "HOME_PAGE"));
+              arguments: ScreenArguments(
+                  "SITE", site.toUpperCase(), element.uid,
+                  from: "HOME_PAGE"));
         },
-        child:SizedBox(
-      width: MediaQuery.of(context).size.width * 0.40,
-      child: Container(
-          margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset:
-                            const Offset(10, 10), // changes position of shadow
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.40,
+          child: Container(
+              margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(
+                                10, 10), // changes position of shadow
+                          ),
+                        ],
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(30)),
                       ),
-                    ],
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: Image(image: NetworkImage(element.imagen)))),
+                  Container(
+                    margin: const EdgeInsets.only(top: 15),
+                    color: const Color(0xffFCDC4D),
+                    child: Text(
+                      element.categoryTitle,
+                      style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image(image: NetworkImage(element.imagen)))),
-              Container(
-                margin: const EdgeInsets.only(top: 15),
-                color: const Color(0xffFCDC4D),
-                child: Text(
-                  element.categoryTitle,
-                  style: const TextStyle(fontSize: 8),
-                ),
-              ),
-              SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  child: Text(element.title,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 5,
+                  SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: Text(element.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 5,
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold))),
+                  Container(
+                    child: Text(
+                      site,
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 9,
                           color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold))),
-              Container(
-                child: Text(
-                  site,
-                  style: TextStyle(
-                      fontSize: 9,
-                      color: Theme.of(context).primaryColor,
-                      fontStyle: FontStyle.italic),
-                ),
-              ),
-              Container(
-                child: Text(
-                  formatted,
-                  style: const TextStyle(fontSize: 8, color: Color(0xff666666)),
-                ),
-              ),
-            ],
-          )),
-    ));
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      formatted,
+                      style: const TextStyle(
+                          fontSize: 8, color: Color(0xff666666)),
+                    ),
+                  ),
+                ],
+              )),
+        ));
   }
 
   _launchURL(var url) async {
@@ -682,4 +746,6 @@ class _HomeState extends State<Home> {
       throw 'Could not launch $url';
     }
   }
+
+
 }

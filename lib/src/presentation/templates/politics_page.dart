@@ -39,7 +39,7 @@ class PoliticsPage extends StatelessWidget {
                   ),
                 ),
                 const Text(
-                    'CircularUNAL usa información almacenada en el dispositivo donde se encuentra instalada. Esta información consiste en:\n'),
+                    'RadioUNAL usa información almacenada en el dispositivo donde se encuentra instalada. Esta información consiste en:\n'),
                 Container(
                     margin: const EdgeInsets.only(left: 20.0),
                     child: Column(children: [
@@ -133,9 +133,36 @@ class PoliticsPage extends StatelessWidget {
                 const Text(
                     '\nParte de la información almacenada en Firebase podría usarse en el futuro con fines estadísticos sobre el uso de la aplicación.'),
                 const Text(
-                    '\nEn ningún caso se usará la información recopilada con fines comerciales que puedan beneficiar a terceros; tampoco se entregará a personas o entidades externas a la Universidad Nacional de Colombia.'),
+                    '\nPor otro lado los datos personales que recopilamos son los solicitados en los formularios de descarga de contenido y contacto y serán tratados y resguardados con base en los principios establecidos en la legislación aplicable (Resolución 207 DE 2021 (16 de abril) "Por la cual se establece la Política de Tratamiento de Datos Personales de la Universidad Nacional de Colombia y se derógala Resolución No. 440 de 2019 de Rectoría"). Los datos solicitados son los siguientes: Nombres y Apellidos, Correo Electrónico, Número de Contacto, Edad, País, Ciudad y datos sensibles como Género.'),
                 const Text(
-                    '\nSe hace uso de los servicios de localización de cada dispositivo para indicar la ubicación de un evento seleccionado. Las ubicaciones de los dispositivos no son recopiladas; sin embargo, puede almacenarse en la plataforma gestora de mapas del dispositivo (Google Maps) si se tiene habilitada la opción correspondiente.'),
+                    '\nEsta información se guarda en bases de datos almacenados en servidores internos de la Universidad y son cifrados en tránsito para más seguridad.'),
+                const Text(
+                    '\n Estos serán utilizados para los siguientes fines:'),
+                Container(
+                    margin: EdgeInsets.only(left: 20.0),
+                    child: Column(children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const <Widget>[
+                          Text("• "),
+                          Expanded(
+                            child: Text(
+                                'Obtener canales de comunicación con el usuario (datos de contacto) para dar respuesta a las solicitudes por el formulario de contáctenos.'),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const <Widget>[
+                          Text("• "),
+                          Expanded(
+                            child: Text(
+                                'Registrar las descargas que se realicen de los contenidos disponibles con esta opción.'),
+                          ),
+                        ],
+                      )
+                    ])),
+                const Text('\nEn ningún caso se usará la información recopilada con fines comerciales que puedan beneficiar a terceros; tampoco se entregará a personas o entidades externas a la Universidad Nacional de Colombia.'),
                  Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(

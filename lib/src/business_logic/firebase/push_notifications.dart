@@ -54,4 +54,5 @@ class PushNotification {
     print(value);
     _firebaseMessaging.unsubscribeFromTopic(value);
   }
+
 }
