@@ -63,6 +63,8 @@ class _DetailPageState extends State<DetailPage> {
   late FirebaseLogic firebaseLogic;
   late PushNotification pushNotification;
 
+  int totalPages = 0;
+  List<Widget> cardList = [];
 
   @override
    initState()  {
@@ -122,6 +124,25 @@ class _DetailPageState extends State<DetailPage> {
       }
     }
 
+    _scrollController.addListener(() {
+      if(_scrollController.position.maxScrollExtent == _scrollController.offset){
+
+        if(page < totalPages){
+
+            page++;
+
+
+          if (message == "RADIO") {
+            blocRadioEmisiones.fetchEmisiones(uid, page);
+          } else {
+            blocPodcastEpisodios.fetchEpisodios(uid, page);
+          }
+        }
+
+      }
+
+    });
+
   }
 
   @override
@@ -166,8 +187,8 @@ class _DetailPageState extends State<DetailPage> {
               } else if (snapshot.hasError) {
                 child = drawError(snapshot.error);
               } else {
-                child = Container(
-                    //child: Text("en progreso..."),
+                child = const Center(
+                    child: CircularProgressIndicator(),
                     );
               }
               return child;
@@ -180,6 +201,7 @@ class _DetailPageState extends State<DetailPage> {
   void dispose() {
     blocPodcastEpisodios.dispose();
     blocRadioEmisiones.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -400,11 +422,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
+    totalPages = infoModel.pages;
 
-    return Stack(children: [
-      Positioned(
-          top: 0,
-          child: Column(
+    return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -420,7 +440,7 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                 ),
-                Container(
+                /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
@@ -431,69 +451,15 @@ class _DetailPageState extends State<DetailPage> {
                       decorationColor: Color(0xFFFCDC4D),
                     ),
                   ),
-                ),
-                if (page > 1)
-                  InkWell(
-                      onTap: () {
-                        setState(() {
-                          page--;
-                        });
-                        _scrollController.animateTo(
-                            _scrollController.position.minScrollExtent,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
-                        if (message == "RADIO") {
-                          blocRadioEmisiones.fetchEmisiones(uid, page);
-                        } else {
-                          blocPodcastEpisodios.fetchEpisodios(uid, page);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        width: size.width,
-                        height: size.width * 0.1,
-                        child: Transform.rotate(
-                            angle: 180 * pi / 180,
-                            child: Image.asset("assets/icons/arrow_page.png")),
-                      ))
-              ])),
-      Container(
-          padding: EdgeInsets.only(
-              top: (page == 1) ? (size.width * 0.1) : (size.width * 0.16),
-              bottom: (page == infoModel.pages) ? 0 : (size.width * 0.1)),
-          child: buildList(snapshot)),
-      if (page < infoModel.pages)
-        Positioned(
-            bottom: 0,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  page++;
-                });
-
-                _scrollController.animateTo(
-                    _scrollController.position.minScrollExtent,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut);
-                if (message == "RADIO") {
-                  blocRadioEmisiones.fetchEmisiones(uid, page);
-                } else {
-                  blocPodcastEpisodios.fetchEpisodios(uid, page);
-                }
-              },
-              child: Container(
-                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                  width: size.width,
-                  height: size.width * 0.1,
-                  child: Image.asset("assets/icons/arrow_page.png")),
-            ))
-    ]);
+                ),*/
+                Expanded(
+                    child: buildList(snapshot))
+              ]);
   }
 
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     var list = snapshot.data!["result"];
 
-    List<Widget> cardList = [];
     list?.forEach((element) => {cardList.add(buildCard(element))});
 
     return ListView(controller: _scrollController, children: cardList);

@@ -83,8 +83,6 @@ class _ItemPageState extends State<ItemPage> {
         });
       });
     } else if (message == "PODCAST") {
-      print(" ####### PODCAST ${uid}");
-
 
       blocPodcastEpisodio.fetchEpisodio(uid);
       blocPodcastEpisodio.subject.stream.listen((event) {
@@ -99,8 +97,6 @@ class _ItemPageState extends State<ItemPage> {
     } else {
       platform = TargetPlatform.iOS;
     }
-
-
 
   }
 

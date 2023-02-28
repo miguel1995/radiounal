@@ -37,6 +37,9 @@ class _ContentPageState extends State<ContentPage> {
   var size = null;
   double paddingTop = 0;
   ScrollController _scrollController = ScrollController();
+  List<Widget> cardList = [];
+
+  int totalPages = 0;
 
   @override
   void initState() {
@@ -51,6 +54,26 @@ class _ContentPageState extends State<ContentPage> {
     } else if (message == "PODCAST") {
       blocPodcastSeries.fetchSeries(page);
     }
+
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.maxScrollExtent == _scrollController.offset){
+
+          if(page < totalPages){
+
+              page++;
+
+
+            if (message == "RADIO") {
+              blocRadioProgramas.fetchProgramas(page);
+            } else {
+              blocPodcastSeries.fetchSeries(page);
+            }
+          }
+
+      }
+
+    });
   }
 
   @override
@@ -77,12 +100,13 @@ class _ContentPageState extends State<ContentPage> {
             Widget child;
 
             if (snapshot.hasData) {
+
               child = drawContentList(snapshot);
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = Container(
-                  //child: Text("en progreso..."),
+              child = Center(
+                  child: CircularProgressIndicator()
                   );
             }
             return child;
@@ -95,17 +119,18 @@ class _ContentPageState extends State<ContentPage> {
   void dispose() {
     blocPodcastSeries.dispose();
     blocRadioProgramas.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
   Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
+    totalPages = infoModel.pages;
 
-    return Stack(children: [
-      Positioned(
-          top: 0,
-          child: Column(
+
+    return
+Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -142,7 +167,7 @@ class _ContentPageState extends State<ContentPage> {
                     ),
                   ),
                 ),
-                Container(
+                /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
@@ -153,64 +178,11 @@ class _ContentPageState extends State<ContentPage> {
                       decorationColor: Color(0xFFFCDC4D),
                     ),
                   ),
-                ),
-                if (page > 1)
-                  InkWell(
-                      onTap: () {
-                        setState(() {
-                          page--;
-                        });
-                        _scrollController.animateTo(
-                            _scrollController.position.minScrollExtent,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
-                        if (message == "RADIO") {
-                          blocRadioProgramas.fetchProgramas(page);
-                        } else {
-                          blocPodcastSeries.fetchSeries(page);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        width: size.width,
-                        height: size.width * 0.1,
-                        child: Transform.rotate(
-                            angle: 180 * pi / 180,
-                            child: Image.asset("assets/icons/arrow_page.png")),
-                      ))
-              ])),
-      Container(
-          padding: EdgeInsets.only(
-              top: (page == 1) ? (size.width * 0.2) : (size.width * 0.3),
-              bottom: (page == infoModel.pages) ? 0 : (size.width * 0.1)),
-          child: buildList(snapshot)),
-      if (page < infoModel.pages)
-        Positioned(
-            bottom: 0,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  page++;
-                });
+                ),*/
+                Expanded(
+                    child: buildList(snapshot))
+              ]);
 
-                _scrollController.animateTo(
-                    _scrollController.position.minScrollExtent,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut);
-                if (message == "RADIO") {
-                  blocRadioProgramas.fetchProgramas(page);
-                } else {
-                  blocPodcastSeries.fetchSeries(page);
-                }
-              },
-              child: Container(
-                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                  width: size.width,
-                  height: size.width * 0.1,
-                  color: Colors.white,
-                  child: Image.asset("assets/icons/arrow_page.png")),
-            ))
-    ]);
   }
 
   Widget drawError(error) {
@@ -234,8 +206,9 @@ class _ContentPageState extends State<ContentPage> {
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     var list = snapshot.data!["result"];
 
-    List<Widget> cardList = [];
-    list?.forEach((element) => {cardList.add(buildCard(element))});
+    list?.forEach((element) => {
+      cardList.add(buildCard(element))
+    });
 
     return GridView.count(
         controller: _scrollController, crossAxisCount: 2, children: cardList);
