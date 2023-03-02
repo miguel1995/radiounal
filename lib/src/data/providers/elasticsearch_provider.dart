@@ -23,8 +23,8 @@ class ElasticSearchProvider {
     Map<String, dynamic> map = {};
 
     var body = jsonEncode(<String, dynamic>{
-      "from":0,
-      "size":10,
+      "from":from,
+      "size":size,
       "sort":[
         {
           "recordDate":{

@@ -324,7 +324,7 @@ class _ItemPageState extends State<ItemPage> {
                     element.imagen,
                     element.categoryTitle,
                     element.title,
-                    element.bodytext,
+                    (message == "RADIO")?element.bodytext:element.teaser,
                     element.date,
                     message,
                     false

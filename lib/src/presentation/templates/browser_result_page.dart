@@ -23,6 +23,7 @@ class BrowserResultPage extends StatefulWidget {
   dynamic element;
   late int page;
 
+
   BrowserResultPage(
       {Key? key,
       required this.title,
@@ -50,9 +51,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   var size = null;
   double paddingTop = 0;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   var querySize = 0;
   var start = 0;
+  List<Widget> cardList = [];
+
+  int totalPages = 0;
+  bool isLoading = false;
+
 
   @override
   void initState() {
@@ -79,10 +85,89 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     } else if (elementFilters["contentType"] == "EPISODIOS") {
       blocPodcastSearch.fetchSearch(elementFilters["query"],page);
     }else if (elementFilters["contentType"] == "ELASTIC") {
-      querySize = 10;
+      querySize = 100;
       start = page * querySize;
       blocElasticSearch.fetchSearch(elementFilters["query"], page, start);
     }
+
+
+    initializeScrollListener();
+    initializeStopLoading();
+
+
+  }
+
+  void initializeScrollListener(){
+
+    _scrollController.addListener(() {
+      if(_scrollController.position.maxScrollExtent == _scrollController.offset){
+
+        if(page < totalPages){
+          page++;
+          print(">>> PAGINA");
+          print(page);
+          setState((){
+            isLoading = true;
+          });
+
+          if (elementFilters["contentType"] == "PROGRAMAS" || elementFilters["contentType"] == "EMISIONES") {
+
+            blocRadioSearch.fetchSearch(
+                elementFilters["query"],
+                page,
+                elementFilters["sede"],
+                elementFilters["canal"],
+                elementFilters["area"],
+                elementFilters["contentType"]);
+          } else if (elementFilters["contentType"] == "ELASTIC") {
+            start = page * querySize;
+            blocElasticSearch.fetchSearch(
+                elementFilters["query"], start, querySize);
+          } else if(elementFilters["contentType"] == "SERIES"){
+            blocPodcastSeries.fetchSeries(page);
+          }else if (elementFilters["contentType"] == "EPISODIOS") {
+            blocPodcastSearch.fetchSearch(elementFilters["query"],page);
+          }
+        }
+      }
+    });
+  }
+
+  void initializeStopLoading(){
+
+    blocPodcastSeries.subject.stream.listen((event) {
+      if(event.values.isNotEmpty){
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+
+    blocRadioSearch.subject.stream.listen((event) {
+      if(event.values.isNotEmpty){
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+
+
+    blocElasticSearch.subject.stream.listen((event) {
+      if(event.values.isNotEmpty){
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+
+    blocPodcastSearch.subject.stream.listen((event) {
+      if(event.values.isNotEmpty){
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+
   }
 
   @override
@@ -170,9 +255,9 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           stream: blocStream,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasData) {
+
+            if (snapshot.hasData) {
+
               child = drawContentList(snapshot);
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
@@ -189,11 +274,9 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   Widget drawContentList(AsyncSnapshot<dynamic> snapshot) {
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
+    totalPages = infoModel.pages;
 
-    return Stack(children: [
-      Positioned(
-          top: 0,
-          child: Column(
+    return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -205,7 +288,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                       shadows: [
                         Shadow(
                             color: Theme.of(context).primaryColor,
-                            offset: const Offset(0, -5))
+                            offset: const Offset(0, -5)
+                        )
                       ],
                       color: Colors.transparent,
                       decorationThickness: 2,
@@ -228,7 +312,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     ),
                   ),
                 ),
-                Container(
+                /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
@@ -239,95 +323,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                       decorationColor: Color(0xFFFCDC4D),
                     ),
                   ),
+                ),*/
+                Expanded(
+                    child: buildList(snapshot)
                 ),
-                if (page > 1)
-                  InkWell(
-                      onTap: () {
-                        setState(() {
-                          page--;
-                        });
-                        _scrollController.animateTo(
-                            _scrollController.position.minScrollExtent,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeOut);
+                if(isLoading)
+                  Center(child: CircularProgressIndicator())
 
-                        if (elementFilters["contentType"] == "PROGRAMAS" || elementFilters["contentType"] == "EMISIONES") {
-                          blocRadioSearch.subject.sink.add(null);
-                          blocRadioSearch.fetchSearch(
-                              elementFilters["query"],
-                              page,
-                              elementFilters["sede"],
-                              elementFilters["canal"],
-                              elementFilters["area"],
-                              elementFilters["contentType"]);
-                        } else if (elementFilters["contentType"] == "ELASTIC") {
-
-                          start = page * querySize;
-                          blocElasticSearch.fetchSearch(
-                              elementFilters["query"], page, start);
-                        } else if(elementFilters["contentType"] == "SERIES"){
-                          blocPodcastSeries.fetchSeries(page);
-                        }else if (elementFilters["contentType"] == "EPISODIOS") {
-                          blocPodcastSearch.fetchSearch(elementFilters["query"],page);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        width: size.width,
-                        height: size.width * 0.1,
-                        child: Transform.rotate(
-                            angle: 180 * pi / 180,
-                            child: Image.asset("assets/icons/arrow_page.png")),
-                      ))
-              ])),
-      Container(
-          padding: EdgeInsets.only(
-              top: (page == 1) ? (size.width * 0.2) : (size.width * 0.3),
-              bottom: (page == infoModel.pages) ? 0 : (size.width * 0.1)),
-          child: buildList(snapshot)),
-      if (page < infoModel.pages)
-        Positioned(
-            bottom: 0,
-            child: InkWell(
-              onTap: () {
-                setState(() {
-                  page++;
-                });
-
-                _scrollController.animateTo(
-                    _scrollController.position.minScrollExtent,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut);
+              ]);
 
 
-                if (elementFilters["contentType"] == "PROGRAMAS" || elementFilters["contentType"] == "EMISIONES") {
-                  blocRadioSearch.subject.sink.add(null);
-                  blocRadioSearch.fetchSearch(
-                      elementFilters["query"],
-                      page,
-                      elementFilters["sede"],
-                      elementFilters["canal"],
-                      elementFilters["area"],
-                      elementFilters["contentType"]);
-                } else if (elementFilters["contentType"] == "ELASTIC") {
-                  start = page * querySize;
-                  blocElasticSearch.fetchSearch(
-                      elementFilters["query"], page, start);
-                } else if(elementFilters["contentType"] == "SERIES"){
-                  blocPodcastSeries.fetchSeries(page);
-                }else if (elementFilters["contentType"] == "EPISODIOS") {
-                  blocPodcastSearch.fetchSearch(elementFilters["query"],page);
-                }
-
-              },
-              child: Container(
-                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                  width: size.width,
-                  height: size.width * 0.1,
-                  color: Colors.white,
-                  child: Image.asset("assets/icons/arrow_page.png")),
-            ))
-    ]);
   }
 
   Widget drawError(error) {
@@ -351,15 +356,25 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   Widget buildList(AsyncSnapshot<dynamic> snapshot) {
     var list = snapshot.data!["result"];
 
-    List<Widget> cardList = [];
-    list?.forEach((element) => {cardList.add(buildCard(element))});
+    print(">> Llegan nuevos elementos");
+    print(list.length);
+    print(cardList.length);
 
-    return GridView.count(
-        controller: _scrollController, crossAxisCount: 2, children: cardList);
+    for (var i = 0; i < list.length; i++) {
+      cardList.add(buildCard(list[i]));
+    }
+
+    print(">> cardList");
+
+    print(cardList.length);
+
+    return
+      GridView.count(
+        controller: _scrollController, crossAxisCount: 2, children: cardList
+    );
   }
 
   Widget buildCard(element) {
-    print(element);
     var w = MediaQuery.of(context).size.width;
 
     return InkWell(
@@ -474,7 +489,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];
 
-    List<Widget> cardList = [];
 
     list1?.forEach((element) => {cardList.add(buildCard(element))});
 
