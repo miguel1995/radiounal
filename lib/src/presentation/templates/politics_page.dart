@@ -9,16 +9,13 @@ class PoliticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      drawer: const Menu(),
-      appBar: const AppBarRadio(),
+      endDrawer: const Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body: SingleChildScrollView(
           child: Container(
-              margin: const EdgeInsets.all(10.0),
-              padding: const EdgeInsets.all(5.0),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Theme.of(context).primaryColor)
-              ),
+
+            padding: const EdgeInsets.only(left: 25, right: 25, top:25, bottom: 25),
+
             child: Column(
               children: <Widget>[
                  Align(
@@ -26,14 +23,20 @@ class PoliticsPage extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
                     child: Text(
-                      'Política de privacidad',
+                      "Políticas de privacidad",
                       style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold,
-                          decorationColor: Theme.of(context).appBarTheme.foregroundColor,
-                          decoration: TextDecoration.underline
-
+                        shadows: [
+                          Shadow(
+                              color: Theme.of(context).primaryColor,
+                              offset: const Offset(0, -5)
+                          )
+                        ],
+                        color: Colors.transparent,
+                        decorationThickness: 2,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        decorationColor: Color(0xFFFCDC4D),
+                        decoration: TextDecoration.underline,
                       ),
                     ),
                   ),
@@ -236,26 +239,7 @@ class PoliticsPage extends StatelessWidget {
                             )),
                       ],
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        const Text("• "),
-                        Expanded(
-                            child:  RichText(
-                              text:  TextSpan(
-                                children: <TextSpan>[
-                                   TextSpan(
-                                      text: 'Idea conceptual: ',
-                                      style:
-                                       TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
-                                   TextSpan(text: 'Jaime Franky Rodríguez',
-                                       style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)
-                                   ),
-                                ],
-                              ),
-                            )),
-                      ],
-                    ),
+
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -277,7 +261,7 @@ class PoliticsPage extends StatelessWidget {
                                    TextSpan(
                                       text: 'Oficina de Medios Digitales - Unimedios',
                                        style:
-                                       TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)
+                                       TextStyle( color: Theme.of(context).primaryColor)
                                    ),
                                 ],
                               ),
@@ -301,7 +285,7 @@ class PoliticsPage extends StatelessWidget {
                                           color: Theme.of(context).primaryColor
                                       )),
                                    TextSpan(text: 'Martha Lucía Chaves Muñoz',
-                                       style: TextStyle(fontWeight: FontWeight.bold,
+                                       style: TextStyle(
                                            color: Theme.of(context).primaryColor
                                        )
                                    ),
@@ -326,7 +310,7 @@ class PoliticsPage extends StatelessWidget {
                                       style:
                                        TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
                                    TextSpan(text: 'Miguel Andrés Torres Chavarro',
-                                       style: TextStyle(fontWeight: FontWeight.bold,
+                                       style: TextStyle(
                                            color: Theme.of(context).primaryColor
                                        )
                                    ),
@@ -352,7 +336,7 @@ class PoliticsPage extends StatelessWidget {
                                        TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
                                    TextSpan(
                                       text: 'Giovanni Romero Pérez',
-                                       style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)
+                                       style: TextStyle( color: Theme.of(context).primaryColor)
                                    ),
                                 ],
                               ),
@@ -371,14 +355,14 @@ class PoliticsPage extends StatelessWidget {
 
                                 children: <TextSpan>[
                                    TextSpan(
-                                      text: 'Diseño gráfico en conjunto: ',
+                                      text: 'Diseño gráfico: ',
                                       style:
                                        TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
                                    TextSpan(
                                       text:
                                       'María Teresa Naranjo Castillo',
                                        style:
-                                       TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                                       TextStyle(color: Theme.of(context).primaryColor)),
                                 ],
                               ),
                             )),
@@ -395,13 +379,14 @@ class PoliticsPage extends StatelessWidget {
                                    TextSpan(
                                       text: 'Webmaster: ',
                                       style:
-                                       TextStyle(fontWeight: FontWeight.bold,
+                                       TextStyle(
+                                           fontWeight: FontWeight.bold,
                                            color: Theme.of(context).primaryColor
                                        )),
                                    TextSpan(
                                       text: 'Francisco Javier Morales  Ducuara, Aldemar Hernandez Torres',
                                        style:
-                                       TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)
+                                       TextStyle(color: Theme.of(context).primaryColor)
                                    ),
                                 ],
                               ),
@@ -444,9 +429,7 @@ class PoliticsPage extends StatelessWidget {
                     child: Text('\nUniversidad Nacional de Colombia')),
               ],
             ),
-          )),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
-
+          ))
     );
   }
 }

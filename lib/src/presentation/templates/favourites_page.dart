@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -64,7 +65,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
             child = drawError(snapshot.error);
           } else {
             child = const Center(
-              child: CircularProgressIndicator(),
+                child: SpinKitFadingCircle(
+                  color: Color(0xffb6b3c5),
+                  size: 50.0,
+                )
             );
           }
           return child;
@@ -151,14 +155,17 @@ class _FavouritesPageState extends State<FavouritesPage> {
     Widget  widgetResult;
 
     if(cardList.length>0){
-      widgetResult = SingleChildScrollView(
+      widgetResult =
+          Container(
+              padding: const EdgeInsets.only(top: 20),
+              child:SingleChildScrollView(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: cardList,
             ),
-          ));
+          )));
     }else{
       widgetResult =  Center(child: Text("Su listado de contenidos favoritos está vacío.",
       style: TextStyle(
@@ -243,7 +250,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       child: CachedNetworkImage(
                         imageUrl: element.imagen,
                         placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
+                        const Center(
+                            child: SpinKitFadingCircle(
+                              color: Color(0xffb6b3c5),
+                              size: 50.0,
+                            )
+                        ),
                         errorWidget: (context, url, error) => Container(
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
@@ -270,7 +282,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       child: Text(
                         element.categoryTitle,
                         style: const TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.bold),
+                            fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),
                   Container(
@@ -292,7 +304,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     child: Text(
                       site,
                       style: TextStyle(
-                          fontSize: 9,
+                          fontSize: 11,
                           color: Theme.of(context).primaryColor,
                           fontStyle: FontStyle.italic),
                     ),
@@ -302,7 +314,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     child: Text(
                       formatted,
                       style: const TextStyle(
-                          fontSize: 8, color: Color(0xff666666)),
+                          fontSize: 10, color: Color(0xff666666)),
                     ),
                   ),
                 ])

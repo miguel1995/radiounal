@@ -4,7 +4,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 
 class Menu extends StatefulWidget {
-  const Menu({super.key});
+
+
+
+  const  Menu({super.key});
 
   @override
   State<Menu> createState() => _MenuState();
@@ -26,11 +29,7 @@ class _MenuState extends State<Menu> {
     ),
     MenuItem('Siguiendo', "/followed", "", ScreenArguments('NONE', 'NONE', 1)),
     MenuItem('Configuración', "/configurations", "", null),
-    MenuItem('Acerca de esta App', "/about", "", null),
-    MenuItem('Contáctenos', "/contacts", "", null),
-    MenuItem('Política de privacidad', "/politics", "", null),
-    MenuItem('Créditos', "/credits", "", null)
-  ];
+    MenuItem('Acerca de esta App', "/configurations", "", null)];
 
   final List<MenuItem> _menuUrls = [
     MenuItem('UNIMEDIOS  ', "https://unimedios.unal.edu.co/", "assets/icons/icono_links_externos.svg", null),
@@ -46,11 +45,14 @@ class _MenuState extends State<Menu> {
     MenuItem("Solicitudes Unimedios", "http://solicitudesunimedios.unal.edu.co/", "", null)
   ];
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(40))),
+            borderRadius: BorderRadius.horizontal(left: Radius.circular(40))),
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -63,14 +65,18 @@ class _MenuState extends State<Menu> {
 
   Widget _buildFlutterLogo() {
     return Container(
+      padding: const EdgeInsets.only( left: 35, top: 60, bottom: 10),
         child: Row(children: [
-      IconButton(
+          Image.asset('assets/images/logo.png',
+              width: MediaQuery.of(context).size.width * 0.35),
+      Container(
+          margin: EdgeInsets.only(left:60),
+          child:IconButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.close, color: Color(0xffFCDC4D))),
-      Image.asset('assets/images/logo.png',
-          width: MediaQuery.of(context).size.width * 0.5)
+          icon: const Icon(Icons.close, color: Color(0xffFCDC4D)))),
+
     ]));
   }
 
@@ -95,7 +101,10 @@ class _MenuState extends State<Menu> {
     for (var i = 0; i < _menuTitles.length; ++i) {
       listItems.add(GestureDetector(
           onTap: () {
-            Navigator.popUntil(context, ModalRoute.withName("/home"));
+            //Navigator.popUntil(context, ModalRoute.withName("/"));
+            //Navigator.of(context).pop();
+            Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+
             Navigator.pushNamed(context, _menuTitles[i].url,
                 arguments: _menuTitles[i].arguments);
           },

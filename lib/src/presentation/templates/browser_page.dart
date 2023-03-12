@@ -27,8 +27,8 @@ class _BrowserPageState extends State<BrowserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+      endDrawer: Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
           decoration: const BoxDecoration(
@@ -64,7 +64,6 @@ class _BrowserPageState extends State<BrowserPage> {
           drawMainFilters()
         ]),
       )),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
 

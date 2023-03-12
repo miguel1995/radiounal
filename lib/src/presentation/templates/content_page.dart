@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_series_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programas_bloc.dart';
@@ -9,6 +10,8 @@ import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 
 class ContentPage extends StatefulWidget {
   final String title;
@@ -82,8 +85,8 @@ class _ContentPageState extends State<ContentPage> {
     paddingTop = size.width * 0.30;
 
     return Scaffold(
-      drawer: const Menu(),
-      appBar: const AppBarRadio(),
+      endDrawer: const Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body:  DecoratedBox(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -105,13 +108,15 @@ class _ContentPageState extends State<ContentPage> {
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = Center(
-                  child: CircularProgressIndicator()
+              child = const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
                   );
             }
             return child;
           })),
-      //bottomNavigationBar: const BottomNavigationBarRadio(),
     );
   }
 
@@ -156,12 +161,12 @@ Column(
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
                   child: Text(
                     "${infoModel.count} resultados",
                     style: const TextStyle(
                       color: Color(0xff121C4A),
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       decorationColor: Color(0xFFFCDC4D),
                     ),
@@ -224,37 +229,36 @@ Column(
                   element: element));
         },
         child: Container(
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+            padding:const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
             child: Column(
               children: [
                 Expanded(
                     child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: const Offset(5, 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(5, 5),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: CachedNetworkImage(
-                      //fit: BoxFit.cover,
-                      imageUrl: element.imagen,
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Container(
-                          height: w * 0.25,
-                          color: Theme.of(context).primaryColor,
-                          child: Image.asset("assets/images/logo.png")),
-                    ),
-                  ),
-                )),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: element.imagen,
+                          placeholder: (context, url) =>
+                         Text(""),
+                          errorWidget: (context, url, error) => Image.asset(
+                              "assets/images/default.png"
+                          ),
+                        ),
+                      ),
+                    )),
+
                 Container(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.only(top: 20),
@@ -272,6 +276,8 @@ Column(
                   ),
                   child: Text(
                     element.title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                     style: const TextStyle(
                         fontSize: 12, fontWeight: FontWeight.bold),
                   ),

@@ -8,14 +8,13 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  const Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+    return   Scaffold(
+        endDrawer: Menu(),
+    appBar:  AppBarRadio(enableBack:true),
+
       body: Center(
         child:  Text("En construcción ..."),
-      ),
-      bottomNavigationBar: BottomNavigationBarRadio(),
-
+      )
     );
   }
 }

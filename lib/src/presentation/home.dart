@@ -8,6 +8,7 @@ import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/favorito_btn.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_destacados_bloc.dart';
@@ -19,7 +20,21 @@ import '../business_logic/bloc/podcast_masescuchados_bloc.dart';
 import '../business_logic/bloc/radio_masescuchados_bloc.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+
+  late Function(dynamic uidParam,
+      dynamic audioUrlParam,
+      dynamic imagenUrlParam,
+      dynamic textParentParam,
+      dynamic titleParam,
+      dynamic textContentParam,
+      dynamic dateParam,
+      dynamic durationParam,
+      dynamic typeParam,
+      dynamic urlParam,
+      bool isFrecuencia,
+      FavoritoBtn? favoritoBtn)? callBackPlayMusic;
+
+  Home( this.callBackPlayMusic, {Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -31,7 +46,6 @@ class _HomeState extends State<Home> {
   final blocRadioProgramacion = RadioProgramacionBloc();
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
-  final GlobalKey<BottomNavigationBarRadioState> _key = GlobalKey();
 
 
   @override
@@ -46,13 +60,14 @@ class _HomeState extends State<Home> {
     blocRadioProgramacion.fetchProgramacion();
     blocRadioMasEscuchados.fetchMasEscuchados();
     blocPodcastMasEscuchados.fetchMasEscuchados();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const Menu(),
-        appBar: const AppBarRadio(),
+        endDrawer:  const Menu(),
+        appBar:  AppBarRadio(enableBack:false),
         body: DecoratedBox(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -72,10 +87,7 @@ class _HomeState extends State<Home> {
               ],
 
 
-            ))),
-      bottomNavigationBar:  BottomNavigationBarRadio(
-        key: _key
-      )
+            )))
     );
   }
 
@@ -84,6 +96,8 @@ class _HomeState extends State<Home> {
     blocRadioProgramacion.dispose();
     blocPodcastDestacados.dispose();
     blocRadioDestacados.dispose();
+    blocRadioMasEscuchados.dispose();
+    blocPodcastMasEscuchados.dispose();
     super.dispose();
   }
 
@@ -189,6 +203,7 @@ class _HomeState extends State<Home> {
             },
             label: Text("Favoritos",
                 style: TextStyle(
+                    fontSize: 16,
                     color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.bold)),
           ),
@@ -338,7 +353,7 @@ class _HomeState extends State<Home> {
                   },
                   child: SvgPicture.asset(
                     'assets/icons/icono_facebook.svg',
-                    width: MediaQuery.of(context).size.width * 0.18,
+                    width: MediaQuery.of(context).size.width * 0.14,
                   )),
               InkWell(
                   onTap: () {
@@ -346,13 +361,13 @@ class _HomeState extends State<Home> {
                   },
                   child: SvgPicture.asset(
                       'assets/icons/icono_instagram_svg.svg',
-                      width: MediaQuery.of(context).size.width * 0.18)),
+                      width: MediaQuery.of(context).size.width * 0.14,)),
               InkWell(
                   onTap: () {
                     _launchURL("https://twitter.com/radiounal");
                   },
                   child: SvgPicture.asset('assets/icons/icono_twitter.svg',
-                      width: MediaQuery.of(context).size.width * 0.18))
+                      width: MediaQuery.of(context).size.width * 0.14,))
             ],
           )
         ]));
@@ -446,10 +461,11 @@ class _HomeState extends State<Home> {
                               style: const TextStyle(color: Colors.white),
                             )),
                         Container(
+                          padding: EdgeInsets.only(left: 2, right: 2),
                           color: const Color(0xffFCDC4D),
                           child: Text(
                             element.categoryTitle,
-                            style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         )
                       ],
@@ -462,7 +478,9 @@ class _HomeState extends State<Home> {
     var widthBox = MediaQuery.of(context).size.width * 0.35;
     return InkWell(
         onTap: () {
-          _key.currentState!.playMusic(
+
+          widget.callBackPlayMusic!(
+            0,
               urlFrecuencia,
               "",
               "",
@@ -470,8 +488,14 @@ class _HomeState extends State<Home> {
               "",
               "",
               "",
-              true
+              "",
+              "",
+              true,
+              null
+
           );
+
+
         },
 
         child: Container(
@@ -531,6 +555,7 @@ class _HomeState extends State<Home> {
 
     rowList.add(Row(children: [
       Container(
+        padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
         color: Theme.of(context).appBarTheme.foregroundColor,
         width: widthBox,
@@ -540,6 +565,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       Container(
+        padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
         color: Theme.of(context).primaryColor,
         width: widthBox,
@@ -549,6 +575,7 @@ class _HomeState extends State<Home> {
         ),
       ),
       Container(
+        padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
         color: Theme.of(context).appBarTheme.foregroundColor,
         width: widthBox,
@@ -556,6 +583,7 @@ class _HomeState extends State<Home> {
             style: TextStyle(fontWeight: FontWeight.bold)),
       ),
       Container(
+          padding: EdgeInsets.only(top: 3, bottom: 3),
           alignment: Alignment.center,
           color: Theme.of(context).primaryColor,
           width: widthBox,
@@ -581,6 +609,7 @@ class _HomeState extends State<Home> {
             child: Text(
               "${list![i].emisora}\n${list[i].frecuencia}",
               style: TextStyle(
+                fontSize: 16,
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold),
             )),
@@ -706,7 +735,7 @@ class _HomeState extends State<Home> {
                     color: const Color(0xffFCDC4D),
                     child: Text(
                       element.categoryTitle,
-                      style: const TextStyle(fontSize: 8, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ),
                   SizedBox(
@@ -715,23 +744,23 @@ class _HomeState extends State<Home> {
                           overflow: TextOverflow.ellipsis,
                           maxLines: 5,
                           style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               color: Theme.of(context).primaryColor,
                               fontWeight: FontWeight.bold))),
                   Container(
                     child: Text(
                       site,
                       style: TextStyle(
-                          fontSize: 9,
+                          fontSize: 11,
                           color: Theme.of(context).primaryColor,
                           fontStyle: FontStyle.italic),
                     ),
                   ),
                   Container(
                     child: Text(
-                      formatted,
+                      "$formatted | ${formatDurationString(element.duration)}",
                       style: const TextStyle(
-                          fontSize: 8, color: Color(0xff666666)),
+                          fontSize: 9, color: Color(0xff666666)),
                     ),
                   ),
                 ],
@@ -745,6 +774,19 @@ class _HomeState extends State<Home> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+
+  String formatDurationString(String duration) {
+
+    String formatted = duration;
+    if(duration != null && duration.substring(0,2) == "00"){
+      formatted = duration.substring(3);
+    }else{
+      formatted = "";
+    }
+
+    return formatted;
   }
 
 

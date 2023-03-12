@@ -32,8 +32,8 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
-      drawer: const Menu(),
-      appBar: const AppBarRadio(),
+      endDrawer: const Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
           decoration: const BoxDecoration(
@@ -85,8 +85,7 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
             ),
           ],
         ),
-      )),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
+      ))
     );
   }
 

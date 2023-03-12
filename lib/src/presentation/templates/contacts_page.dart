@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../business_logic/bloc/radio_email_bloc.dart';
 
@@ -41,14 +43,12 @@ class _ContactPageState extends State<ContactsPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+      endDrawer: Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body:
-
-
       Container(
         padding:
-            const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
@@ -57,10 +57,16 @@ class _ContactPageState extends State<ContactsPage> {
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 10),
-                child: const Text(
+                child: Text(
                   "Contáctenos",
                   style: TextStyle(
-                    color: Color(0xff121C4A),
+                    shadows: [
+                      Shadow(
+                          color: Theme.of(context).primaryColor,
+                          offset: const Offset(0, -5))
+                    ],
+                    color: Colors.transparent,
+                    decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     decorationColor: Color(0xFFFCDC4D),
@@ -172,22 +178,60 @@ class _ContactPageState extends State<ContactsPage> {
               ),
               Container(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
-                child: Text(
-                    "Para peticiones, quejas, reclamos, sugerecias y felicitaciones haz click aquí",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
+                child:
+
+                RichText(
+                    text: TextSpan(
+                        children: [
+                          TextSpan(
+                              text:"Para peticiones, quejas, reclamos, sugerecias y felicitaciones haz click ",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold)),
+                          TextSpan(
+                            text: 'aquí',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = (){
+                              _launchURL("https://quejasyreclamos.unal.edu.co/");
+                              },
+
+                          ),
+                        ])
+                )
+
+
               ),
               Row(
                 children: [
                   Container(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child: Text("Política de tratamiento de datos personales*",
+                    child:
+                    InkWell(
+                      onTap: (){
+
+                        _launchURL("https://unal.edu.co/fileadmin/user_upload/docs/ProteccionDatos/Resolucion-207_2021-Rectoria.pdf");
+
+                      },
+                      child:
+                    Text("Política de tratamiento de datos personales*",
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                          shadows: [
+                            Shadow(
+                                color: Theme.of(context).primaryColor,
+                                offset: const Offset(0, -5))
+                          ],
+                          color: Colors.transparent,
+                          decorationThickness: 1,
+                          decorationColor: Theme.of(context).primaryColor,
+                          decoration: TextDecoration.underline,
                             fontSize: 16,
-                            fontWeight: FontWeight.bold)),
+                            fontWeight: FontWeight.bold,
+
+                        ))),
                   ),
                   Checkbox(
                       fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -200,12 +244,19 @@ class _ContactPageState extends State<ContactsPage> {
                 ],
               ),
               if (flagPolitics == true)
-                const Text(
+              const Text(
                   "Por favor, acepte las políticas de privacidad",
-                  style: TextStyle(color: Colors.red),
+                  style: TextStyle(color: Colors.red,
+
+                  ),
                 ),
               const Text(
-                  "DE ACUERDO CON LA LEY 1581 DE 2012 DE PROTECCIÓN DE DATOS PERSONALES, HE LEÍDO Y ACEPTO LOS TERMINOS DESCRITOS EN LA POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES"),
+                  "DE ACUERDO CON LA LEY 1581 DE 2012 DE PROTECCIÓN DE DATOS PERSONALES, HE LEÍDO Y ACEPTO LOS TERMINOS DESCRITOS EN LA POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES",
+                  style: TextStyle(
+                    fontSize: 12
+                  )
+
+              ),
               Container(
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 10),
@@ -244,7 +295,6 @@ class _ContactPageState extends State<ContactsPage> {
           ),
         )),
       ),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
 
@@ -289,5 +339,14 @@ class _ContactPageState extends State<ContactsPage> {
         color: Theme.of(context).primaryColor,
         fontSize: 16,
         fontWeight: FontWeight.bold);
+  }
+
+
+  _launchURL(var url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

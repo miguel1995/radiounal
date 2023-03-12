@@ -1,7 +1,9 @@
 import 'dart:collection';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
 import '../../business_logic/bloc/departamento_bloc.dart';
 import '../../business_logic/bloc/pais_bloc.dart';
@@ -83,29 +85,45 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+        insetPadding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+
         backgroundColor: Theme.of(context).primaryColor,
-        title: Container(
-          margin: const EdgeInsets.only(top: 10),
-          child: const Text(
-            "Formulario de descarga",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              decorationColor: Color(0xFFFCDC4D),
-              decoration: TextDecoration.underline,
-            ),
-          ),
-        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(25.0))),
         content: SingleChildScrollView(
           child:
           Container(
-            child: SingleChildScrollView(
-                child: Form(
+
+
+
+            child:  Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
+                      Container(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                            onTap: () => {Navigator.pop(context)},
+                            child: Icon(Icons.close, size: 30, color: Theme.of(context).appBarTheme.foregroundColor),
+                          )),
+                      Text(
+                        "Formulario de descarga",
+                        style: TextStyle(
+                          shadows: [
+                            Shadow(
+                                color: Colors.white,
+                                offset: const Offset(0, -5))
+                          ],
+                          color: Colors.transparent,
+                          decorationThickness: 2,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          decorationColor: Color(0xFFFCDC4D),
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                       Container(
                           margin: EdgeInsets.only(top: 10),
                           child:  Text("Nombre*",
@@ -151,12 +169,12 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             prefs.setString('edad', edad);
                           }
                       ),
-                      Container(
+                      /*Container(
                           margin: const EdgeInsets.only(top: 10),
                           child:  Text("Género*",
                             style: getTextStyle(),
-                          )),
-                      Container(
+                          )),*/
+                      /*Container(
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         decoration: BoxDecoration(
@@ -192,7 +210,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             );
                           }).toList(),
                         ),
-                      ),
+                      ),*/
                       Container(
                           margin: const EdgeInsets.only(top: 10),
                           child:  Text("País*",
@@ -353,14 +371,36 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       Row(
                         children: [
 
-                          Flexible(child:Container(
+
+                          Flexible(child:
+
+                          Container(
                             padding: EdgeInsets.only(top: 10, bottom: 10),
-                            child: const Text("Política de tratamiento de datos personales*",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)),
-                          )),
+                            child:
+                            InkWell(
+                                onTap: (){
+
+                                  _launchURL("https://unal.edu.co/fileadmin/user_upload/docs/ProteccionDatos/Resolucion-207_2021-Rectoria.pdf");
+
+                                },
+                                child:
+                                const Text("Política de tratamiento de datos personales*",
+                                    style: TextStyle(
+                                      shadows: [
+                                        Shadow(
+                                            color: Colors.white,
+                                            offset: const Offset(0, -5))
+                                      ],
+                                      color: Colors.transparent,
+                                      decorationThickness: 1,
+                                      decorationColor: Colors.white,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+
+                                    ))),
+                          ),
+                          ),
                           Checkbox(
                               checkColor: Theme.of(context).primaryColor,
                               fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -380,7 +420,6 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       Text(
                         "DE ACUERDO CON LA LEY 1581 DE 2012 DE PROTECCIÓN DE DATOS PERSONALES, HE LEÍDO Y ACEPTO LOS TERMINOS DESCRITOS EN LA POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES",
                         style: getTextStyle(),
-
                       ),
                       Align(
                           alignment: Alignment.centerRight,
@@ -437,7 +476,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       ))
                     ],
                   ),
-                )),
+                ),
           ),
         )
     );
@@ -471,7 +510,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
   TextStyle getTextStyle() {
     return const TextStyle(
         color: Colors.white,
-        fontSize: 16,
+        fontSize: 12,
         fontWeight: FontWeight.bold);
   }
 
@@ -558,5 +597,13 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
     _controllerEdad.text = edad;
     _controllerEmail.text = email;
 
+  }
+
+  _launchURL(var url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

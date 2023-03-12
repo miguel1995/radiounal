@@ -1,10 +1,18 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:platform_device_id/platform_device_id.dart';
+import 'package:share_plus/share_plus.dart';
+
+import '../../business_logic/firebase/firebaseLogic.dart';
+import 'favorito_btn.dart';
 
 class BottomNavigationBarRadio extends StatefulWidget {
   const BottomNavigationBarRadio({Key? key}) : super(key: key);
@@ -18,11 +26,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   bool _expanded = false;
-
+  late int uid = 5;
   var audioUrl =
       "http://podcastradio.unal.edu.co/fileadmin/Radio/Audio-imagenes/2022/11/RGU_E68-Politicas_urbana_y_social-1.mp3";
   var imagenUrl =
       "http://podcastradio.unal.edu.co/fileadmin/Radio/Audio-imagenes/2022/11/RGU_E68-Politicas_urbana_y_social-1.png";
+  var url = "";
   var textParent = "Análisis Unal";
   var title =
       "E90: Analizamos el nombramiento de Rishi Sunak como nuevo primer ministro de Reino Unido y más en nuestra selección de noticias. E90: Analizamos el nombramiento de Rishi Sunak como nuevo primer ministro de Reino Unido y más en nuestra selección de noticias. E90: Analizamos el nombramiento de Rishi Sunak como nuevo primer ministro de Reino Unido y más en nuestra selección de noticias.E90: Analizamos el nombramiento de Rishi Sunak como nuevo primer ministro de Reino Unido y más en nuestra selección de noticias.E90: Analizamos el nombramiento de Rishi Sunak como nuevo primer ministro de Reino Unido y más en nuestra selección de noticias.";
@@ -31,6 +40,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var date =
       DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
   var type = "";
+  String durationContent = "";
   var canExpand = false;
   var hasDuration = false;
 
@@ -41,6 +51,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   bool showVolumenSlider = false;
   bool showSpeedList = true;
   double currentVolumen = 1.0;
+
   var speedListItems = const [
     DropdownMenuItem<double>(value: 0.5, child: Text("0.5x")),
     DropdownMenuItem<double>(value: 1.0, child: Text("1.0x")),
@@ -53,6 +64,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var _maxHeight = 0.0;
   var _minHeight = 0.0;
 
+  String? _deviceId;
+  bool _isFavorito = false;
+  late FirebaseLogic firebaseLogic;
+  late FavoritoBtn? myFavoritoBtn;
+
   @override
   void initState() {
     super.initState();
@@ -64,15 +80,16 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     audioUrl = "http://streaming.unradio.unal.edu.co:8010/;stream.mp3";
     //audioUrl = "http://podcastradio.unal.edu.co/fileadmin/Radio/Audio-imagenes/2022/11/RGU_E68-Politicas_urbana_y_social-1.mp3";
     imagenUrl = "";
+    url = "http://radio.unal.edu.co/bogota-985";
     textParent = "";
     title = "Bogotá 98.5 fm";
     textContent = "";
     date =
         DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
     type = "";
+    durationContent = "";
     canExpand = false;
     hasDuration = false;
-
     speedListItemsBuilder = const [
       Text("0.5x", style: TextStyle(color: Colors.white)),
       Text("1.0x", style: TextStyle(color: Colors.white)),
@@ -83,6 +100,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     audioPlayer = AudioPlayer();
     audioPlayer.setVolume(currentVolumen);
     audioPlayer.setPlaybackRate(dropDownValue);
+
+
+    myFavoritoBtn = FavoritoBtn(uid: uid, message: type);
+
+
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -108,6 +130,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         });
       }
     });
+
+    //firebaseLogic = FirebaseLogic();
+
+    //initPlatformState();
   }
 
   @override
@@ -118,17 +144,59 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   String formatDateString(DateTime date) {
-    final DateFormat formatter = DateFormat('dd MMMM yyyy | HH:mm');
+    final DateFormat formatter = DateFormat('dd MMMM yyyy');
     final String formatted = formatter.format(date);
 
     return formatted;
+  }
+
+
+  String formatDurationString(String duration) {
+
+     String formatted = duration;
+    if(duration.substring(0,2) == "00"){
+      formatted = duration.substring(3);
+    }
+
+    return formatted;
+  }
+  Future<void> initPlatformState() async {
+    String? deviceId;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get deviceId.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _deviceId = deviceId;
+    });
+    print("deviceId->$_deviceId");
+
+    firebaseLogic.validateFavorite(uid, _deviceId).then(
+            (value) => {
+
+              print(">>>  HAY FAVORITO ??"),
+              print(value),
+
+          setState(()=>{
+            _isFavorito = value
+          })
+        });
+
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     _maxHeight = size.height * 0.88;
-    _minHeight = size.height * 0.18;
+    _minHeight = 110;
 
     return AnimatedBuilder(
         animation: _controller,
@@ -140,6 +208,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               Container(
                   height: lerpDouble(_minHeight, _maxHeight, value),
                   child: Container(
+                      alignment: Alignment.bottomCenter,
                       child: _expanded
                           ? audioPlayerExpanded()
                           : audioPlayerMini()))
@@ -154,6 +223,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
+
+
+
 
   Widget drawAudioPlayer() {
     return Container(
@@ -209,6 +281,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                             .seek(position + const Duration(seconds: 10));
                       }
                     }),
+                Container(
+                  padding: EdgeInsets.only(top: 32),
+                  child:
                 DropdownButtonHideUnderline(
                     child: DropdownButton(
                         style: TextStyle(color: Theme.of(context).primaryColor),
@@ -227,7 +302,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           });
 
                           audioPlayer.setPlaybackRate(dropDownValue);
-                        }))
+                        })))
               ],
             ),
             Row(children: [
@@ -250,8 +325,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   Widget audioPlayerExpanded() {
+
+
     return Container(
-        decoration: const BoxDecoration(
+        decoration:  const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"),
+              fit: BoxFit.cover,
+            ),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
             color: Color(0xff121C4A)),
@@ -276,25 +357,50 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  IconButton(
+                 /* IconButton(
                       color: const Color(0xffFCDC4D),
                       icon: const Icon(Icons.favorite),
                       onPressed: () {
-                        //TODO: "AGRAGAR A MIS FAVORITOS EN FIREBASE"
-                        print("AGRAGAR A MIS FAVORITOS EN FIREBASE");
-                      }),
+                        if (_isFavorito == true) {
+                          firebaseLogic
+                              .eliminarFavorite(uid, _deviceId)
+                              .then((value) => {
+                                    setState(() {
+                                      _isFavorito = false;
+                                    })
+                                  });
+                        } else {
+                          /*firebaseLogic.agregarFavorito(uid, message, (message == "RADIO") ? "EMISION" : "EPISODIO", _deviceId).then(
+                                  (value) => {
+                                if(value == true){
+                                  //print('DocumentSnapshot added with ID: ${doc.id}');
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Agregado a mis favoritos"))
+                                  ),
+                                  setState((){
+                                    _isFavorito = true;
+                                  })
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Se ha presentado un problema, intentelo más tarde"))
+                                  )
+                                }
+                              });*/
+                        }
+                      })*/
+                  myFavoritoBtn!,
                   IconButton(
                     color: const Color(0xffFCDC4D),
                     icon: const Icon(Icons.share),
                     onPressed: () {
-                      //TODO: "COMPATIR EN REDES SOCIALES"
-                      print("COMPATIR EN REDES SOCIALES");
+
+                      Share.share("Escucha Radio UNAL -  ${url}",
+                          subject: "Radio UNAL - ${title}");
                     },
                   )
                 ],
               ),
-              Expanded(
-                  child: SingleChildScrollView(
+              SingleChildScrollView(
                       scrollDirection: Axis.vertical,
                       child: Column(children: [
                         Center(
@@ -303,7 +409,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                   top: 20, bottom: 20, left: 60, right: 60),
                               child: getImageExpand()),
                         ),
-                        if (textParent != null && textParent != "")
+                        if (textParent != "")
                           Container(
                             alignment: Alignment.centerLeft,
                             margin: const EdgeInsets.only(left: 30, right: 30),
@@ -311,45 +417,54 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                 padding:
                                     const EdgeInsets.only(left: 10, right: 10),
                                 color: const Color(0xffFCDC4D),
-                                child: Text(textParent)),
+                                child: Text(textParent,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold
+                                ),
+                                )),
                           ),
-                        if (title != null && title != "")
+                        if (title != "")
                           Container(
+                              alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(
-                                  top: 20, left: 30, right: 30),
+                                  top: 10, left: 30, right: 30),
                               child: Text(title,
                                   style: const TextStyle(
                                       color: Colors.white,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold))),
                         if (date != null)
                           Container(
                               alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(
                                   top: 10, left: 30, right: 30),
-                              child: Text(formatDateString(date),
-                                  style: const TextStyle(color: Colors.white))),
-                        if (type != null && type != "")
+                              child: Text("${formatDateString(date)} | ${formatDurationString(durationContent)}",
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white))),
+                        if (type != "")
                           Container(
                               alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(
                                   top: 10, left: 30, right: 30),
-                              child: Text(type,
+                              child: Text(type[0].toUpperCase() + type.substring(1,type.length).toLowerCase(),
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontStyle: FontStyle.italic)))
-                      ]))),
+                      ])),
               drawAudioPlayer(),
-              const Center(
-                child: Text("Universidad Nacional de Colombia",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontStyle: FontStyle.italic,
-                        color: Color(0xffFCDC4D))),
-              )
+              Expanded(child:
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child:
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child:
+                   SvgPicture.asset('assets/images/firma.svg', width: 180))))
             ]),
             if (showVolumenSlider)
               Positioned(
-                  bottom: 100,
+                  bottom: 200,
                   left: 20,
                   child: RotatedBox(
                     quarterTurns: 3,
@@ -372,41 +487,48 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   Widget audioPlayerMini() {
     return Container(
+        padding: EdgeInsets.only(top: 1),
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
             color: Color(0xff121C4A)),
         child: Column(children: [
-          Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-            Container(
-                margin: const EdgeInsets.only(right: 20, top: 20, bottom: 10),
-                child: (canExpand)
-                    ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            _expanded = !_expanded;
-                          });
-                          _controller.forward();
-                        },
-                        child: SvgPicture.asset(
-                            'assets/icons/icono_flechita_up.svg',
-                            width: MediaQuery.of(context).size.width * 0.05))
-                    : null)
-          ]),
           Row(children: [
             getImageMini(),
             Column(
               children: [
-                if (title != null && title != "")
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                  if (title != "")
+                    Container(
+                        width: 220,
+                        padding: EdgeInsets.only(top:20),
+                        child: Text(
+                            (title.length > 35)
+                                ? "${title.substring(0, 35)}..."
+                                : title,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
                   Container(
-                      margin: const EdgeInsets.only(left: 30, right: 30),
-                      child: Text(
-                          (title.length > 40)
-                              ? "${title.substring(1, 40)}..."
-                              : title,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold))),
+                     padding: EdgeInsets.only(left: 15),
+                      child: (canExpand)
+                          ? Align(
+                          alignment: Alignment.centerRight,
+                          child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _expanded = !_expanded;
+                                });
+                                _controller.forward();
+                              },
+                              child: SvgPicture.asset(
+                                  'assets/icons/icono_flechita_up.svg',
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05)))
+                          : null)
+                ]),
                 Row(children: [
                   IconButton(
                     color: const Color(0xffFCDC4D),
@@ -436,18 +558,18 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               ],
             )
           ]),
-          const Center(
-            child: Text("Universidad Nacional de Colombia",
-                style: TextStyle(
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    color: Color(0xffFCDC4D))),
+          Container(
+            child: SvgPicture.asset('assets/images/firma.svg', width: 180),
           )
         ]));
   }
 
-  playMusic(audioUrlParam, imagenUrlParam, textParentParam, titleParam,
-      textContentParam, dateParam, typeParam, isFrecuencia) {
+  playMusic(uidParam, audioUrlParam, imagenUrlParam, textParentParam, titleParam,
+      textContentParam, dateParam, durationParam, typeParam, urlParam, bool isFrecuencia, FavoritoBtn? favoritoBtn) {
+
+    //initPlatformState();
+
+
     if (dateParam == "") {
       setState(() {
         date = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -460,11 +582,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     }
 
     setState(() {
+      //uid =  uidParam;
       imagenUrl = imagenUrlParam;
       textParent = textParentParam;
       title = titleParam.replaceAll("\n", " ");
       textContent = textContentParam;
       type = typeParam;
+      url = urlParam;
+      durationContent = durationParam;
     });
 
     //En el caso que sean alguna de las cuantro frecuencias
@@ -474,11 +599,17 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         hasDuration = false;
       });
     } else {
+      print(">>>> BNT");
+      print(favoritoBtn);
+
+
       setState(() {
         canExpand = true;
         hasDuration = true;
+        myFavoritoBtn = favoritoBtn;
       });
     }
+
     setState(() {
       audioUrl = audioUrlParam;
     });
@@ -495,10 +626,20 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     Widget widget;
     Widget widgetImg;
 
-    if (imagenUrl != null && imagenUrl != "") {
-      widgetImg = Image.network(imagenUrl);
+    if (imagenUrl != "") {
+      widgetImg = CachedNetworkImage(
+        imageUrl: imagenUrl,
+        placeholder: (context, url) => const Center(
+            child: SpinKitFadingCircle(
+          color: Color(0xffb6b3c5),
+          size: 10.0,
+        )),
+        errorWidget: (context, url, error) => Container(
+            color: Theme.of(context).primaryColor,
+            child: Image.asset("assets/images/default.png")),
+      );
     } else {
-      widgetImg = Image.asset('assets/images/default_audio_image.png');
+      widgetImg = Image.asset('assets/images/default.png');
     }
 
     widget = Container(
@@ -514,22 +655,26 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     Widget widget;
     Widget widgetImg;
 
-    if (imagenUrl != null && imagenUrl != "") {
+    if (imagenUrl != "") {
       widgetImg = ClipRRect(
           borderRadius: BorderRadius.circular(30.0),
-          child: Image.network(imagenUrl));
+          child: CachedNetworkImage(
+            imageUrl: imagenUrl,
+            placeholder: (context, url) => const Center(
+                child: SpinKitFadingCircle(
+              color: Color(0xffb6b3c5),
+              size: 50.0,
+            )),
+            errorWidget: (context, url, error) => Container(
+                color: Theme.of(context).primaryColor,
+                child: Image.asset("assets/images/default.png")),
+          ));
     } else {
       widgetImg = ClipRRect(
           borderRadius: BorderRadius.circular(30.0),
-          child: Image.asset('assets/images/default_audio_image.png'));
+          child: Image.asset('assets/images/default.png'));
     }
 
-    widget = Container(
-        padding: const EdgeInsets.only(left: 10),
-        width: MediaQuery.of(context).size.width * 0.2,
-        child: ClipRRect(
-            borderRadius: BorderRadius.circular(10.0), child: widgetImg));
-
-    return widget;
+    return widgetImg;
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -9,26 +10,37 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
-import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:platform_device_id/platform_device_id.dart';
 import '../../business_logic/bloc/radio_califica_bloc.dart';
 import '../partials/download_form_dialog.dart';
+import '../partials/favorito_btn.dart';
 
 class ItemPage extends StatefulWidget {
   final String title;
   final String message;
   final int uid; //Indica el id del episodio de podcast o emisora de radio
   final String from; //Indica la página desde lacual fue llamada (home, detail)
+  late Function(
+      dynamic uidParam,
+      dynamic audioUrlParam,
+      dynamic imagenUrlParam,
+      dynamic textParentParam,
+      dynamic titleParam,
+      dynamic textContentParam,
+      dynamic dateParam,
+      dynamic durationParam,
+      dynamic typeParam,
+      dynamic typeUrl,
+      bool isFrecuencia,
+      FavoritoBtn? favoritoBtn)? callBackPlayMusic;
 
-  const ItemPage(
-      {Key? key, required this.title, required this.message, required this.uid, required this.from})
+   ItemPage(
+      {Key? key, required this.title, required this.message, required this.uid, required this.from, required this.callBackPlayMusic})
       : super(key: key);
 
   @override
@@ -51,21 +63,12 @@ class _ItemPageState extends State<ItemPage> {
   late String _localPath;
   late bool _permissionReady;
 
-  String? _deviceId;
-  bool _isFavorito = false;
-  late FirebaseLogic firebaseLogic;
-
-  final GlobalKey<BottomNavigationBarRadioState> _key = GlobalKey();
-
+  late FavoritoBtn favoritoBtn;
 
   @override
   void initState() {
     super.initState();
 
-
-    initPlatformState();
-
-    firebaseLogic = FirebaseLogic();
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -74,6 +77,9 @@ class _ItemPageState extends State<ItemPage> {
     message = widget.message;
     uid = widget.uid;
     from = widget.from;
+
+    favoritoBtn = FavoritoBtn(uid: uid, message: message);
+
 
     if (message == "RADIO") {
       blocRadioEmision.fetchEmision(uid);
@@ -104,8 +110,8 @@ class _ItemPageState extends State<ItemPage> {
   Widget build(BuildContext context) {
     return
       Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+        endDrawer: Menu(),
+        appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
           decoration: const BoxDecoration(
@@ -120,10 +126,7 @@ class _ItemPageState extends State<ItemPage> {
           drawContentDescription(element),
           drawContentBtns(element)
         ]),
-      )),
-      bottomNavigationBar: BottomNavigationBarRadio(
-          key: _key
-      ),
+      ))
     );
   }
 
@@ -149,44 +152,10 @@ class _ItemPageState extends State<ItemPage> {
       Container(
         padding: const EdgeInsets.only(top: 20, right: 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          favoritoBtn,
           InkWell(
               onTap: () {
-
-                if(_isFavorito == true){
-                  firebaseLogic.eliminarFavorite(uid, _deviceId).then((value) => {
-                    setState((){
-                      _isFavorito = false;
-                    })
-                  });
-                }else{
-                  firebaseLogic.agregarFavorito(uid, message, (message == "RADIO") ? "EMISION" : "EPISODIO", _deviceId).then(
-                          (value) => {
-                        if(value == true){
-                          //print('DocumentSnapshot added with ID: ${doc.id}');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Agregado a mis favoritos"))
-                          ),
-                          setState((){
-                            _isFavorito = true;
-                          })
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text("Se ha presentado un problema, intentelo más tarde"))
-                          )
-                        }
-                      });
-                }
-              },
-              child: Container(
-                  padding: const EdgeInsets.only(left: 3, right: 3),
-                  child:  (_isFavorito==true)? SvgPicture.asset('assets/icons/icono_corazon_completo.svg') :
-                  SvgPicture.asset('assets/icons/icono_corazon_borde.svg')
-              )
-
-          ),
-          InkWell(
-              onTap: () {
-                Share.share(element.url,
+                Share.share("Escucha Radio UNAL -  ${element.url}",
                     subject: "Radio UNAL - ${element.title}");
               },
               child: Container(
@@ -211,14 +180,16 @@ class _ItemPageState extends State<ItemPage> {
             borderRadius: BorderRadius.circular(20),
             child: CachedNetworkImage(
               imageUrl: (element != null) ? element.imagen : "",
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              ),
               errorWidget: (context, url, error) =>
                   Container(
-                      height: w * 0.25,
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                      child: Image.asset("assets/images/logo.png")),
+                      width: w * 0.40,
+                      child: Image.asset("assets/images/default.png")),
             ),
           )),
       Container(
@@ -247,7 +218,7 @@ class _ItemPageState extends State<ItemPage> {
           )),
       Container(
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+        padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
         child: Text(
           (element != null) ? element.title : "",
           style: const TextStyle(
@@ -260,8 +231,8 @@ class _ItemPageState extends State<ItemPage> {
         alignment: Alignment.centerLeft,
         margin: const EdgeInsets.only(left: 20),
         child: Text(
-          formatted,
-          style: const TextStyle(fontSize: 10, color: Color(0xff666666)),
+          "$formatted | ${formatDurationString(element.duration)}",
+          style: const TextStyle(fontSize: 11, color: Color(0xff666666)),
         ),
       ),
       Container(
@@ -317,23 +288,25 @@ class _ItemPageState extends State<ItemPage> {
           child: InkWell(
               onTap: () {
 
-                print(element);
-
-                _key.currentState!.playMusic(
+                widget.callBackPlayMusic!(
+                    element.uid,
                     element.audio,
                     element.imagen,
                     element.categoryTitle,
                     element.title,
                     (message == "RADIO")?element.bodytext:element.teaser,
                     element.date,
+                    element.duration,
                     message,
-                    false
+                    element.url,
+                    false,
+                    favoritoBtn
                 );
 
               },
               child: Container(
                   width: w * 0.35,
-                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                   decoration: BoxDecoration(
                     gradient: const RadialGradient(radius: 2, colors: [
                       Color( 0xff216278),
@@ -357,7 +330,7 @@ class _ItemPageState extends State<ItemPage> {
                       Icon(
                         Icons.play_arrow,
                         color: Colors.white,
-                        size: 40,
+                        size: 30,
                       ),
                       Text(
                         "Reproducir",
@@ -403,10 +376,8 @@ class _ItemPageState extends State<ItemPage> {
                         ),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flecha_descarga.svg',
-                            width: MediaQuery.of(context).size.width * 0.1)
-                    )))
-            ,
-
+                            width: 20)
+                    ))),
             Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -443,7 +414,7 @@ class _ItemPageState extends State<ItemPage> {
                         child:
                         SvgPicture.asset(
                               "assets/icons/icono_rss.svg",
-                              width: MediaQuery.of(context).size.width * 0.1)
+                              width: 20)
 
                     ))),
             Container(
@@ -483,7 +454,7 @@ class _ItemPageState extends State<ItemPage> {
                           children: [
                             SvgPicture.asset(
                                 'assets/icons/icono_flechita_transcripcion.svg',
-                                width: MediaQuery.of(context).size.width * 0.08),
+                                width: 17),
                             const Text(
                               "  Transcripción",
                               style: TextStyle(
@@ -500,7 +471,7 @@ class _ItemPageState extends State<ItemPage> {
           child: InkWell(
               onTap: () {
                 if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE" || from == "BROWSER_RESULT_PAGE") {
-                  Navigator.popUntil(context, ModalRoute.withName("/home"));
+                  Navigator.pop(context);
                   Navigator.pushNamed(context, "/detail",
                       arguments: ScreenArguments(
                           title,
@@ -535,19 +506,22 @@ class _ItemPageState extends State<ItemPage> {
                     ],
                   ),
                   child: Row(
-                    children: const [
-                      Icon(
+                    children:  [
+                      const Icon(
                         Icons.arrow_back_ios_new,
                         color: Colors.white,
-                        size: 30,
+                        size: 20,
                       ),
-                      Text(
+                      Container(
+                          margin: EdgeInsets.only(left: 5),
+                          child:
+                      const Text(
                         "Más episodios",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 16),
-                      )
+                      ))
                     ],
                   ))))
     ]);
@@ -633,34 +607,7 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String? deviceId;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      deviceId = await PlatformDeviceId.getDeviceId;
-    } on PlatformException {
-      deviceId = 'Failed to get deviceId.';
-    }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _deviceId = deviceId;
-    });
-    print("deviceId->$_deviceId");
-
-    firebaseLogic.validateFavorite(uid, _deviceId).then(
-            (value) => {
-          setState(()=>{
-            _isFavorito = value
-          })
-        });
-
-  }
 
   Future<void> _showMyDialog() async {
 
@@ -715,6 +662,18 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
+
+  String formatDurationString(String duration) {
+
+    String formatted = duration;
+    if(duration != null && duration.substring(0,2) == "00"){
+      formatted = duration.substring(3);
+    }else{
+      formatted = "";
+    }
+
+    return formatted;
+  }
 
 }
 

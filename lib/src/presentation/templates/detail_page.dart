@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -153,8 +154,8 @@ class _DetailPageState extends State<DetailPage> {
     return
 
       Scaffold(
-        drawer: const Menu(),
-        appBar: const AppBarRadio(),
+          endDrawer: const Menu(),
+          appBar:  AppBarRadio(enableBack:true),
         body:
         DecoratedBox(
             decoration: const BoxDecoration(
@@ -177,23 +178,23 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     if(elementContent!=null)
                     SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.50,
+                        height: MediaQuery.of(context).size.height * 0.53,
                         child: drawContentDescription(elementContent)),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.38,
-                        child: drawContentList(snapshot))
+                  drawContentList(snapshot)
                   ],
                 );
               } else if (snapshot.hasError) {
                 child = drawError(snapshot.error);
               } else {
                 child = const Center(
-                    child: CircularProgressIndicator(),
-                    );
+                    child: SpinKitFadingCircle(
+                      color: Color(0xffb6b3c5),
+                      size: 50.0,
+                    )
+                );
               }
               return child;
             }))
-        //bottomNavigationBar: BottomNavigationBarRadio(),
         );
   }
 
@@ -268,7 +269,8 @@ class _DetailPageState extends State<DetailPage> {
           ),
           InkWell(
               onTap: (){
-                Share.share(element.url, subject: "Radio UNAL - ${element.title}");
+                Share.share("Escucha Radio UNAL -  ${element.url}",
+                    subject: "Radio UNAL - ${element.title}");
               },
               child: Container(
               padding: const EdgeInsets.only(left: 3, right: 3),
@@ -293,15 +295,19 @@ class _DetailPageState extends State<DetailPage> {
             borderRadius: BorderRadius.circular(20),
             child: CachedNetworkImage(
               imageUrl: element.imagen,
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              ),
               errorWidget: (context, url, error) => Container(
-                  height: w * 0.25,
-                  color: Theme.of(context).primaryColor,
-                  child: Image.asset("assets/images/logo.png")),
+                  width: w * 0.40,
+                  child: Image.asset("assets/images/default.png")),
             ),
           )),
       Container(
-        padding: const EdgeInsets.only(left: 20, top: 20),
+        padding: const EdgeInsets.only(top: 20),
         child: Text(
           element.title,
           style: TextStyle(
@@ -398,7 +404,7 @@ class _DetailPageState extends State<DetailPage> {
 
               },
           child:Container(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: Theme.of(context).appBarTheme.foregroundColor,
@@ -414,7 +420,10 @@ class _DetailPageState extends State<DetailPage> {
               child:
               Text(
                 (_isSeguido)?"Dejar de Seguir":"Seguir",
-                style: TextStyle(fontWeight: FontWeight.bold),
+
+                style: TextStyle(fontWeight: FontWeight.bold,
+                  fontSize: 16
+                ),
               )))),
     ]);
   }
@@ -424,7 +433,9 @@ class _DetailPageState extends State<DetailPage> {
     infoModel = snapshot.data!["info"];
     totalPages = infoModel.pages;
 
-    return Column(
+    return
+      Expanded(child:
+      Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -434,7 +445,7 @@ class _DetailPageState extends State<DetailPage> {
                     "${infoModel.count} resultados",
                     style: const TextStyle(
                       color: Color(0xff121C4A),
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: FontWeight.bold,
                       decorationColor: Color(0xFFFCDC4D),
                     ),
@@ -454,7 +465,7 @@ class _DetailPageState extends State<DetailPage> {
                 ),*/
                 Expanded(
                     child: buildList(snapshot))
-              ]);
+              ]));
   }
 
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -477,8 +488,6 @@ class _DetailPageState extends State<DetailPage> {
         onTap: () {
           Navigator.pushNamed(context, "/item",
               arguments: ScreenArguments(title, message, element.uid, from: "DETAIL_PAGE"));
-
-
         },
         child: Container(
             padding:
@@ -502,11 +511,15 @@ class _DetailPageState extends State<DetailPage> {
                     child: CachedNetworkImage(
                       imageUrl: element.imagen,
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Container(
-                          height: w * 0.25,
-                          color: Theme.of(context).primaryColor,
-                          child: Image.asset("assets/images/logo.png")),
+                      const Center(
+                          child: SpinKitFadingCircle(
+                            color: Color(0xffb6b3c5),
+                            size: 50.0,
+                          )
+                      ),
+                      errorWidget: (context, url, error) => Image.asset(
+                          "assets/images/default.png"
+                      ),
                     ),
                   )),
               Expanded(
@@ -531,7 +544,7 @@ class _DetailPageState extends State<DetailPage> {
                       child: Text(
                         element.categoryTitle,
                         style: const TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.bold),
+                            fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),
                     Container(
@@ -548,9 +561,9 @@ class _DetailPageState extends State<DetailPage> {
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
-                        formatted,
+                        "$formatted | ${formatDurationString(element.duration)}",
                         style: const TextStyle(
-                            fontSize: 8, color: Color(0xff666666)),
+                            fontSize: 10, color: Color(0xff666666)),
                       ),
                     )
                   ]))
@@ -593,6 +606,19 @@ class _DetailPageState extends State<DetailPage> {
           })
         });
 
+  }
+
+  String formatDurationString(String duration) {
+
+    String formatted = duration;
+    if(duration != null && duration.substring(0,2) == "00"){
+      formatted = duration.substring(3);
+    }else{
+      formatted = "";
+    }
+
+
+    return formatted;
   }
 
 }

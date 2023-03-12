@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:radiounal/src/business_logic/bloc/elastic_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
@@ -176,8 +177,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     paddingTop = size.width * 0.30;
 
     return Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+      endDrawer: Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
           decoration: const BoxDecoration(
@@ -187,8 +188,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             ),
           ),
           child:
-      drawContent()),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
+      drawContent())
     );
   }
 
@@ -222,7 +222,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = const Center(child: CircularProgressIndicator());
+              child =  const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              );
             }
             return child;
           });
@@ -232,13 +237,23 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Widget child;
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              );
             } else if (snapshot.hasData) {
               child = drawContentList(snapshot);
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = const Center(child: CircularProgressIndicator());
+              child = const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              );
             }
             return child;
           });
@@ -262,7 +277,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
-              child = const Center(child: CircularProgressIndicator());
+              child = const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )
+              );
             }
             return child;
           });
@@ -328,7 +348,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     child: buildList(snapshot)
                 ),
                 if(isLoading)
-                  Center(child: CircularProgressIndicator())
+                    const Center(
+                    child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                    )
+                    )
 
               ]);
 
@@ -450,7 +475,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                           ? element["_source"]["imagen"]
                           : element.imagen,
                       placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                      const Center(
+                          child: SpinKitFadingCircle(
+                            color: Color(0xffb6b3c5),
+                            size: 50.0,
+                          )
+                      ),
                       errorWidget: (context, url, error) => Container(
                           height: w * 0.25,
                           color: Theme.of(context).primaryColor,

@@ -18,15 +18,14 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Menu(),
-      appBar: AppBarRadio(),
+      endDrawer: Menu(),
+      appBar:  AppBarRadio(enableBack:true),
       body: Container(
         padding: EdgeInsets.only(top: 20),
         child: Column(
           children: [drawConfiguracion(), drawAcerca()],
         ),
       ),
-      //bottomNavigationBar: BottomNavigationBarRadio(),
     );
   }
 
@@ -58,7 +57,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
           children: [
             Container(
                 alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 child: InkWell(
                     onTap: () {
                       // sets theme mode to light
@@ -89,7 +88,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                         )))),
             Container(
                 alignment: Alignment.centerLeft,
-                padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
                 child: InkWell(
                     onTap: () {
                       // sets theme mode to dark

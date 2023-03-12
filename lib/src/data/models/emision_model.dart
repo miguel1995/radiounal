@@ -10,11 +10,12 @@ class EmisionModel{
   late String _audio;
   late String _categoryTitle;
   late int _categoryUid;
+  late String _duration;
 
 
 
   EmisionModel(this._uid, this._title, this._teaser, this._bodytext, this._date,
-      this._imagen, this._url, this._audio, this._categoryTitle);
+      this._imagen, this._url, this._audio, this._categoryTitle, this._duration);
 
 
   String get audio => _audio;
@@ -78,6 +79,11 @@ class EmisionModel{
     _categoryUid = value;
   }
 
+  String get duration => _duration;
+
+  set duration(String value) {
+    _duration = value;
+  }
 
   //Retorna  un EmisionModel a partir de un JSON ingresado
   //Utilizado en el llamado al API de radio desde los providers
@@ -93,7 +99,7 @@ class EmisionModel{
     _audio = parsedJson["audio"];
     _categoryTitle = parsedJson["categoryTitle"];
     _categoryUid = (parsedJson["categoryUid"]=="" || parsedJson["categoryUid"]==1)?0:parsedJson["categoryUid"];
-
+    _duration = parsedJson["duration"];
 
   }
 }
