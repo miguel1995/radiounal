@@ -364,4 +364,21 @@ class _FollowedPageState extends State<FollowedPage> {
     }
     return Theme.of(context).primaryColor;
   }
+
+  String formatDurationString(String duration) {
+
+    String formatted = "";
+    if(duration != null){
+
+      if(duration.substring(0,2) == "00"){
+        formatted = "| " + duration.substring(3);
+      }else{
+        formatted = "| " + duration;
+      }
+
+    }
+
+    return formatted;
+  }
+
 }

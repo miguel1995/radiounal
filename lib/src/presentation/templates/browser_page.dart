@@ -39,12 +39,12 @@ class _BrowserPageState extends State<BrowserPage> {
           ),
           child:
       Container(
-        padding: EdgeInsets.only(left: 10, right: 10, top: 20),
+      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
         child: Column(children: [
           drawSearchField(),
           Container(
             alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(top: 30, bottom: 20),
             child: Text(
               "Explorando el contenido",
               style: TextStyle(
@@ -54,7 +54,8 @@ class _BrowserPageState extends State<BrowserPage> {
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
-                decorationThickness: 2,                fontSize: 18,
+                decorationThickness: 2,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
@@ -83,7 +84,8 @@ class _BrowserPageState extends State<BrowserPage> {
           Container(
               margin: EdgeInsets.only(left: 5),
               decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Colors.white,
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
                   border: Border.all(
                       color: Theme.of(context).primaryColor, width: 3)),
               child: InkWell(
@@ -93,10 +95,11 @@ class _BrowserPageState extends State<BrowserPage> {
                     }
                   },
                   child: Container(
-                      margin: EdgeInsets.all(6),
+
+                      margin: EdgeInsets.all(9),
                       child:SvgPicture.asset(
                       'assets/icons/icono_filtro_buscador.svg',
-                      width: MediaQuery.of(context).size.width * 0.1))
+                      width: 25))
 
               ))
       ],
@@ -105,7 +108,10 @@ class _BrowserPageState extends State<BrowserPage> {
 
   Widget drawMainFilters() {
     return Expanded(
-      child: GridView.count(crossAxisCount: 2, children: [
+      child: GridView.count(
+          childAspectRatio: (1/0.5),
+
+          crossAxisCount: 2, children: [
         drawFrecuenciaBtn(
             "Series Podcast", {"query": "", "contentType": "SERIES"}),
         drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
@@ -185,24 +191,26 @@ class _BrowserPageState extends State<BrowserPage> {
 
   InputDecoration getFieldDecoration(String hintText) {
     return InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
-        suffixIcon: InkWell(
-            onTap: () {
-              if (_controllerQuery.value.text.isNotEmpty) {
-                Navigator.pushNamed(context, "/browser-result",
-                    arguments: ScreenArguments('NONE', "Resultados", 1,
-                        element: {
-                          "query": _controllerQuery.value.text,
-                          "contentType": "ELASTIC"
-                        }));
-              }
-            },
-            child: SvgPicture.asset(
-                "assets/icons/icono_lupa_buscador_azul.svg"
-                )
+        suffixIcon: IconButton(
+          onPressed: (){
+            if (_controllerQuery.value.text.isNotEmpty) {
+            Navigator.pushNamed(context, "/browser-result",
+                arguments: ScreenArguments('NONE', "Resultados", 1,
+                    element: {
+                      "query": _controllerQuery.value.text,
+                      "contentType": "ELASTIC"
+                    }));
+          }},
+          icon: SvgPicture.asset(
+            "assets/icons/icono_lupa_buscador_azul.svg",
+            width: 25,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
@@ -214,9 +222,13 @@ class _BrowserPageState extends State<BrowserPage> {
               BorderSide(width: 3, color: Theme.of(context).primaryColor),
         ),
         enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
           borderSide:
               BorderSide(width: 3, color: Theme.of(context).primaryColor),
-        ));
+        ),
+      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10)
+
+    );
   }
 
   showFilterDialog(BuildContext context) {
@@ -251,15 +263,18 @@ class _BrowserPageState extends State<BrowserPage> {
           Navigator.pushNamed(context, "/browser-result",
               arguments: ScreenArguments('NONE', texto, 1, element: mapFilter));
         },
-        child: Container(
+        child:
+            SizedBox(
+            height: 100,
+        child:
+        Container(
+
             alignment: Alignment.center,
-            padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
-            margin:
-                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            margin: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              gradient: const RadialGradient(radius: 0.40, colors: [
+              gradient: const RadialGradient(radius: 1, colors: [
                 Color( 0xff216278),
                 Color(0xff121C4A)
               ]),
@@ -277,6 +292,6 @@ class _BrowserPageState extends State<BrowserPage> {
               texto,
               style: const TextStyle(color: Colors.white, fontSize: 15),
               textAlign: TextAlign.center,
-            )));
+            ))));
   }
 }

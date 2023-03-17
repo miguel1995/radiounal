@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../business_logic/bloc/podcast_masescuchados_bloc.dart';
 import '../business_logic/bloc/radio_masescuchados_bloc.dart';
+import '../business_logic/firebase/firebaseLogic.dart';
 
 class Home extends StatefulWidget {
 
@@ -33,6 +34,7 @@ class Home extends StatefulWidget {
       dynamic urlParam,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
+
 
   Home( this.callBackPlayMusic, {Key? key}) : super(key: key);
 
@@ -178,9 +180,9 @@ class _HomeState extends State<Home> {
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
 
-              gradient: const RadialGradient(radius: 2, colors: [
-                Color(0xffFCDC4D),
-                Color(0xffFFCC17 )
+              gradient:  const RadialGradient(radius: 3, colors: [
+                Color(0xffFEE781),
+                Color(0xffFFCC17)
               ]),
 
               boxShadow: [
@@ -492,7 +494,6 @@ class _HomeState extends State<Home> {
               "",
               true,
               null
-
           );
 
 
@@ -694,6 +695,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildCardEscuchados(element, String site) {
+
     final DateTime now =
         DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
@@ -731,6 +733,7 @@ class _HomeState extends State<Home> {
                           borderRadius: BorderRadius.circular(30),
                           child: Image(image: NetworkImage(element.imagen)))),
                   Container(
+                    padding: EdgeInsets.only(left: 2, right: 2),
                     margin: const EdgeInsets.only(top: 15),
                     color: const Color(0xffFCDC4D),
                     child: Text(
@@ -758,7 +761,7 @@ class _HomeState extends State<Home> {
                   ),
                   Container(
                     child: Text(
-                      "$formatted | ${formatDurationString(element.duration)}",
+                      "$formatted ${formatDurationString(element.duration)}",
                       style: const TextStyle(
                           fontSize: 9, color: Color(0xff666666)),
                     ),
@@ -776,18 +779,20 @@ class _HomeState extends State<Home> {
     }
   }
 
-
   String formatDurationString(String duration) {
 
-    String formatted = duration;
-    if(duration != null && duration.substring(0,2) == "00"){
-      formatted = duration.substring(3);
-    }else{
-      formatted = "";
+    String formatted = "";
+    if(duration != null){
+
+      if(duration.substring(0,2) == "00"){
+        formatted = "| " + duration.substring(3);
+      }else{
+        formatted = "| " + duration;
+      }
+
     }
 
     return formatted;
   }
-
 
 }

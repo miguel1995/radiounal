@@ -312,7 +312,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: Text(
-                      formatted,
+                      "$formatted ${(element!= null && (element is EmisionModel || element is EpisodioModel) && element.duration!= null )?formatDurationString(element.duration):''}",
                       style: const TextStyle(
                           fontSize: 10, color: Color(0xff666666)),
                     ),
@@ -394,4 +394,22 @@ class _FavouritesPageState extends State<FavouritesPage> {
       },
     );
   }
+
+  String formatDurationString(String duration) {
+
+    String formatted = "";
+    if(duration != null){
+
+      if(duration.substring(0,2) == "00"){
+        formatted = "| " + duration.substring(3);
+      }else{
+        formatted = "| " + duration;
+      }
+
+    }
+
+    return formatted;
+  }
+
+
 }

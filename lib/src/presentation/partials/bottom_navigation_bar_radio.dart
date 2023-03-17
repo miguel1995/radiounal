@@ -64,9 +64,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var _maxHeight = 0.0;
   var _minHeight = 0.0;
 
-  String? _deviceId;
-  bool _isFavorito = false;
-  late FirebaseLogic firebaseLogic;
   late FavoritoBtn? myFavoritoBtn;
 
   @override
@@ -102,7 +99,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     audioPlayer.setPlaybackRate(dropDownValue);
 
 
-    myFavoritoBtn = FavoritoBtn(uid: uid, message: type);
+    myFavoritoBtn = FavoritoBtn(uid: uid, message: type, isPrimaryColor: false);
 
 
 
@@ -133,7 +130,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
     //firebaseLogic = FirebaseLogic();
 
-    //initPlatformState();
   }
 
   @override
@@ -153,44 +149,20 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   String formatDurationString(String duration) {
 
-     String formatted = duration;
-    if(duration.substring(0,2) == "00"){
-      formatted = duration.substring(3);
+    String formatted = "";
+    if(duration != null){
+
+      if(duration.substring(0,2) == "00"){
+        formatted = "| " + duration.substring(3);
+      }else{
+        formatted = "| " + duration;
+      }
+
     }
 
     return formatted;
   }
-  Future<void> initPlatformState() async {
-    String? deviceId;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      deviceId = await PlatformDeviceId.getDeviceId;
-    } on PlatformException {
-      deviceId = 'Failed to get deviceId.';
-    }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _deviceId = deviceId;
-    });
-    print("deviceId->$_deviceId");
-
-    firebaseLogic.validateFavorite(uid, _deviceId).then(
-            (value) => {
-
-              print(">>>  HAY FAVORITO ??"),
-              print(value),
-
-          setState(()=>{
-            _isFavorito = value
-          })
-        });
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -357,37 +329,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                 /* IconButton(
-                      color: const Color(0xffFCDC4D),
-                      icon: const Icon(Icons.favorite),
-                      onPressed: () {
-                        if (_isFavorito == true) {
-                          firebaseLogic
-                              .eliminarFavorite(uid, _deviceId)
-                              .then((value) => {
-                                    setState(() {
-                                      _isFavorito = false;
-                                    })
-                                  });
-                        } else {
-                          /*firebaseLogic.agregarFavorito(uid, message, (message == "RADIO") ? "EMISION" : "EPISODIO", _deviceId).then(
-                                  (value) => {
-                                if(value == true){
-                                  //print('DocumentSnapshot added with ID: ${doc.id}');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Agregado a mis favoritos"))
-                                  ),
-                                  setState((){
-                                    _isFavorito = true;
-                                  })
-                                }else{
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Se ha presentado un problema, intentelo más tarde"))
-                                  )
-                                }
-                              });*/
-                        }
-                      })*/
+
                   myFavoritoBtn!,
                   IconButton(
                     color: const Color(0xffFCDC4D),
@@ -438,7 +380,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                               alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(
                                   top: 10, left: 30, right: 30),
-                              child: Text("${formatDateString(date)} | ${formatDurationString(durationContent)}",
+                              child: Text("${formatDateString(date)} ${formatDurationString(durationContent)}",
                                   style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.white))),
@@ -567,9 +509,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   playMusic(uidParam, audioUrlParam, imagenUrlParam, textParentParam, titleParam,
       textContentParam, dateParam, durationParam, typeParam, urlParam, bool isFrecuencia, FavoritoBtn? favoritoBtn) {
 
-    //initPlatformState();
-
-
     if (dateParam == "") {
       setState(() {
         date = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -582,7 +521,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     }
 
     setState(() {
-      //uid =  uidParam;
+      uid =  uidParam;
       imagenUrl = imagenUrlParam;
       textParent = textParentParam;
       title = titleParam.replaceAll("\n", " ");
@@ -606,9 +545,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
       setState(() {
         canExpand = true;
         hasDuration = true;
-        myFavoritoBtn = favoritoBtn;
+        //myFavoritoBtn = favoritoBtn;
       });
     }
+
+    myFavoritoBtn = FavoritoBtn(uid: uid, message: type, isPrimaryColor: false);
+
 
     setState(() {
       audioUrl = audioUrlParam;

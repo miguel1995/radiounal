@@ -433,7 +433,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                 radius: 0.8,
                                 colors: [
 
-                                  Color(0xffFCDC4D),
+                                  Color(0xffFEE781),
                                   Color(0xffFFCC17 )
                             ]),
 

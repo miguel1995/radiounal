@@ -85,6 +85,7 @@ class _MyAppState extends State<MyApp> {
             // Define the default brightness and colors.
             brightness: Brightness.light,
             primaryColor: const Color(0xff121C4A),
+
             // Define the default font family.
             fontFamily: 'AncizarSans',
             textTheme: const TextTheme(
@@ -103,7 +104,9 @@ class _MyAppState extends State<MyApp> {
                 bodyText1: TextStyle(color: Colors.red),
                 bodyText2: TextStyle(fontSize: 14.0, color: Color(0xff121C4A))),
             appBarTheme: const AppBarTheme(
-                color: Color(0xff121C4A), foregroundColor: Color(0xFFFCDC4D)),
+                color: Color(0xff121C4A),
+                foregroundColor: Color(0xFFFCDC4D)
+            ),
             drawerTheme:
                 const DrawerThemeData(backgroundColor: Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,

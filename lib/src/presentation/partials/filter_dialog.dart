@@ -78,6 +78,7 @@ class FilterDialogState extends State<FilterDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
+                    margin: EdgeInsets.only(bottom: 20),
                       alignment: Alignment.centerRight,
                       child: InkWell(
                         onTap: () => {Navigator.pop(context)},
@@ -133,13 +134,13 @@ class FilterDialogState extends State<FilterDialog> {
                         },
                         child: Container(
                             padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 10, bottom: 10),
-                            margin: const EdgeInsets.only(left: 50),
+                                left: 30, right: 30, top: 10, bottom: 10),
+                            margin: const EdgeInsets.only(left: 55),
                             decoration: BoxDecoration(
                               gradient: const RadialGradient(
                                   radius: 0.5,
                                   colors: [
-                                    Color(0xffFCDC4D),
+                                    Color(0xffFEE781),
                                     Color(0xffFFCC17 )
                                   ]),
                               borderRadius: BorderRadius.circular(5),
@@ -167,7 +168,7 @@ class FilterDialogState extends State<FilterDialog> {
                             ))),
                   ]),
                   Container(
-                      margin: const EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 30),
                       child: Text(
                         "Sedes",
                         style: getTextStyle(),
@@ -208,7 +209,7 @@ class FilterDialogState extends State<FilterDialog> {
                     ),
                   ),
                   Container(
-                      margin: const EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 30),
                       child: Text(
                         "Canales",
                         style: getTextStyle(),
@@ -258,23 +259,26 @@ class FilterDialogState extends State<FilterDialog> {
                     ),
                   ),
                   Container(
-                      margin: const EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(top: 30),
                       child: Text(
                         "Áreas",
                         style: getTextStyle(),
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    margin: EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(4),
+
                     ),
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      isDense: true,
                       value: dropdownValueAreas,
                       icon: const Icon(
                         Icons.keyboard_arrow_down_outlined,
@@ -296,6 +300,7 @@ class FilterDialogState extends State<FilterDialog> {
                         );
                       }).toList(),
                     ),
+
                   )
                 ],
               ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:rxdart/rxdart.dart';
 
 
 class FirebaseLogic{
@@ -38,11 +39,43 @@ class FirebaseLogic{
 
     return flag;
   }
+  final _subjectFavorite = BehaviorSubject<bool>();
+  BehaviorSubject<bool> get subjectFavorite => _subjectFavorite;
 
-  Future<bool> validateFavorite(uid, userId)  async {
+  validateFavorite(uid, userId)  async {
     // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
     bool flag = false;
-    await db
+
+
+    final docRef = db
+        .collection("favoritos")
+        .where("uid", isEqualTo: uid)
+        .where("userId", isEqualTo: userId);
+
+    docRef.snapshots().listen(
+
+          (event) => {
+            print("current data: ${event.docs.length}"),
+            if(event.docs.length > 0){
+
+              flag = true,
+              _subjectFavorite.sink.add(flag)
+
+        }else{
+
+              flag = false,
+              _subjectFavorite.sink.add(flag)
+
+              }
+
+
+
+          },
+          onError: (error) => print("Listen failed: $error")
+
+    );
+
+    /*await db
         .collection("favoritos")
         .where("uid", isEqualTo: uid)
         .where("userId", isEqualTo: userId)
@@ -50,14 +83,16 @@ class FirebaseLogic{
         .then(
           (res) => {
               if(res.docs.length > 0){
+                print(">>> registros en Firebase ${res.docs.length}"),
                 flag = true
               }
 
       },
       onError: (e) => print("Error completing: $e"),
-    );
+    );*/
 
-    return flag;
+    //return flag;
+    //return false;
 
   }
 

@@ -17,6 +17,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../business_logic/bloc/radio_califica_bloc.dart';
+import '../../business_logic/firebase/firebaseLogic.dart';
 import '../partials/download_form_dialog.dart';
 import '../partials/favorito_btn.dart';
 
@@ -69,7 +70,6 @@ class _ItemPageState extends State<ItemPage> {
   void initState() {
     super.initState();
 
-
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
 
@@ -78,7 +78,7 @@ class _ItemPageState extends State<ItemPage> {
     uid = widget.uid;
     from = widget.from;
 
-    favoritoBtn = FavoritoBtn(uid: uid, message: message);
+    favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
 
 
     if (message == "RADIO") {
@@ -231,7 +231,7 @@ class _ItemPageState extends State<ItemPage> {
         alignment: Alignment.centerLeft,
         margin: const EdgeInsets.only(left: 20),
         child: Text(
-          "$formatted | ${formatDurationString(element.duration)}",
+          "$formatted ${(element!= null && element.duration!= null )?formatDurationString(element.duration):''}",
           style: const TextStyle(fontSize: 11, color: Color(0xff666666)),
         ),
       ),
@@ -300,7 +300,8 @@ class _ItemPageState extends State<ItemPage> {
                     message,
                     element.url,
                     false,
-                    favoritoBtn
+                    favoritoBtn,
+
                 );
 
               },
@@ -357,7 +358,7 @@ class _ItemPageState extends State<ItemPage> {
                         padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
                           gradient: const RadialGradient(radius: 0.8, colors: [
-                            Color(0xffFCDC4D),
+                            Color(0xffFEE781),
                             Color(0xffFFCC17)
                           ]),
                           borderRadius: BorderRadius.circular(5),
@@ -665,15 +666,20 @@ class _ItemPageState extends State<ItemPage> {
 
   String formatDurationString(String duration) {
 
-    String formatted = duration;
-    if(duration != null && duration.substring(0,2) == "00"){
-      formatted = duration.substring(3);
-    }else{
-      formatted = "";
+    String formatted = "";
+    if(duration != null){
+
+      if(duration.substring(0,2) == "00"){
+        formatted = "| " + duration.substring(3);
+      }else{
+        formatted = "| " + duration;
+      }
+
     }
 
     return formatted;
   }
+
 
 }
 

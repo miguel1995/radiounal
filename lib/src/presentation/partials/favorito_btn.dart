@@ -4,11 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 
+import '../../business_logic/bloc/favorito_bloc.dart';
+
 class FavoritoBtn extends StatefulWidget {
   final int uid; //Indica el id del episodio de podcast o emisora de radio
   final String message;
+  final bool isPrimaryColor;
 
-  const FavoritoBtn({Key? key, required this.uid, required this.message}) : super(key: key);
+  const FavoritoBtn({Key? key, required this.uid, required this.message, required this.isPrimaryColor}) : super(key: key);
 
 
   @override
@@ -21,18 +24,21 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
   late FirebaseLogic firebaseLogic;
   late int uid; //Indica el id del episodio de podcast o emisora de radio
   late String message;
+  late bool isPrimaryColor;
 
+  FavoritoBloc blocFavorito = FavoritoBloc();
 
   @override
   void initState() {
     uid = widget.uid;
     message = widget.message;
-
+    isPrimaryColor = widget.isPrimaryColor;
 
     firebaseLogic = FirebaseLogic();
     initPlatformState();
 
-  } // Platform messages are asynchronous, so we initialize in an async method.
+  }
+  // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String? deviceId;
     // Platform messages may fail, so we use a try/catch PlatformException.
@@ -52,27 +58,35 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
     });
     print("deviceId->$_deviceId");
 
-    firebaseLogic.validateFavorite(uid, _deviceId).then(
-            (value) => {
+    blocFavorito.validateFavorite(uid, _deviceId);
+    blocFavorito.subject.stream.listen(
+            (event) {
           setState(()=>{
-            _isFavorito = value
-          })
-        });
+            _isFavorito = event
+          });
+        }
+    );
 
   }
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return InkWell(
         onTap: () {
 
           if(_isFavorito == true){
+            print(">> Quiero ELIMINAR a ${uid} - ${_deviceId}");
             firebaseLogic.eliminarFavorite(uid, _deviceId).then((value) => {
               setState((){
                 _isFavorito = false;
               })
             });
           }else{
+            print(">> Quiero agregar a ${uid} - ${_deviceId}");
+
             firebaseLogic.agregarFavorito(uid, message, (message == "RADIO") ? "EMISION" : "EPISODIO", _deviceId).then(
                     (value) => {
                   if(value == true){
@@ -94,10 +108,10 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
         child: Container(
             padding: const EdgeInsets.only(left: 3, right: 3),
             child:  (_isFavorito==true)? SvgPicture.asset('assets/icons/icono_corazon_completo.svg',
-              color: Colors.white,
+              color: (isPrimaryColor)?Theme.of(context).primaryColor:Theme.of(context).appBarTheme.foregroundColor,
             ) :
             SvgPicture.asset('assets/icons/icono_corazon_borde.svg',
-            color: Colors.white,
+              color: (isPrimaryColor)?Theme.of(context).primaryColor:Theme.of(context).appBarTheme.foregroundColor,
             )
         )
 
