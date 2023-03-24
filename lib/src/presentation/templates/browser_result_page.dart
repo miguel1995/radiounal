@@ -470,21 +470,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
                     child: CachedNetworkImage(
-                      //fit: BoxFit.cover,
+                      fit: BoxFit.cover,
                       imageUrl: (elementFilters["contentType"] == "ELASTIC")
                           ? element["_source"]["imagen"]
                           : element.imagen,
-                      placeholder: (context, url) =>
-                      const Center(
-                          child: SpinKitFadingCircle(
-                            color: Color(0xffb6b3c5),
-                            size: 50.0,
-                          )
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                          height: w * 0.25,
-                          color: Theme.of(context).primaryColor,
-                          child: Image.asset("assets/images/logo.png")),
+                      placeholder: (context, url) => Text(""),
+                      errorWidget: (context, url, error) => Image.asset("assets/images/default.png"),
                     ),
                   ),
                 )),
