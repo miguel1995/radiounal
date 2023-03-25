@@ -175,7 +175,7 @@ class FilterDialogState extends State<FilterDialog> {
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -184,8 +184,8 @@ class FilterDialogState extends State<FilterDialog> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: DropdownButton<int>(
-
                       isExpanded: true,
+                      isDense: true,
                       value: dropdownValueSedes,
                       icon: const Icon(
                         Icons.keyboard_arrow_down_outlined,
@@ -203,7 +203,10 @@ class FilterDialogState extends State<FilterDialog> {
                           .map<DropdownMenuItem<int>>((int value) {
                         return DropdownMenuItem<int>(
                           value: value,
-                          child: Text(listSedes[value]!),
+                          child:
+                            Container(
+                            padding: const EdgeInsets.only(top: 9),
+                          child:Text(listSedes[value]!))
                         );
                       }).toList(),
                     ),
@@ -216,7 +219,7 @@ class FilterDialogState extends State<FilterDialog> {
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(
@@ -226,6 +229,7 @@ class FilterDialogState extends State<FilterDialog> {
                     ),
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      isDense: true,
                       value: dropdownValueCanales,
                       icon: const Icon(
                         Icons.keyboard_arrow_down_outlined,
@@ -253,7 +257,11 @@ class FilterDialogState extends State<FilterDialog> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(listCanales[value]!),
+                          child:
+                            Container(
+                            padding: const EdgeInsets.only(top: 9),
+                          child: Text(listCanales[value]!)
+                            )
                         );
                       }).toList(),
                     ),
@@ -296,7 +304,11 @@ class FilterDialogState extends State<FilterDialog> {
                           .map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(listAreas[value]!),
+                          child:
+                          Container(
+                            padding: const EdgeInsets.only(top: 9),
+                            child: Text(listAreas[value]!),
+                          )
                         );
                       }).toList(),
                     ),
@@ -329,7 +341,8 @@ class FilterDialogState extends State<FilterDialog> {
 
   TextStyle getTextStyle() {
     return  TextStyle(
-        color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.bold);
+        color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.bold
+    );
   }
 
   Color? getColor(Set<MaterialState> states) {
