@@ -51,8 +51,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   bool showVolumenSlider = false;
-  bool showSpeedList = true;
+  bool showSpeedList = false;
   double currentVolumen = 1.0;
+
+  String currentSpeedText = "1.0";
+  List<String> listSpeedText = ['0.5', '1.0', '1.5', '2.0'];
+
 
   var speedListItems = const [
     DropdownMenuItem<double>(value: 0.5, child: Text("0.5x")),
@@ -267,28 +271,22 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       }
                     }),
                 Container(
-                    padding: EdgeInsets.only(top: 32),
-                    child:
+                    child: InkWell(
+                      onTap: (){
+                        setState(() {
+                          showSpeedList = !showSpeedList;
+                        });
+                      },
+                      child: Text("${currentSpeedText}x",
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18
+                          )
+                      ),
+                    )
 
-                    DropdownButtonHideUnderline(
-                        child: DropdownButton(
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
-                            dropdownColor: Colors.white,
-                            focusColor: const Color(0xffFCDC4D),
-                            iconSize: 0.0,
-                            items: speedListItems,
-                            value: dropDownValue,
-                            selectedItemBuilder: (BuildContext context) {
-                              return speedListItemsBuilder;
-                            },
-                            onChanged: (value) {
-                              setState(() {
-                                dropDownValue = value!;
-                              });
 
-                              audioPlayer.setPlaybackRate(dropDownValue);
-                            })))
+                )
               ],
             ),
             Row(children: [
@@ -433,7 +431,15 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           });
                           audioPlayer.setVolume(currentVolumen);
                         }),
-                  ))
+                  )),
+            if (showSpeedList)
+              Positioned(
+                  bottom: 200,
+                  right: 25,
+                  child:
+                    drawListSpeed()
+              )
+
           ],
         ));
   }
@@ -656,5 +662,51 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     }
 
     return widgetImg;
+  }
+
+  Widget drawListSpeed(){
+
+    List<Widget> list = [];
+    for (var element in listSpeedText) {
+      list.add(
+
+        Container(
+          padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(add .
+                color: Colors.white, // Color del borde
+                width: 0, // Ancho del borde
+              ),
+            ),
+          child:
+              InkWell(
+                  onTap: (){
+                    setState(() {
+                      currentSpeedText = element;
+                    });
+                    audioPlayer.setPlaybackRate(double.parse(currentSpeedText));
+                    setState(() {
+                      showSpeedList = false;
+                    });
+
+                  },
+                  child:
+
+              Text(
+                "${element}x",
+                style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).primaryColor
+                ),
+              )
+              )
+        )
+      );
+    }
+
+    return Column(
+      children: list
+    );
   }
 }
