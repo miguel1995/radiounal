@@ -6,8 +6,8 @@ class RadioEmailBloc{
   final _repository = RadioRepository();
   final _subject = BehaviorSubject<String>();
 
-  fetchEmail(String nombre, String email, String telefono, String tipo, String mensaje) async {
-    String string = await _repository.createEmail(nombre, email, telefono, tipo, mensaje);
+  fetchEmail(String nombre, String email, String telefono, String mensaje) async {
+    String string = await _repository.createEmail(nombre, email, telefono, mensaje);
     _subject.sink.add(string);
   }
 

@@ -55,7 +55,7 @@ class FirebaseLogic{
     docRef.snapshots().listen(
 
           (event) => {
-            print("current data: ${event.docs.length}"),
+            //print("current data: ${event.docs.length}"),
             if(event.docs.length > 0){
 
               flag = true,

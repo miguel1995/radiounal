@@ -32,7 +32,8 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
-      endDrawer: const Menu(),
+        extendBodyBehindAppBar: true,
+        endDrawer: const Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
@@ -44,6 +45,7 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
           ),
           child:
       Container(
+        padding: EdgeInsets.only(top: 90, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -109,6 +111,7 @@ class _TabMenuState extends State<TabMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         bottom: TabBar(

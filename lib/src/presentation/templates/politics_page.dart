@@ -9,12 +9,14 @@ class PoliticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      endDrawer: const Menu(),
+
+        extendBodyBehindAppBar: true,
+        endDrawer: const Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body: SingleChildScrollView(
           child: Container(
-
-            padding: const EdgeInsets.only(left: 25, right: 25, top:25, bottom: 25),
+            //color: Colors.red,
+            padding: const EdgeInsets.only(left: 25,  right: 25, top:100, bottom: 25),
 
             child: Column(
               children: <Widget>[

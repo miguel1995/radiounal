@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
+import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -48,6 +49,7 @@ class _HomeState extends State<Home> {
   final blocRadioProgramacion = RadioProgramacionBloc();
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
+  String potcastRandom = "";
 
 
   @override
@@ -60,14 +62,34 @@ class _HomeState extends State<Home> {
     blocRadioDestacados.fetchDestacados();
     blocPodcastDestacados.fetchDestacados();
     blocRadioProgramacion.fetchProgramacion();
+    print(">>> carga RADIO - mas escuchados");
+
     blocRadioMasEscuchados.fetchMasEscuchados();
     blocPodcastMasEscuchados.fetchMasEscuchados();
+
+    blocPodcastDestacados.subject.stream.listen((event) {
+
+
+      //Actualiza la transmision de podcast random
+      EpisodioModel randomItem = (event..shuffle()).first;
+      print(">> random audio");
+      print(randomItem.audio);
+
+      setState((){
+        potcastRandom = randomItem.audio;
+      });
+
+
+    });
+
+
 
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
         endDrawer:  const Menu(),
         appBar:  AppBarRadio(enableBack:false),
         body: DecoratedBox(
@@ -105,7 +127,7 @@ class _HomeState extends State<Home> {
 
   Widget drawDestacados() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20, top: 40),
+      margin: const EdgeInsets.only(bottom: 20, top: 140),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: StreamBuilder(
           stream: CombineLatestStream.list([
@@ -115,7 +137,6 @@ class _HomeState extends State<Home> {
           builder:
               (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot1) {
             Widget child;
-
             if (snapshot1.hasData) {
               child = buildListDestacados(snapshot1);
             } else if (snapshot1.hasError) {
@@ -164,7 +185,7 @@ class _HomeState extends State<Home> {
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
             drawFrecuenciaBtn("Radio web", "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
-            drawFrecuenciaBtn("Podcast", "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
+            drawFrecuenciaBtn("Podcast", potcastRandom),
           ])
         ],
       ),
@@ -304,12 +325,14 @@ class _HomeState extends State<Home> {
                 Widget child;
 
                 if (snapshot.hasData) {
+                  print(">> snapshot tiene data");
                   child = buildListEscuchados(snapshot);
                 } else if (snapshot.hasError) {
+                  print(">>> snapshot tiene un error");
                   child = drawError(snapshot.error);
                 } else {
                   child = Container(
-                      //child: Text("en progreso..."),
+                      child: Text("en progreso..."),
                       );
                 }
                 return child;
@@ -394,8 +417,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildListDestacados(AsyncSnapshot<List<dynamic>> snapshot1) {
-    var list1 = snapshot1.data![0];
-    var list2 = snapshot1.data![1];
+    var list1 = snapshot1.data![0]; //Destacados de radio
+    var list2 = snapshot1.data![1]; //Destacados de podcast
 
     List<Widget> cardList = [];
 
@@ -495,7 +518,6 @@ class _HomeState extends State<Home> {
               true,
               null
           );
-
 
         },
 
@@ -674,6 +696,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {
+
+    print(">>> build List Escuchados");
+    print(snapshot1);
+
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];
 

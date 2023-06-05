@@ -10,11 +10,13 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodios_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_seriesyepisodios_bloc.dart';
+import 'package:radiounal/src/business_logic/bloc/radio_califica_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programasyemisiones_bloc.dart';
 import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/confirm_dialog.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -53,8 +55,11 @@ class _DetailPageState extends State<DetailPage> {
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
   final blocPodcastSeriesYEpisodios = PodcastSeriesYEpisodiosBloc();
   final blocRadioProgramasYEmisiones = RadioProgramasYEmisionesBloc();
+  final blocRadioCalifica = RadioCalificaBloc();
 
   ScrollController _scrollController = ScrollController();
+  ScrollController _scrollControllerSilver = ScrollController();
+
 
   var size = null;
   double paddingTop = 0;
@@ -67,6 +72,7 @@ class _DetailPageState extends State<DetailPage> {
   int totalPages = 0;
   List<Widget> cardList = [];
   late FavoritoBtn favoritoBtn;
+  bool isListLoading = false;
 
   @override
   initState() {
@@ -86,6 +92,12 @@ class _DetailPageState extends State<DetailPage> {
     page = 1;
     elementContent = widget.elementContent;
     favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
+/*
+    print(title);
+    print(message);
+    print(uid);
+    print(page);
+    print(elementContent.toString());*/
 
     if (message == "RADIO") {
       blocRadioEmisiones.fetchEmisiones(uid, page);
@@ -120,12 +132,18 @@ class _DetailPageState extends State<DetailPage> {
         });
       }
     }
+    _scrollControllerSilver.addListener(() {
+      print(">> SILVER");
+      print(_scrollControllerSilver.position.maxScrollExtent);
+      print( _scrollControllerSilver.offset);
 
-    _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent ==
-          _scrollController.offset) {
+      if (_scrollControllerSilver.position.maxScrollExtent ==
+          _scrollControllerSilver.offset) {
+
+
         if (page < totalPages) {
           page++;
+          print(page);
 
           if (message == "RADIO") {
             blocRadioEmisiones.fetchEmisiones(uid, page);
@@ -134,6 +152,12 @@ class _DetailPageState extends State<DetailPage> {
           }
         }
       }
+    });
+
+    _scrollController.addListener(() {
+      print(">> list");
+      print(_scrollController.position.maxScrollExtent);
+      print( _scrollController.offset);
     });
   }
 
@@ -179,6 +203,7 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Scaffold(
+        //extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
@@ -197,9 +222,9 @@ class _DetailPageState extends State<DetailPage> {
                   Widget child;
 
 
-
                   if (snapshot.hasData) {
                     child = CustomScrollView(
+                      controller: _scrollControllerSilver,
                       slivers: <Widget>[sliverAppBar, _sliverList(snapshot)],
                     );
                   } else if (snapshot.hasError) {
@@ -220,6 +245,7 @@ class _DetailPageState extends State<DetailPage> {
     blocPodcastEpisodios.dispose();
     blocRadioEmisiones.dispose();
     _scrollController.dispose();
+    _scrollControllerSilver.dispose();
     super.dispose();
   }
 
@@ -247,7 +273,7 @@ class _DetailPageState extends State<DetailPage> {
     totalPages = infoModel.pages;
 
     return Container(
-        color: Colors.white,
+        //color: Colors.white,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,7 +311,9 @@ class _DetailPageState extends State<DetailPage> {
     list?.forEach((element) => {cardList.add(buildCard(element))});
 
     return ListView(
-        shrinkWrap: true, controller: _scrollController, children: cardList);
+        shrinkWrap: true,
+        controller: _scrollController,
+        children: cardList);
   }
 
   Widget buildCard(element) {
@@ -371,7 +399,7 @@ class _DetailPageState extends State<DetailPage> {
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
-                        "$formatted | ${(element != null && element.duration != null) ? formatDurationString(element.duration) : ''}",
+                        "$formatted ${ (element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
                         style: const TextStyle(
                             fontSize: 10, color: Color(0xff666666)),
                       ),
@@ -403,7 +431,7 @@ class _DetailPageState extends State<DetailPage> {
 
   String formatDurationString(String duration) {
     String formatted = "";
-    if (duration != null) {
+    if (duration != null || duration != "") {
       if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
       } else {
@@ -528,8 +556,13 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 onRatingUpdate: (rating) {
-                  //TODO: Este valor se debe enviar al servicio de Estadisticas
                   print(rating);
+                  DateTime today = DateTime.now();
+                  String dateStr = "${today.day}-${today.month}-${today.year}";
+                  blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"PROGRAMA":"SERIE", rating.toInt(), dateStr);
+                  showConfirmDialog(context, "STATISTIC");
+
+
                 },
               )),
           Container(
@@ -537,6 +570,7 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
               child: InkWell(
                   onTap: () {
+
                     if (_isSeguido == true) {
                       firebaseLogic
                           .eliminarSeguido(uid, _deviceId)
@@ -560,11 +594,7 @@ class _DetailPageState extends State<DetailPage> {
                                     //print('DocumentSnapshot added with ID: ${doc.id}');
                                     pushNotification.addNotificationItem(
                                         "${message.toUpperCase()}-$uid"),
-
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "Ahora está siguiendo este contenido"))),
+                                    showConfirmDialog(context, "FOLLOWED"),
                                     setState(() {
                                       _isSeguido = true;
                                     })
@@ -604,6 +634,19 @@ class _DetailPageState extends State<DetailPage> {
                       )))),
         ]);
       },
+    );
+  }
+
+  showConfirmDialog(BuildContext context, String strTipo) {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop(true);
+          });
+          return  ConfirmDialog(strTipo);
+        }
     );
   }
 }

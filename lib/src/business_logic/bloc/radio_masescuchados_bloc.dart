@@ -11,6 +11,9 @@ class RadioMasEscuchadosBloc{
 
   fetchMasEscuchados() async {
     List<EmisionModel> modelList = await _repository.findMasEscuchados();
+    print(">> Estoy en el bloc");
+    print(modelList);
+
     _subject.sink.add(modelList);
   }
 

@@ -25,8 +25,7 @@ class RadioProvider {
     final parsed = json.decode(responseBody);
 
     return parsed["results"]
-        .map<EmisionModel>((json) => EmisionModel.fromJson(json))
-        .toList();
+        .map<EmisionModel>((json) => EmisionModel.fromJson(json)).toList();
   }
 
   List<ProgramaModel> parseProgramas(String responseBody) {
@@ -71,6 +70,10 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
+    print(">>> URL destacados ");
+    print(url);
+    print(response.body);
+
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
     } else {
@@ -85,6 +88,8 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
+    print(">>>> URL:");
+    print(url);
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -117,6 +122,9 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
+    print(url);
+    print(response);
+
     if (response.statusCode == 200) {
       List<ProgramaModel> result = parseProgramas(utf8.decode(response.bodyBytes));
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
@@ -145,7 +153,8 @@ class RadioProvider {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body);
-
+    print(url);
+    print(response);
     if (response.statusCode == 200) {
 
       List<EmisionModel> result = parseEmisiones(utf8.decode(response.bodyBytes));
@@ -167,6 +176,9 @@ class RadioProvider {
     var url = Uri.parse('http://$_hostDomain$_urlEmision${uid.toString()}');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
+
+    print(url);
+    print(response);
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -200,7 +212,7 @@ class RadioProvider {
     }
   }
 
-  Future<String> postEmail(String nombre, String email, String telefono, String tipo, String mensaje) async {
+  Future<String> postEmail(String nombre, String email, String telefono, String mensaje) async {
     var url = Uri.parse('http://$_hostDomain$_urlContactoEmail');
     Map<String, dynamic> map = {};
     // Await the http get response, then decode the json-formatted response.
@@ -208,9 +220,11 @@ class RadioProvider {
       "nombre":nombre,
       "email":email,
       "telefono":telefono,
-      "tipo":tipo,
       "mensaje":mensaje
     });
+
+    print(">>> URL: ${url}");
+    print(">>> Body: ${body}");
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -345,6 +359,13 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
+    print(">>> URL");
+    print(url);
+
+    print(">> Response");
+    print(response);
+
+
     if (response.statusCode == 200) {
       List<ProgramaModel> result = parseProgramas(utf8.decode(response.bodyBytes));
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
@@ -383,6 +404,8 @@ class RadioProvider {
       }
     });
 
+    print(">>> BODY");
+    print(body);
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -406,7 +429,8 @@ class RadioProvider {
 
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
       map["info"] = info;
-
+      print(">>> map: ");
+      print(map);
       return map;
 
     } else {

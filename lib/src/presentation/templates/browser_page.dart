@@ -27,9 +27,11 @@ class _BrowserPageState extends State<BrowserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //extendBodyBehindAppBar: true,
       endDrawer: Menu(),
-      appBar:  AppBarRadio(enableBack:true),
+      appBar: AppBarRadio(enableBack: true),
       body:
+
       DecoratedBox(
           decoration: const BoxDecoration(
             image: DecorationImage(
@@ -37,34 +39,33 @@ class _BrowserPageState extends State<BrowserPage> {
               fit: BoxFit.cover,
             ),
           ),
-          child:
-      Container(
-      padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: Column(children: [
-          drawSearchField(),
-          Container(
-            alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.only(top: 30, bottom: 20),
-            child: Text(
-              "Explorando el contenido",
-              style: TextStyle(
-                shadows: [
-                  Shadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: const Offset(0, -5))
-                ],
-                color: Colors.transparent,
-                decorationThickness: 2,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
-                decoration: TextDecoration.underline,
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+            child: Column(children: [
+              drawSearchField(),
+              Container(
+                alignment: Alignment.centerLeft,
+                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                child: Text(
+                  "Explorando el contenido",
+                  style: TextStyle(
+                    shadows: [
+                      Shadow(
+                          color: Theme.of(context).primaryColor,
+                          offset: const Offset(0, -5))
+                    ],
+                    color: Colors.transparent,
+                    decorationThickness: 2,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    decorationColor: Color(0xFFFCDC4D),
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
-            ),
-          ),
-          drawMainFilters()
-        ]),
-      )),
+              drawMainFilters()
+            ]),
+          )),
     );
   }
 
@@ -84,7 +85,7 @@ class _BrowserPageState extends State<BrowserPage> {
           Container(
               margin: EdgeInsets.only(left: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                  color: Colors.white,
                   borderRadius: const BorderRadius.all(Radius.circular(15)),
                   border: Border.all(
                       color: Theme.of(context).primaryColor, width: 3)),
@@ -95,13 +96,10 @@ class _BrowserPageState extends State<BrowserPage> {
                     }
                   },
                   child: Container(
-
                       margin: EdgeInsets.all(9),
-                      child:SvgPicture.asset(
-                      'assets/icons/icono_filtro_buscador.svg',
-                      width: 25))
-
-              ))
+                      child: SvgPicture.asset(
+                          'assets/icons/icono_filtro_buscador.svg',
+                          width: 25))))
       ],
     );
   }
@@ -109,83 +107,94 @@ class _BrowserPageState extends State<BrowserPage> {
   Widget drawMainFilters() {
     return Expanded(
       child: GridView.count(
-          childAspectRatio: (1/0.5),
-
-          crossAxisCount: 2, children: [
-        drawFrecuenciaBtn(
-            "Series Podcast", {"query": "", "contentType": "SERIES"}),
-        drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
-          "query": "",
-          "sede": 0,
-          "canal": "BOG",
-          "area": "TODOS",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Programas Medellín 100.4 fm", {
-          "query": "",
-          "sede": 0,
-          "canal": "MED",
-          "area": "TODOS",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Programas Radio Web", {
-          "query": "",
-          "sede": 0,
-          "canal": "WEB",
-          "area": "TODOS",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Programas Temáticos", {
-          "query": "",
-          "sede": 0,
-          "canal": "TODOS",
-          "area": "TEMATICOS",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Programas de Actualidad", {
-          "query": "",
-          "sede": 0,
-          "canal": "TODOS",
-          "area": "ACTUALIDAD",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Programas Musicales", {
-          "query": "",
-          "sede": 0,
-          "canal": "TODOS",
-          "area": "MUSICALES",
-          "contentType": "PROGRAMAS"
-        }),
-        drawFrecuenciaBtn("Centro de Producción Amazonia", {
-          "query": "",
-          "sede": 490,
-          "canal": "TODOS",
-          "area": "TODOS",
-          "contentType": "EMISIONES"
-        }),
-        drawFrecuenciaBtn("Centro de Producción Manizales", {
-          "query": "",
-          "sede": 492,
-          "canal": "TODOS",
-          "area": "TODOS",
-          "contentType": "EMISIONES"
-        }),
-        drawFrecuenciaBtn("Centro de Producción Orinoquia", {
-          "query": "",
-          "sede": 493,
-          "canal": "TODOS",
-          "area": "TODOS",
-          "contentType": "EMISIONES"
-        }),
-        drawFrecuenciaBtn("Centro de Producción Palmira", {
-          "query": "",
-          "sede": 489,
-          "canal": "TODOS",
-          "area": "TODOS",
-          "contentType": "EMISIONES"
-        }),
-        drawFrecuenciaBtn("Lo más Escuchado", {"contentType": "MASESCUCHADO"})
-      ]),
+          childAspectRatio: (1 / 0.5),
+          crossAxisCount: 2,
+          children: [
+            drawFrecuenciaBtn(
+                "Series Podcast", {"query": "", "contentType": "SERIES"}),
+            drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
+              "query": "",
+              "sede": 0,
+              "canal": "BOG",
+              "area": "TODOS",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Programas Medellín 100.4 fm", {
+              "query": "",
+              "sede": 0,
+              "canal": "MED",
+              "area": "TODOS",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Programas Radio Web", {
+              "query": "",
+              "sede": 0,
+              "canal": "WEB",
+              "area": "TODOS",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Programas Temáticos", {
+              "query": "",
+              "sede": 0,
+              "canal": "TODOS",
+              "area": "TEMATICOS",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Programas de Actualidad", {
+              "query": "",
+              "sede": 0,
+              "canal": "TODOS",
+              "area": "ACTUALIDAD",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Programas Musicales", {
+              "query": "",
+              "sede": 0,
+              "canal": "TODOS",
+              "area": "MUSICALES",
+              "contentType": "PROGRAMAS",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Centro de Producción Amazonia", {
+              "query": "",
+              "sede": 490,
+              "canal": "TODOS",
+              "area": "TODOS",
+              "contentType": "EMISIONES",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Centro de Producción Manizales", {
+              "query": "",
+              "sede": 492,
+              "canal": "TODOS",
+              "area": "TODOS",
+              "contentType": "EMISIONES",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Centro de Producción Orinoquia", {
+              "query": "",
+              "sede": 493,
+              "canal": "TODOS",
+              "area": "TODOS",
+              "contentType": "EMISIONES",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Centro de Producción Palmira", {
+              "query": "",
+              "sede": 489,
+              "canal": "TODOS",
+              "area": "TODOS",
+              "contentType": "EMISIONES",
+              "numColumn": 2
+            }),
+            drawFrecuenciaBtn("Lo más Escuchado",
+                {"contentType": "MASESCUCHADO", "numColumn": 2})
+          ]),
     );
   }
 
@@ -198,15 +207,16 @@ class _BrowserPageState extends State<BrowserPage> {
           borderRadius: BorderRadius.circular(15),
         ),
         suffixIcon: IconButton(
-          onPressed: (){
+          onPressed: () {
             if (_controllerQuery.value.text.isNotEmpty) {
-            Navigator.pushNamed(context, "/browser-result",
-                arguments: ScreenArguments('NONE', "Resultados", 1,
-                    element: {
-                      "query": _controllerQuery.value.text,
-                      "contentType": "ELASTIC"
-                    }));
-          }},
+              Navigator.pushNamed(context, "/browser-result",
+                  arguments: ScreenArguments('NONE', "Resultados", 1, element: {
+                    "query": _controllerQuery.value.text,
+                    "contentType": "ELASTIC",
+                    "numColumn": 1
+                  }));
+            }
+          },
           icon: SvgPicture.asset(
             "assets/icons/icono_lupa_buscador_azul.svg",
             width: 25,
@@ -226,9 +236,7 @@ class _BrowserPageState extends State<BrowserPage> {
           borderSide:
               BorderSide(width: 3, color: Theme.of(context).primaryColor),
         ),
-      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10)
-
-    );
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10));
   }
 
   showFilterDialog(BuildContext context) {
@@ -253,7 +261,8 @@ class _BrowserPageState extends State<BrowserPage> {
           "sede": sede,
           "canal": canal,
           "area": area,
-          "contentType": contentType
+          "contentType": contentType,
+          "numColumn": 1
         }));
   }
 
@@ -263,35 +272,33 @@ class _BrowserPageState extends State<BrowserPage> {
           Navigator.pushNamed(context, "/browser-result",
               arguments: ScreenArguments('NONE', texto, 1, element: mapFilter));
         },
-        child:
-            SizedBox(
+        child: SizedBox(
             height: 100,
-        child:
-        Container(
-
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            margin: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              gradient: const RadialGradient(radius: 1, colors: [
-                Color( 0xff216278),
-                Color(0xff121C4A)
-              ]),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xff121C4A).withOpacity(0.3),
-                  spreadRadius: 3,
-                  blurRadius: 10,
-                  offset: const Offset(10, 10), // changes position of shadow
+            child: Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                margin: const EdgeInsets.only(
+                    left: 20, right: 20, top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  gradient: const RadialGradient(
+                      radius: 1,
+                      colors: [Color(0xff216278), Color(0xff121C4A)]),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff121C4A).withOpacity(0.3),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset:
+                          const Offset(10, 10), // changes position of shadow
+                    ),
+                  ],
+                  borderRadius: const BorderRadius.all(Radius.circular(10)),
                 ),
-              ],
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-            ),
-            child: Text(
-              texto,
-              style: const TextStyle(color: Colors.white, fontSize: 15),
-              textAlign: TextAlign.center,
-            ))));
+                child: Text(
+                  texto,
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
+                  textAlign: TextAlign.center,
+                ))));
   }
 }

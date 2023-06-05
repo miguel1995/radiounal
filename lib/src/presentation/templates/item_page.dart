@@ -11,6 +11,7 @@ import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/confirm_dialog.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -192,7 +193,8 @@ class _ItemPageState extends State<ItemPage> {
                       child: Image.asset("assets/images/default.png")),
             ),
           )),
-      Container(
+      if(element != null && element.categoryTitle != null && element.categoryTitle != "")
+        Container(
           alignment: Alignment.centerLeft,
           child: Container(
             padding: const EdgeInsets.only(left: 10, right: 10),
@@ -269,7 +271,7 @@ class _ItemPageState extends State<ItemPage> {
               DateTime today = DateTime.now();
               String dateStr = "${today.day}-${today.month}-${today.year}";
               blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"EMISION":"EPISODIO", rating.toInt(), dateStr);
-              _showMyDialog();
+              showConfirmDialog(context, "STATISTIC");
             },
           ))
     ]);
@@ -466,7 +468,8 @@ class _ItemPageState extends State<ItemPage> {
           ],
         ),
       ),
-      Container(
+      if(element != null && element.categoryTitle != null && element.categoryTitle != "")
+        Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: InkWell(
@@ -610,42 +613,6 @@ class _ItemPageState extends State<ItemPage> {
 
 
 
-  Future<void> _showMyDialog() async {
-
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: const Text(''),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Gracias por calificar nuestro contenido',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).appBarTheme.foregroundColor))
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                'OK',
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Theme.of(context).appBarTheme.foregroundColor),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   showFormDialog(BuildContext context) {
     showDialog(
@@ -680,6 +647,18 @@ class _ItemPageState extends State<ItemPage> {
     return formatted;
   }
 
+  showConfirmDialog(BuildContext context, String strTipo) {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(seconds: 2), () {
+            Navigator.of(context).pop(true);
+          });
+          return  ConfirmDialog(strTipo);
+        }
+    );
+  }
 
 }
 

@@ -45,11 +45,16 @@ class ProgramaModel{
   //Utilizado en el llamado al API de radio desde los providers
   ProgramaModel.fromJson(Map<String, dynamic> parsedJson) {
 
+    print(">> CASTEA MI NUEVO PROGRAMA");
+    print(parsedJson);
     _uid = parsedJson["id"];
     _title = parsedJson["title"];
     _imagen = parsedJson["imagen"];
     _url = parsedJson["url"];
     _description = parsedJson["description"];
+
+
+
   }
 
 

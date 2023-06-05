@@ -33,22 +33,18 @@ class _ContactPageState extends State<ContactsPage> {
   String telefono =  "";
   String tipo =  "";
   String mensaje =  "";
-  String? dropdownValue = "TIPO1";
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body:
       Container(
         padding:
-            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 20, right: 20, top: 10 + 80, bottom: 10),
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
@@ -119,44 +115,6 @@ class _ContactPageState extends State<ContactsPage> {
                       telefono = value.toString();
                     });
                   }
-              ),
-              Container(
-                  margin: const EdgeInsets.only(top: 10),
-                  child: const Text("Tipo de contacto*")),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: dropdownValue,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_outlined,
-                    size: 40,
-                  ),
-                  underline: Container(
-                    color: Colors.white,
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      dropdownValue = value;
-                      tipo = value!;
-                      });
-                    },
-                  items:
-                      list.keys.map<DropdownMenuItem<String>>((String value) {
-
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(list[value]!),
-                    );
-                  }).toList(),
-                ),
               ),
               Container(
                   margin: const EdgeInsets.only(top: 10),
@@ -272,7 +230,7 @@ class _ContactPageState extends State<ContactsPage> {
                     }
                     if (_formKey.currentState!.validate() && isChecked) {
 
-                      blocRadioEmail.fetchEmail(nombre, email, telefono, tipo, mensaje);
+                      blocRadioEmail.fetchEmail(nombre, email, telefono, mensaje);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Enviando mensaje ..."))
                       );

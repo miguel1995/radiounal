@@ -8,6 +8,7 @@ import 'package:radiounal/src/business_logic/bloc/radio_programas_bloc.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
+import 'package:radiounal/src/presentation/partials/confirm_dialog.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -82,6 +83,7 @@ class _ContentPageState extends State<ContentPage> {
     paddingTop = size.width * 0.30;
 
     return Scaffold(
+      //extendBodyBehindAppBar: true,
       endDrawer: const Menu(),
       appBar: AppBarRadio(enableBack: true),
       body: DecoratedBox(
@@ -213,6 +215,12 @@ class _ContentPageState extends State<ContentPage> {
 
     return InkWell(
         onTap: () {
+          print(">>>  Voy al detalle...");
+          print(title);
+          print(message);
+          print(element.uid);
+          print(element);
+
           Navigator.pushNamed(context, "/detail",
               arguments: ScreenArguments(title, message, element.uid,
                   element: element));
@@ -272,4 +280,7 @@ class _ContentPageState extends State<ContentPage> {
               ],
             )));
   }
+
+
+
 }

@@ -100,6 +100,8 @@ class EpisodioModel {
   //Utilizado en el llamado al API de podcast desde los providers
   EpisodioModel.fromJson(Map<String, dynamic> parsedJson) {
 
+    //print(parsedJson);
+
     _uid = parsedJson["id"];
     _title = parsedJson["title"];
     _teaser = parsedJson["teaser"];
@@ -107,11 +109,11 @@ class EpisodioModel {
     _imagen = parsedJson["imagen"];
     _url = parsedJson["url"];
     _audio = parsedJson["audio"];
-    _pdf = parsedJson["pdf"];
-    _rss = parsedJson["rss"];
-    _categoryTitle = parsedJson["categoryTitle"];
-    _categoryUid = parsedJson["categoryUid"];
-    _duration = parsedJson["duration"];
+    _pdf = parsedJson["pdf"]??"";
+    _rss = parsedJson["rss"]??"";
+    _categoryTitle = parsedJson["categoryTitle"]??"";
+    _categoryUid = parsedJson["categoryUid"]??0;
+    _duration = parsedJson["duration"]??"";
 
 
   }

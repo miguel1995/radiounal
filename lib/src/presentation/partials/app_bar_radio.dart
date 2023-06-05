@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class AppBarRadio extends StatelessWidget with PreferredSizeWidget {
+class AppBarRadio extends StatelessWidget implements PreferredSizeWidget {
 
   get vgPicture => null;
   late bool enableBack;
@@ -25,12 +25,8 @@ class AppBarRadio extends StatelessWidget with PreferredSizeWidget {
             child:
             InkWell(
               onTap: (){
-
                 //Navigator.popUntil(context, ModalRoute.withName('/'));
-
                 Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
-
-
               },
               child:SvgPicture.asset(
                   "assets/icons/identificador_radioUNAL.svg",

@@ -18,6 +18,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body: Container(
