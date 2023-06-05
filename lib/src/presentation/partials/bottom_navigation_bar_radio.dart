@@ -674,7 +674,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
           padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
-              border: Border.all(add .
+              border: Border.all(
                 color: Colors.white, // Color del borde
                 width: 0, // Ancho del borde
               ),
