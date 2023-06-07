@@ -589,7 +589,7 @@ class _DetailPageState extends State<DetailPage> {
                       firebaseLogic
                           .agregarSeguido(
                               uid,
-                              message,ad
+                              message,
                               (message == "RADIO") ? "PROGRAMA" : "SERIE",
                               _deviceId)
                           .then((value) => {
