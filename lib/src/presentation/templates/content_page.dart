@@ -245,13 +245,18 @@ class _ContentPageState extends State<ContentPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: CachedNetworkImage(
+                    child:
+
+                    AspectRatio(
+                      aspectRatio: 1.0, // Relación de aspecto 1:1 (cuadrado)
+                      child:
+                    CachedNetworkImage(
                       fit: BoxFit.cover,
                       imageUrl: element.imagen,
                       placeholder: (context, url) => Text(""),
                       errorWidget: (context, url, error) =>
                           Image.asset("assets/images/default.png"),
-                    ),
+                    )),
                   ),
                 )),
                 Container(

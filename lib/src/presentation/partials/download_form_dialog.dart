@@ -460,7 +460,9 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                   );*/
                                 //Inicia la Descarga del archivo .mp3
                                 widget.callBackFormDialog(true);
-                                Navigator.of(context).pop();
+                                //Navigator.of(context).pop();
+                                Navigator.pop(context);
+
                               });
                             }
                           },

@@ -107,12 +107,49 @@ class _MyAppState extends State<MyApp> {
                 const DrawerThemeData(backgroundColor: Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
-          return MaterialApp(
+          return
+
+            MaterialApp(
               theme: theme,
               //Tema Oscuro, se usa cuando se activa el modo oscuro
               darkTheme: darkTheme,
               title: 'Radio UNAL',
-              home: Scaffold(
+              home:
+              WillPopScope(
+                  onWillPop: () async {
+
+                    /*showDialog(
+                      context: context,
+                      builder: (BuildContext dialogContext) {
+
+
+                        return AlertDialog(
+                          title: Text('Diálogo de confirmación'),
+                          content: Text('¿Desea salir de la aplicación?'),
+                          actions: [
+                            TextButton(
+                              child: Text('Cancelar'),
+                              onPressed: () {
+                                Navigator.of(dialogContext).pop(false);
+                              },
+                            ),
+                            TextButton(
+                              child: Text('Aceptar'),
+                              onPressed: () {
+                                Navigator.of(dialogContext).pop(true);
+                              },
+                            ),
+                          ],
+                        );
+
+                      },
+                    );*/
+                    return Future.value(false);
+
+
+                  },
+                  child:
+          Scaffold(
                 //extendBodyBehindAppBar: true,
                 /*bottomNavigationBar: BottomNavigationBarRadio(
                     key:keyPlayer
@@ -121,7 +158,8 @@ class _MyAppState extends State<MyApp> {
                   Container(
                       padding: const EdgeInsets.only(bottom: 96),
                       child:
-                  Navigator(
+
+                          Navigator(
                       initialRoute: "/",
                       onGenerateRoute: (settings) {
                         //print(">>> settings");
@@ -229,13 +267,15 @@ class _MyAppState extends State<MyApp> {
                         }
                         assert(false, 'Need to implement ${settings.name}');
                         return null;
-                      })),
+                      })
+
+                  ),
 
                   Positioned(
                       bottom: 0,
                       child: BottomNavigationBarRadio(key: keyPlayer))
                 ]),
-              ),
+              )),
               debugShowCheckedModeBanner: false,
               initialRoute: '/splash',
               onGenerateRoute: (settings) {
@@ -247,9 +287,15 @@ class _MyAppState extends State<MyApp> {
 
                 assert(false, 'Need to implement ${settings.name}');
                 return null;
-              });
+              }
+
+              );
         });
   }
 
   playMusic(int sede, String canal, String area) {}
+
+
+
 }
+

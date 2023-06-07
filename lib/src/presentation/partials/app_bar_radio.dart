@@ -19,7 +19,7 @@ class AppBarRadio extends StatelessWidget implements PreferredSizeWidget {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
         leading: (enableBack)?IconButton(
           icon:  const Icon(Icons.arrow_back_ios_new_outlined),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () =>  Navigator.pop(context)
         ):null,
         title: Container(
             child:
@@ -27,6 +27,7 @@ class AppBarRadio extends StatelessWidget implements PreferredSizeWidget {
               onTap: (){
                 //Navigator.popUntil(context, ModalRoute.withName('/'));
                 Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+
               },
               child:SvgPicture.asset(
                   "assets/icons/identificador_radioUNAL.svg",

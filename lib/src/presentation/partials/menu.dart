@@ -73,7 +73,9 @@ class _MenuState extends State<Menu> {
           margin: EdgeInsets.only(left:60),
           child:IconButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            //Navigator.of(context).pop();
+            Navigator.pop(context);
+
           },
           icon: const Icon(Icons.close, color: Color(0xffFCDC4D)))),
 

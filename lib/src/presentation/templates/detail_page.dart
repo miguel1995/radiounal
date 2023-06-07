@@ -470,6 +470,7 @@ class _DetailPageState extends State<DetailPage> {
                           'assets/icons/icono_compartir_redes.svg')))
             ]),
           ),
+
           Container(
               width: w * 0.40,
               decoration: BoxDecoration(
@@ -483,9 +484,12 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ],
               ),
-              child: ClipRRect(
+              child:
+
+              ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
+                child:
+                CachedNetworkImage(
                   imageUrl: element.imagen,
                   placeholder: (context, url) => const Center(
                       child: SpinKitFadingCircle(
@@ -585,7 +589,7 @@ class _DetailPageState extends State<DetailPage> {
                       firebaseLogic
                           .agregarSeguido(
                               uid,
-                              message,
+                              message,ad
                               (message == "RADIO") ? "PROGRAMA" : "SERIE",
                               _deviceId)
                           .then((value) => {
@@ -643,7 +647,9 @@ class _DetailPageState extends State<DetailPage> {
         context: context,
         builder: (BuildContext context) {
           Future.delayed(Duration(seconds: 2), () {
-            Navigator.of(context).pop(true);
+            //Navigator.of(context).pop(true);
+            Navigator.pop(context);
+
           });
           return  ConfirmDialog(strTipo);
         }

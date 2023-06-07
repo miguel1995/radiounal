@@ -126,6 +126,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawDestacados() {
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20, top: 140),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
@@ -703,19 +704,35 @@ class _HomeState extends State<Home> {
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];
 
-    List<Widget> cardList = [];
+    List<Widget> cardList1 = [];
+    List<Widget> cardList2 = [];
 
     list1?.forEach(
-        (element) => {cardList.add(buildCardEscuchados(element, "Radio"))});
+        (element) => {cardList1.add(buildCardEscuchados(element, "Radio"))});
 
     list2?.forEach(
-        (element) => {cardList.add(buildCardEscuchados(element, "Podcast"))});
+        (element) => {cardList2.add(buildCardEscuchados(element, "Podcast"))});
+
+    // Mezcla listas
+    List<Widget> listaMezclada = [];
+
+
+    int longitudMaxima = cardList1.length > cardList2.length ? cardList1.length : cardList2.length;
+
+    for (int i = 0; i < longitudMaxima; i++) {
+      if (i < cardList1.length) {
+        listaMezclada.add(cardList1[i]);
+      }
+      if (i < cardList2.length) {
+        listaMezclada.add(cardList2[i]);
+      }
+    }
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: cardList,
+        children: listaMezclada,
       ),
     );
   }

@@ -284,6 +284,7 @@ class _ItemPageState extends State<ItemPage> {
         .width;
 
     return Column(children: [
+      if(element.audio != null && element.audio != "")
       Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -328,8 +329,8 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                     ],
                   ),
-                  child: Row(
-                    children: const [
+                  child: const Row(
+                    children: [
                       Icon(
                         Icons.play_arrow,
                         color: Colors.white,
@@ -634,7 +635,7 @@ class _ItemPageState extends State<ItemPage> {
   String formatDurationString(String duration) {
 
     String formatted = "";
-    if(duration != null){
+    if(duration != null && duration != "" ){
 
       if(duration.substring(0,2) == "00"){
         formatted = "| " + duration.substring(3);
@@ -653,7 +654,9 @@ class _ItemPageState extends State<ItemPage> {
         context: context,
         builder: (BuildContext context) {
           Future.delayed(Duration(seconds: 2), () {
-            Navigator.of(context).pop(true);
+            //Navigator.of(context).pop(true);
+            Navigator.pop(context);
+            print(">>> ATRASS");
           });
           return  ConfirmDialog(strTipo);
         }

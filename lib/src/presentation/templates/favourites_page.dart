@@ -359,7 +359,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       fontSize: 20,
                       color: Theme.of(context).appBarTheme.foregroundColor)),
               onPressed: () {
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
+                Navigator.pop(context);
+
 
                 firebaseLogic
                     .eliminarFavorite(element.uid, _deviceId)
@@ -386,7 +388,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     color: Theme.of(context).appBarTheme.foregroundColor),
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                //Navigator.of(context).pop();
+                Navigator.pop(context);
+
               },
             ),
           ],
