@@ -329,7 +329,7 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child:  Row(
                     children: [
                       Icon(
                         Icons.play_arrow,
