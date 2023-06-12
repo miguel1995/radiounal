@@ -107,195 +107,147 @@ class _MyAppState extends State<MyApp> {
                 const DrawerThemeData(backgroundColor: Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
-          return
-
-            MaterialApp(
-              theme: theme,
-              //Tema Oscuro, se usa cuando se activa el modo oscuro
-              darkTheme: darkTheme,
-              title: 'Radio UNAL',
-              home:
-              WillPopScope(
-                  onWillPop: () async {
-
-                    /*showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-
-
-                        return AlertDialog(
-                          title: Text('Diálogo de confirmación'),
-                          content: Text('¿Desea salir de la aplicación?'),
-                          actions: [
-                            TextButton(
-                              child: Text('Cancelar'),
-                              onPressed: () {
-                                Navigator.of(dialogContext).pop(false);
-                              },
-                            ),
-                            TextButton(
-                              child: Text('Aceptar'),
-                              onPressed: () {
-                                Navigator.of(dialogContext).pop(true);
-                              },
-                            ),
-                          ],
-                        );
-
-                      },
-                    );*/
-                    return Future.value(false);
-
-
-                  },
-                  child:
-          Scaffold(
-                //extendBodyBehindAppBar: true,
-                /*bottomNavigationBar: BottomNavigationBarRadio(
-                    key:keyPlayer
-                ),*/
-                body: Stack(children: [
+          return MaterialApp(
+            theme: theme,
+            //Tema Oscuro, se usa cuando se activa el modo oscuro
+            darkTheme: darkTheme,
+            title: 'Radio UNAL',
+            debugShowCheckedModeBanner: false,
+            builder: (context, Widget? childElement) {
+              return Scaffold(
+                  body: Stack(children: [
+                if (childElement != null)
                   Container(
                       padding: const EdgeInsets.only(bottom: 96),
-                      child:
+                      child: childElement),
+                Positioned(
+                    bottom: 0, child: BottomNavigationBarRadio(key: keyPlayer)),
+                /*Positioned(
+                    bottom: 0,
+                    child: Container(
+                      color: Colors.blue,
+                        child: Text("SPLASH \n AQUI",
+                            style: TextStyle(
+                                color: Colors.red,
+                              fontSize: 100
 
-                          Navigator(
-                      initialRoute: "/",
-                      onGenerateRoute: (settings) {
-                        //print(">>> settings");
-                        //print(settings.name);
+                            )
+                        )))*/
+              ]));
+            },
+            initialRoute: "/",
+            onGenerateRoute: (settings) {
+              if (settings.name == '/') {
+                return MaterialPageRoute(builder: (context) {
+                  return Home(keyPlayer.currentState?.playMusic);
+                });
+              } else if (settings.name == '/browser') {
+                return MaterialPageRoute(builder: (context) {
+                  return BrowserPage();
+                });
+              } else if (settings.name == '/configurations') {
+                return MaterialPageRoute(builder: (context) {
+                  return ConfigurationsPage();
+                });
+              } else if (settings.name == '/about') {
+                return MaterialPageRoute(builder: (context) {
+                  return AboutPage();
+                });
+              } else if (settings.name == '/contacts') {
+                return MaterialPageRoute(builder: (context) {
+                  return ContactsPage();
+                });
+              } else if (settings.name == '/politics') {
+                return MaterialPageRoute(builder: (context) {
+                  return PoliticsPage();
+                });
+              } else if (settings.name == '/credits') {
+                return MaterialPageRoute(builder: (context) {
+                  return CreditsPage();
+                });
+              } else if (settings.name == "/content") {
+                final args = settings.arguments as ScreenArguments;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return ContentPage(
+                      title: args.title,
+                      message: args.message,
+                      page: args.number,
+                    );
+                  },
+                );
+              } else if (settings.name == "/detail") {
+                final args = settings.arguments as ScreenArguments;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return DetailPage(
+                      title: args.title,
+                      message: args.message,
+                      uid: args.number,
+                      elementContent: args.element,
+                    );
+                  },
+                );
+              } else if (settings.name == "/item") {
+                final args = settings.arguments as ScreenArguments;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return ItemPage(
+                        title: args.title,
+                        message: args.message,
+                        uid: args.number,
+                        from: args.from,
+                        callBackPlayMusic: keyPlayer.currentState?.playMusic);
+                  },
+                );
+              } else if (settings.name == "/browser-result") {
+                final args = settings.arguments as ScreenArguments;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return BrowserResultPage(
+                        title: args.title,
+                        message: args.message,
+                        page: args.number,
+                        element: args.element);
+                  },
+                );
+              } else if (settings.name == "/favourites") {
+                final args = settings.arguments as ScreenArguments;
 
-                        if (settings.name == '/') {
-                          return MaterialPageRoute(builder: (context) {
-                            return Home(keyPlayer.currentState?.playMusic);
-                          });
-                        } else if (settings.name == '/browser') {
-                          return MaterialPageRoute(builder: (context) {
-                            return BrowserPage();
-                          });
-                        } else if (settings.name == '/configurations') {
-                          return MaterialPageRoute(builder: (context) {
-                            return ConfigurationsPage();
-                          });
-                        } else if (settings.name == '/about') {
-                          return MaterialPageRoute(builder: (context) {
-                            return AboutPage();
-                          });
-                        } else if (settings.name == '/contacts') {
-                          return MaterialPageRoute(builder: (context) {
-                            return ContactsPage();
-                          });
-                        } else if (settings.name == '/politics') {
-                          return MaterialPageRoute(builder: (context) {
-                            return PoliticsPage();
-                          });
-                        } else if (settings.name == '/credits') {
-                          return MaterialPageRoute(builder: (context) {
-                            return CreditsPage();
-                          });
-                        } else if (settings.name == "/content") {
-                          final args = settings.arguments as ScreenArguments;
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return ContentPage(
-                                title: args.title,
-                                message: args.message,
-                                page: args.number,
-                              );
-                            },
-                          );
-                        } else if (settings.name == "/detail") {
-                          final args = settings.arguments as ScreenArguments;
-                          /*print(args);
-                    print(args.title +
-                        args.message +
-                        args.number.toString() +
-                        args.element.toString());*/
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return DetailPage(
-                                title: args.title,
-                                message: args.message,
-                                uid: args.number,
-                                elementContent: args.element,
-                              );
-                            },
-                          );
-                        } else if (settings.name == "/item") {
-                          final args = settings.arguments as ScreenArguments;
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return ItemPage(
-                                  title: args.title,
-                                  message: args.message,
-                                  uid: args.number,
-                                  from: args.from,
-                                  callBackPlayMusic:
-                                      keyPlayer.currentState?.playMusic);
-                            },
-                          );
-                        } else if (settings.name == "/browser-result") {
-                          final args = settings.arguments as ScreenArguments;
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return BrowserResultPage(
-                                  title: args.title,
-                                  message: args.message,
-                                  page: args.number,
-                                  element: args.element);
-                            },
-                          );
-                        } else if (settings.name == "/favourites") {
-                          final args = settings.arguments as ScreenArguments;
-
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return TabMenuPage(
-                                tabIndex: args.number,
-                              );
-                            },
-                          );
-                        } else if (settings.name == "/followed") {
-                          final args = settings.arguments as ScreenArguments;
-                          return MaterialPageRoute(
-                            builder: (context) {
-                              return TabMenuPage(
-                                tabIndex: args.number,
-                              );
-                            },
-                          );
-                        }
-                        assert(false, 'Need to implement ${settings.name}');
-                        return null;
-                      })
-
-                  ),
-
-                  Positioned(
-                      bottom: 0,
-                      child: BottomNavigationBarRadio(key: keyPlayer))
-                ]),
-              )),
-              debugShowCheckedModeBanner: false,
-              initialRoute: '/splash',
-              onGenerateRoute: (settings) {
-                if (settings.name == '/splash') {
-                  return MaterialPageRoute(builder: (context) {
-                    return Splash();
-                  });
-                }
-
-                assert(false, 'Need to implement ${settings.name}');
-                return null;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return TabMenuPage(
+                      tabIndex: args.number,
+                    );
+                  },
+                );
+              } else if (settings.name == "/followed") {
+                final args = settings.arguments as ScreenArguments;
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return TabMenuPage(
+                      tabIndex: args.number,
+                    );
+                  },
+                );
               }
 
-              );
+              assert(false, 'Need to implement ${settings.name}');
+              return null;
+            },
+          );
         });
   }
 
-  playMusic(int sede, String canal, String area) {}
+  /*Widget addPlayerDecorator(Widget childElement){
+    return Stack(children: [
+    Container(
+    padding: const EdgeInsets.only(bottom: 96),
+    child:childElement
+    ),
+      Positioned(
+          bottom: 0, child: BottomNavigationBarRadio(key: keyPlayer))
+    ]);
 
-
-
+  }*/
 }
-
