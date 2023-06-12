@@ -526,12 +526,13 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];
 
-    list1?.forEach((element) => {cardList.add(buildCardForGridList(element))});
+    list1?.forEach((element) => {cardList.add(buildCardForVerticalList(element))});
 
-    list2?.forEach((element) => {cardList.add(buildCardForGridList(element))});
-
-    return GridView.count(
-        controller: _scrollController, crossAxisCount: 2, children: cardList);
+    list2?.forEach((element) => {cardList.add(buildCardForVerticalList(element))});
+    return ListView(
+        shrinkWrap: true, controller: _scrollController, children: cardList);
+    // return GridView.count(
+    //     controller: _scrollController, crossAxisCount: 2, children: cardList);
   }
 
   Widget buildCardForVerticalList(element) {
