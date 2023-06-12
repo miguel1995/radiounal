@@ -129,7 +129,17 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           print(page);
           setState(() {
             isLoading = true;
-          });
+          }
+          );
+            Future.delayed(Duration(milliseconds: 1000),
+            (){
+              setState(() {
+              isLoading=false;
+              });
+            }
+            );
+                
+          
 
           if (elementFilters["contentType"] == "PROGRAMAS" ||
               elementFilters["contentType"] == "EMISIONES") {
