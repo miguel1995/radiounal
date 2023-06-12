@@ -476,18 +476,20 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                       ),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: (elementFilters["contentType"] == "ELASTIC")
-                          //TODO: descomentar cuando elastic se reestablesca
-                          //? element["_source"]["imagen"]
-                          ? element.imagen
-                          : element.imagen,
-                      placeholder: (context, url) => Text(""),
-                      errorWidget: (context, url, error) =>
-                          Image.asset("assets/images/default.png"),
+                  child: AspectRatio(aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: (elementFilters["contentType"] == "ELASTIC")
+                            //TODO: descomentar cuando elastic se reestablesca
+                            //? element["_source"]["imagen"]
+                            ? element.imagen
+                            : element.imagen,
+                        placeholder: (context, url) => Text(""),
+                        errorWidget: (context, url, error) =>
+                            Image.asset("assets/images/default.png"),
+                      ),
                     ),
                   ),
                 )),
@@ -536,7 +538,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   }
 
   Widget buildCardForVerticalList(element) {
-    var w = MediaQuery.of(context).size.width;
+    var width = MediaQuery.of(context).size.width;
     DateTime now;
     try {
       now = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
@@ -560,7 +562,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
-                  width: w * 0.25,
+                  width: width * 0.25,
+                  height: width * 0.25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -574,7 +577,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(
+                    child: CachedNetworkImage(fit: BoxFit.cover,
                       imageUrl: element.imagen,
                       placeholder: (context, url) => const Center(
                           child: SpinKitFadingCircle(
