@@ -129,17 +129,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           print(page);
           setState(() {
             isLoading = true;
-          }
-          );
-            Future.delayed(Duration(milliseconds: 1000),
-            (){
-              setState(() {
-              isLoading=false;
-              });
-            }
-            );
-                
-          
+          });
+          Future.delayed(Duration(milliseconds: 1000), () {
+            setState(() {
+              isLoading = false;
+            });
+          });
 
           if (elementFilters["contentType"] == "PROGRAMAS" ||
               elementFilters["contentType"] == "EMISIONES") {
@@ -223,9 +218,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 fit: BoxFit.cover,
               ),
             ),
-            child:
-            drawContent()
-        ));
+            child: drawContent()));
   }
 
   @override
@@ -244,7 +237,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     Widget widget;
 
     if (elementFilters["contentType"] == "MASESCUCHADO") {
-
       widget = StreamBuilder(
           stream: CombineLatestStream.list([
             blocRadioMasEscuchados.subject.stream,
@@ -267,7 +259,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             }
             return child;
           });
-
     } else if (elementFilters["contentType"] == "ELASTIC") {
       widget = StreamBuilder(
           //TODO: descomentar cuando el servicio de bloc sea reestablecido
@@ -545,9 +536,13 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   Widget buildCardForVerticalList(element) {
     var w = MediaQuery.of(context).size.width;
+    DateTime now;
+    try {
+      now = DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
+    } catch (noDateException) {
+      now = DateTime.now();
+    }
 
-    final DateTime now =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
@@ -593,29 +588,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    if (element.categoryTitle != null &&
-                        element.categoryTitle != "")
-                      Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        margin: const EdgeInsets.only(left: 20, bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).appBarTheme.foregroundColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xff121C4A).withOpacity(0.3),
-                              spreadRadius: 3,
-                              blurRadius: 10,
-                              offset: const Offset(
-                                  5, 5), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          element.categoryTitle,
-                          style: const TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                    drawCategoryTitle(element),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
@@ -629,14 +602,50 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
-                        style: const TextStyle(
-                            fontSize: 10, color: Color(0xff666666)),
-                      ),
+                      child: drawDuration(formatted, element),
                     )
                   ]))
             ])));
+  }
+
+  Text drawDuration(String formatted, element) {
+    try {
+    return Text(
+                      "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
+                      style: const TextStyle(
+                          fontSize: 10, color: Color(0xff666666)),
+                    );
+      
+    } catch (e) {
+      
+    }
+    return Text('');
+  }
+
+  Container drawCategoryTitle(element) {
+    try {
+      if (element.categoryTitle != null && element.categoryTitle != "")
+        return Container(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          margin: const EdgeInsets.only(left: 20, bottom: 10),
+          decoration: BoxDecoration(
+            color: Theme.of(context).appBarTheme.foregroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xff121C4A).withOpacity(0.3),
+                spreadRadius: 3,
+                blurRadius: 10,
+                offset: const Offset(5, 5), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Text(
+            element.categoryTitle,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        );
+    } catch (e) {}
+    return Container();
   }
 
   String formatDurationString(String duration) {

@@ -111,14 +111,14 @@ class _BrowserPageState extends State<BrowserPage> {
           crossAxisCount: 2,
           children: [
             drawFrecuenciaBtn(
-                "Series Podcast", {"query": "", "contentType": "SERIES"}),
+                "Series Podcast", {"query": "", "numColumn":1, "contentType": "SERIES"}),
             drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
               "query": "",
               "sede": 0,
               "canal": "BOG",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Programas Medellín 100.4 fm", {
               "query": "",
@@ -126,7 +126,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "MED",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Programas Radio Web", {
               "query": "",
@@ -134,7 +134,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "WEB",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Programas Temáticos", {
               "query": "",
@@ -142,7 +142,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TEMATICOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Programas de Actualidad", {
               "query": "",
@@ -150,7 +150,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "ACTUALIDAD",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Programas Musicales", {
               "query": "",
@@ -158,7 +158,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "MUSICALES",
               "contentType": "PROGRAMAS",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Centro de Producción Amazonia", {
               "query": "",
@@ -166,7 +166,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TODOS",
               "contentType": "EMISIONES",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Centro de Producción Manizales", {
               "query": "",
@@ -174,7 +174,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TODOS",
               "contentType": "EMISIONES",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Centro de Producción Orinoquia", {
               "query": "",
@@ -182,7 +182,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TODOS",
               "contentType": "EMISIONES",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Centro de Producción Palmira", {
               "query": "",
@@ -190,10 +190,10 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TODOS",
               "contentType": "EMISIONES",
-              "numColumn": 2
+              "numColumn": 1
             }),
             drawFrecuenciaBtn("Lo más Escuchado",
-                {"contentType": "MASESCUCHADO", "numColumn": 2})
+                {"contentType": "MASESCUCHADO", "numColumn": 1})
           ]),
     );
   }
