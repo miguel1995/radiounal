@@ -35,6 +35,7 @@ class _ContentPageState extends State<ContentPage> {
   late String title;
   late String message;
   late int page;
+  bool isLoading = false;//
 
   final blocRadioProgramas = RadioProgramasBloc();
   final blocPodcastSeries = PodcastSeriesBloc();
@@ -62,6 +63,7 @@ class _ContentPageState extends State<ContentPage> {
     }
 
     _scrollController.addListener(() {
+      print("lower limit listaner");
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
         if (page < totalPages) {
@@ -72,6 +74,23 @@ class _ContentPageState extends State<ContentPage> {
           } else {
             blocPodcastSeries.fetchSeries(page);
           }
+
+
+            setState(() {
+              
+              isLoading=true;
+            });
+
+
+             Future.delayed(Duration(milliseconds: 1000),
+            (){
+              setState(() {
+              isLoading=false;
+              });
+            }
+            );
+                
+          
         }
       }
     });
@@ -179,7 +198,13 @@ class _ContentPageState extends State<ContentPage> {
                     ),
                   ),
                 ),*/
-          Expanded(child: buildList(snapshot))
+          Expanded(child: buildList(snapshot)),
+            if (isLoading)
+            const Center(
+                child: SpinKitFadingCircle(
+              color: Color(0xffb6b3c5),
+              size: 50.0,
+            ))
         ]);
   }
 
