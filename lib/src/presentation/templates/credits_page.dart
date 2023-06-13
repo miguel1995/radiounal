@@ -81,15 +81,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Director Nacional de Unimedios: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Freddy Chaparro Sanabria\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'ffchaparros@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -112,15 +119,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Jefe Oficina de Producción y Realización Radiofónica: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Carlos Emilio Raigoso Camelo\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'ceraigosoca@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -143,15 +157,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Secretaría: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Janeth López Pirajan\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'jlopezpi@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -174,15 +195,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Coordinador Radio UNAL Medellín: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Daniel Iván Longas Arteaga\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'dilongasa@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -205,15 +233,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Producción General Radio UNAL Bogotá: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Wendy Casallas Moreno\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'wlcasallasm@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -236,15 +271,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Producción General Podcast Radio UNAL: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Diana Gabriela Hernández Monroy\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'dihernandezmo@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -267,15 +309,22 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Producción General Radio Web UNAL: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Julio Cesar Casas Castro\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
+                            ),
+                            TextSpan(
+                                text: 'jccasasc@unal.edu.co',
+                                style:                                  Theme.of(context).textTheme.bodySmall 
+
+                                // TextStyle(fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
@@ -298,46 +347,23 @@ class CreditsPage extends StatelessWidget {
                           children: <TextSpan>[
                             TextSpan(
                                 text:
-                                'Rectora: \n',
+                                'Fonoteca Radio UNAL: \n',
                                 style:
                                 TextStyle(fontWeight: FontWeight.bold,
                                     color: Theme.of(context).primaryColor
                                 )),
                             TextSpan(
-                                text: 'Dolly Montoya Castaño',
+                                text: 'Pedro Arturo Salazar Díaz\n',
                                 style:
                                 TextStyle( color: Theme.of(context).primaryColor)
                             ),
-                          ],
-                        ),
-                      )),
-                ],
-              )),
-          Container(
-              margin: const EdgeInsets.only(top: 20),
-              child:
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text("• "),
-                  Expanded(
-                      child: RichText(
-                        text:  TextSpan(
-                          // Note: Styles for TextSpans must be explicitly defined.
-                          // Child text spans will inherit styles from parent
-
-                          children: <TextSpan>[
                             TextSpan(
-                                text:
-                                'Rectora: \n',
+                                text: 'pasalazard@unal.edu.co',
                                 style:
-                                TextStyle(fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor
-                                )),
-                            TextSpan(
-                                text: 'Dolly Montoya Castaño',
-                                style:
-                                TextStyle( color: Theme.of(context).primaryColor)
+                                  Theme.of(context).textTheme.bodySmall 
+                                // TextStyle(
+                                //   fontWeight: FontWeight.w100,
+                                //    color: Theme.of(context).primaryColor)
                             ),
                           ],
                         ),
