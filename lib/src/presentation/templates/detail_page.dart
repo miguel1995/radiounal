@@ -349,7 +349,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(
+                    child: CachedNetworkImage(fit: BoxFit.cover,
                       imageUrl: element.imagen,
                       placeholder: (context, url) => const Center(
                           child: SpinKitFadingCircle(
@@ -473,6 +473,7 @@ class _DetailPageState extends State<DetailPage> {
 
           Container(
               width: w * 0.40,
+              height: w * 0.40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -489,7 +490,7 @@ class _DetailPageState extends State<DetailPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child:
-                CachedNetworkImage(
+                CachedNetworkImage(fit: BoxFit.cover,
                   imageUrl: element.imagen,
                   placeholder: (context, url) => const Center(
                       child: SpinKitFadingCircle(
