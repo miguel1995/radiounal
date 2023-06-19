@@ -32,7 +32,6 @@ class _FollowedPageState extends State<FollowedPage> {
   late FirebaseLogic firebaseLogic;
   late PushNotification pushNotification;
 
-
   final blocRadio = RadioProgramasYEmisionesBloc();
   final blocPodcast = PodcastSeriesYEpisodiosBloc();
 
@@ -57,8 +56,7 @@ class _FollowedPageState extends State<FollowedPage> {
           blocRadio.subject.stream,
           blocPodcast.subject.stream,
         ]),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           Widget child;
 
           if (snapshot.hasData) {
@@ -68,10 +66,9 @@ class _FollowedPageState extends State<FollowedPage> {
           } else {
             child = const Center(
                 child: SpinKitFadingCircle(
-                  color: Color(0xffb6b3c5),
-                  size: 50.0,
-                )
-            );
+              color: Color(0xffb6b3c5),
+              size: 50.0,
+            ));
           }
           return child;
         });
@@ -79,7 +76,6 @@ class _FollowedPageState extends State<FollowedPage> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
-
     String? deviceId;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
@@ -99,24 +95,22 @@ class _FollowedPageState extends State<FollowedPage> {
     print("deviceId->$_deviceId");
 
     firebaseLogic.findSeguidosByUserUid(_deviceId).then((value) => {
-      //Filtra los IDs de los programas
-      listProgramasIds = value
-          .where((e) => e["tipo"] == "PROGRAMA")
-          .map((e) => int.parse(e["uid"].toString()))
-          .toList(),
+          //Filtra los IDs de los programas
+          listProgramasIds = value
+              .where((e) => e["tipo"] == "PROGRAMA")
+              .map((e) => int.parse(e["uid"].toString()))
+              .toList(),
 
+          blocRadio.fetchProgramsaYEmisiones(listProgramasIds, []),
 
-      blocRadio.fetchProgramsaYEmisiones(
-          listProgramasIds, []),
+          //Filtra los IDs de las Series
+          listSeriesIds = value
+              .where((e) => e["tipo"] == "SERIE")
+              .map((e) => int.parse(e["uid"].toString()))
+              .toList(),
 
-      //Filtra los IDs de las Series
-      listSeriesIds = value
-          .where((e) => e["tipo"] == "SERIE")
-          .map((e) => int.parse(e["uid"].toString()))
-          .toList(),
-
-      blocPodcast.fetchSeriesYEpisodios(listSeriesIds, [])
-    });
+          blocPodcast.fetchSeriesYEpisodios(listSeriesIds, [])
+        });
   }
 
   @override
@@ -129,7 +123,7 @@ class _FollowedPageState extends State<FollowedPage> {
   Widget drawContentList(AsyncSnapshot<List<dynamic>> snapshot) {
     Map<String, dynamic> listRadio = snapshot.data![0];
     Map<String, dynamic> listPodcast = snapshot.data![1];
-    int count=0;
+    int count = 0;
     List<Widget> cardList = [];
 
     listRadio?["programas"]
@@ -138,33 +132,28 @@ class _FollowedPageState extends State<FollowedPage> {
     listPodcast?["series"]
         .forEach((element) => cardList.add(buildCard(element, "Podcast")));
 
+    Widget widgetResult;
 
-    Widget  widgetResult;
-
-    if(cardList.length>0){
-      widgetResult =
-          Container(
+    if (cardList.length > 0) {
+      widgetResult = Container(
           padding: const EdgeInsets.only(top: 20),
-          child:SingleChildScrollView(
           child: SingleChildScrollView(
+              child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: cardList,
             ),
           )));
-    }else{
-      widgetResult =  Center(child: Text("Su listado de contenidos está vacío.",
-        style: TextStyle(
-            color: Theme.of(context).primaryColor,
-            fontSize: 20
-        ),
-      )
-      );
+    } else {
+      widgetResult = Center(
+          child: Text(
+        "Su listado de contenidos está vacío.",
+        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20),
+      ));
     }
 
     return widgetResult;
-
   }
 
   Widget drawError(error) {
@@ -190,7 +179,7 @@ class _FollowedPageState extends State<FollowedPage> {
 
     return Container(
         padding:
-        const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
         child: Row(children: [
           InkWell(
               onTap: () {
@@ -209,9 +198,10 @@ class _FollowedPageState extends State<FollowedPage> {
                 }
               },
               child:
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Container(
                     width: w * 0.25,
+                    height: w * 0.25,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
@@ -227,13 +217,11 @@ class _FollowedPageState extends State<FollowedPage> {
                       borderRadius: BorderRadius.circular(20),
                       child: CachedNetworkImage(
                         imageUrl: element.imagen,
-                        placeholder: (context, url) =>
-                        const Center(
+                        placeholder: (context, url) => const Center(
                             child: SpinKitFadingCircle(
-                              color: Color(0xffb6b3c5),
-                              size: 50.0,
-                            )
-                        ),
+                          color: Color(0xffb6b3c5),
+                          size: 50.0,
+                        )),
                         errorWidget: (context, url, error) => Container(
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
@@ -241,28 +229,27 @@ class _FollowedPageState extends State<FollowedPage> {
                       ),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
                   Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      margin: const EdgeInsets.only(left: 20, bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(
-                                5, 5), // changes position of shadow
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        element.title,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    margin: const EdgeInsets.only(left: 20, bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).appBarTheme.foregroundColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xff121C4A).withOpacity(0.3),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset:
+                              const Offset(5, 5), // changes position of shadow
+                        ),
+                      ],
                     ),
+                    child: Text(
+                      element.title,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
                   Container(
                     width: w * 0.55,
                     margin: const EdgeInsets.only(left: 20),
@@ -277,21 +264,16 @@ class _FollowedPageState extends State<FollowedPage> {
                 ])
               ])),
           Expanded(
-            child:
-
-          Checkbox(
-          fillColor: MaterialStateProperty.resolveWith(getColor),
-          value: true,
-          onChanged: (bool? value) {
-                _showMyDialog(element, site);
-          })
-
-          )
+              child: Checkbox(
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: true,
+                  onChanged: (bool? value) {
+                    _showMyDialog(element, site);
+                  }))
         ]));
   }
 
   Future<void> _showMyDialog(element, String site) async {
-
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -302,7 +284,8 @@ class _FollowedPageState extends State<FollowedPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('¿Desea dejar de seguir su contenido de $site: ${element.title} ?',
+                Text(
+                    '¿Desea dejar de seguir su contenido de $site: ${element.title} ?',
                     style: TextStyle(
                         fontSize: 20,
                         color: Theme.of(context).appBarTheme.foregroundColor))
@@ -319,23 +302,22 @@ class _FollowedPageState extends State<FollowedPage> {
                 //Navigator.of(context).pop();
                 Navigator.pop(context);
 
-
                 firebaseLogic
                     .eliminarSeguido(element.uid, _deviceId)
                     .then((value) => {
-                  pushNotification.removeNotificationItem("${site.toUpperCase()}-${element.uid}"),
+                          pushNotification.removeNotificationItem(
+                              "${site.toUpperCase()}-${element.uid}"),
 
-                  //actualiza el listado
-                  initPlatformState()
+                          //actualiza el listado
+                          initPlatformState()
 
-                  //TODO: eliminar el elemento de la lista, en lugar de recargar todo el listo
-                  /*if(site.toUpperCase() == "RADIO"){
+                          //TODO: eliminar el elemento de la lista, en lugar de recargar todo el listo
+                          /*if(site.toUpperCase() == "RADIO"){
 
                       }else if(site.toUpperCase() == "PODCAST"){
 
                       }*/
-                });
-
+                        });
               },
             ),
             TextButton(
@@ -348,7 +330,6 @@ class _FollowedPageState extends State<FollowedPage> {
               onPressed: () {
                 //Navigator.of(context).pop();
                 Navigator.pop(context);
-
               },
             ),
           ],
@@ -370,19 +351,15 @@ class _FollowedPageState extends State<FollowedPage> {
   }
 
   String formatDurationString(String duration) {
-
     String formatted = "";
-    if(duration != null){
-
-      if(duration.substring(0,2) == "00"){
+    if (duration != null) {
+      if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
-      }else{
+      } else {
         formatted = "| " + duration;
       }
-
     }
 
     return formatted;
   }
-
 }

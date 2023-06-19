@@ -166,6 +166,7 @@ class _ItemPageState extends State<ItemPage> {
       ),
       Container(
           width: w * 0.40,
+          height: w * 0.40,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             boxShadow: [

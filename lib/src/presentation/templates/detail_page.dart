@@ -50,6 +50,7 @@ class _DetailPageState extends State<DetailPage> {
   late int uid;
   late int page;
   late dynamic elementContent; // almacena un objeto SerieModel o ProgramaModel
+  bool isLoading = false;
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
@@ -59,7 +60,6 @@ class _DetailPageState extends State<DetailPage> {
 
   ScrollController _scrollController = ScrollController();
   ScrollController _scrollControllerSilver = ScrollController();
-
 
   var size = null;
   double paddingTop = 0;
@@ -85,7 +85,6 @@ class _DetailPageState extends State<DetailPage> {
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
-
     title = widget.title;
     message = widget.message;
     uid = widget.uid;
@@ -133,32 +132,58 @@ class _DetailPageState extends State<DetailPage> {
       }
     }
     _scrollControllerSilver.addListener(() {
-      print(">> SILVER");
-      print(_scrollControllerSilver.position.maxScrollExtent);
-      print( _scrollControllerSilver.offset);
+    //   print(">> SILVER");
+    //   print(_scrollControllerSilver.position.maxScrollExtent);
+    //   print(_scrollControllerSilver.offset);
 
-      if (_scrollControllerSilver.position.maxScrollExtent ==
-          _scrollControllerSilver.offset) {
-
-
-        if (page < totalPages) {
-          page++;
-          print(page);
-
-          if (message == "RADIO") {
-            blocRadioEmisiones.fetchEmisiones(uid, page);
-          } else {
-            blocPodcastEpisodios.fetchEpisodios(uid, page);
-          }
+    if (_scrollControllerSilver.position.maxScrollExtent ==
+        _scrollControllerSilver.offset) {
+      if (page < totalPages) {
+        page++;
+        print(page);
+        setState(() {
+          isLoading = true;
+        });
+        Future.delayed(Duration(milliseconds: 10000), () {
+          setState(() {
+            isLoading = false;
+          });
+        });
+        if (message == "RADIO") {
+          blocRadioEmisiones.fetchEmisiones(uid, page);
+        } else {
+          blocPodcastEpisodios.fetchEpisodios(uid, page);
         }
       }
+    }
     });
-
-    _scrollController.addListener(() {
-      print(">> list");
-      print(_scrollController.position.maxScrollExtent);
-      print( _scrollController.offset);
-    });
+    // _scrollController.addListener(() {
+    //   print(">> listener");
+    //   print(_scrollController.position.maxScrollExtent);
+    //   print(_scrollController.offset);
+    
+    //   if (_scrollController.position.maxScrollExtent ==
+    //       _scrollController.offset) {
+    //     print('bottom limit reached');
+    //     if (page < totalPages) {
+    //       page++;
+    //       print('page: $page');
+    //       setState(() {
+    //         isLoading = true;
+    //       });
+    //       Future.delayed(Duration(milliseconds: 5000), () {
+    //         setState(() {
+    //           isLoading = false;
+    //         });
+    //       });
+    //       if (message == "RADIO") {
+    //         blocRadioEmisiones.fetchEmisiones(uid, page);
+    //       } else {
+    //         blocPodcastEpisodios.fetchEpisodios(uid, page);
+    //       }
+    //     }
+    //   }
+    // });
   }
 
   @override
@@ -167,10 +192,9 @@ class _DetailPageState extends State<DetailPage> {
     paddingTop = size.width * 0.30;
 
     SliverAppBar sliverAppBar = SliverAppBar(
-
         automaticallyImplyLeading: false,
         actions: <Widget>[
-           Container(),
+          Container(),
         ],
         backgroundColor: Colors.transparent,
         expandedHeight: 450,
@@ -186,9 +210,7 @@ class _DetailPageState extends State<DetailPage> {
                 _isSeguido!,
                 pushNotification!,
                 firebaseLogic!,
-                favoritoBtn!))
-
-    );
+                favoritoBtn!)));
 
     _sliverList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
       SliverList sliverList = SliverList(
@@ -220,7 +242,6 @@ class _DetailPageState extends State<DetailPage> {
                 builder: (BuildContext context,
                     AsyncSnapshot<Map<String, dynamic>> snapshot) {
                   Widget child;
-
 
                   if (snapshot.hasData) {
                     child = CustomScrollView(
@@ -278,19 +299,19 @@ class _DetailPageState extends State<DetailPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: const EdgeInsets.only(left: 20),
-                child: Text(
-                  "${infoModel.count} resultados",
-                  style: const TextStyle(
-                    color: Color(0xff121C4A),
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    decorationColor: Color(0xFFFCDC4D),
-                  ),
-                ),
+          Container(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              "${infoModel.count} resultados",
+              style: const TextStyle(
+                color: Color(0xff121C4A),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                decorationColor: Color(0xFFFCDC4D),
               ),
-              /*Container(
+            ),
+          ),
+          /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
@@ -302,8 +323,16 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                 ),*/
-              buildList(snapshot)
-            ]));
+          buildList(snapshot),
+          if (isLoading)
+            Container(height: MediaQuery.of(context).size.height*0.2,
+              child: const Center(
+                  child: SpinKitFadingCircle(
+                color: Color(0xffb6b3c5),
+                size: 50.0,
+              )),
+            )
+        ]));
   }
 
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
@@ -311,9 +340,7 @@ class _DetailPageState extends State<DetailPage> {
     list?.forEach((element) => {cardList.add(buildCard(element))});
 
     return ListView(
-        shrinkWrap: true,
-        controller: _scrollController,
-        children: cardList);
+        shrinkWrap: true, controller: _scrollController, children: cardList);
   }
 
   Widget buildCard(element) {
@@ -336,6 +363,7 @@ class _DetailPageState extends State<DetailPage> {
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                   width: w * 0.25,
+                  height: w * 0.25,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
@@ -349,7 +377,8 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
                       imageUrl: element.imagen,
                       placeholder: (context, url) => const Center(
                           child: SpinKitFadingCircle(
@@ -399,7 +428,7 @@ class _DetailPageState extends State<DetailPage> {
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
-                        "$formatted ${ (element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
+                        "$formatted ${(element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
                         style: const TextStyle(
                             fontSize: 10, color: Color(0xff666666)),
                       ),
@@ -470,7 +499,6 @@ class _DetailPageState extends State<DetailPage> {
                           'assets/icons/icono_compartir_redes.svg')))
             ]),
           ),
-
           Container(
               width: w * 0.40,
               height: w * 0.40,
@@ -485,12 +513,10 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ],
               ),
-              child:
-
-              ClipRRect(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child:
-                CachedNetworkImage(fit: BoxFit.cover,
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
                   imageUrl: element.imagen,
                   placeholder: (context, url) => const Center(
                       child: SpinKitFadingCircle(
@@ -564,10 +590,14 @@ class _DetailPageState extends State<DetailPage> {
                   print(rating);
                   DateTime today = DateTime.now();
                   String dateStr = "${today.day}-${today.month}-${today.year}";
-                  blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"PROGRAMA":"SERIE", rating.toInt(), dateStr);
+                  blocRadioCalifica.addEstadistica(
+                      element.uid,
+                      element.title,
+                      message.toUpperCase(),
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      rating.toInt(),
+                      dateStr);
                   showConfirmDialog(context, "STATISTIC");
-
-
                 },
               )),
           Container(
@@ -575,7 +605,6 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
               child: InkWell(
                   onTap: () {
-
                     if (_isSeguido == true) {
                       firebaseLogic
                           .eliminarSeguido(uid, _deviceId)
@@ -650,11 +679,8 @@ class _DetailPageState extends State<DetailPage> {
           Future.delayed(Duration(seconds: 2), () {
             //Navigator.of(context).pop(true);
             Navigator.pop(context);
-
           });
-          return  ConfirmDialog(strTipo);
-        }
-    );
+          return ConfirmDialog(strTipo);
+        });
   }
 }
-

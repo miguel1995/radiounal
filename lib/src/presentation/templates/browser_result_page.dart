@@ -653,14 +653,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           margin: const EdgeInsets.only(left: 20, bottom: 10),
           decoration: BoxDecoration(
             color: Theme.of(context).appBarTheme.foregroundColor,
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff121C4A).withOpacity(0.3),
-                spreadRadius: 3,
-                blurRadius: 10,
-                offset: const Offset(5, 5), // changes position of shadow
-              ),
-            ],
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: const Color(0xff121C4A).withOpacity(0.3),
+            //     spreadRadius: 3,
+            //     blurRadius: 10,
+            //     offset: const Offset(5, 5), // changes position of shadow
+            //   ),
+            // ],
           ),
           child: Text(
             '',
