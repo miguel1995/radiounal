@@ -66,6 +66,8 @@ class _DetailPageState extends State<DetailPage> {
 
   String? _deviceId;
   bool _isSeguido = false;
+  int _currentScore =  0;
+
   late FirebaseLogic firebaseLogic;
   late PushNotification pushNotification;
 
@@ -97,6 +99,33 @@ class _DetailPageState extends State<DetailPage> {
     print(uid);
     print(page);
     print(elementContent.toString());*/
+
+    firebaseLogic.validateSeguido(uid, _deviceId)
+        .then((value) => {
+
+          setState((){
+            _isSeguido = value;
+          })
+
+    });
+
+    firebaseLogic.validateEstadistica(
+    uid,
+    _deviceId,
+    message.toUpperCase(),
+    (message == "RADIO")?"PROGRAMA":"SERIE"
+    )
+        .then((value) => {
+
+        if(value != null && value != "" && value != null){
+          setState((){
+            _currentScore = value;
+          })
+        }
+
+    });
+
+    print(">>> SI te estoy siguiendo: ${_isSeguido}");
 
     if (message == "RADIO") {
       blocRadioEmisiones.fetchEmisiones(uid, page);
@@ -131,6 +160,7 @@ class _DetailPageState extends State<DetailPage> {
         });
       }
     }
+
     _scrollControllerSilver.addListener(() {
     //   print(">> SILVER");
     //   print(_scrollControllerSilver.position.maxScrollExtent);
@@ -572,7 +602,7 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
               alignment: Alignment.centerLeft,
               child: RatingBar(
-                initialRating: 1,
+                initialRating: _currentScore.toDouble(),
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
@@ -587,17 +617,34 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 onRatingUpdate: (rating) {
+
                   print(rating);
                   DateTime today = DateTime.now();
                   String dateStr = "${today.day}-${today.month}-${today.year}";
-                  blocRadioCalifica.addEstadistica(
-                      element.uid,
-                      element.title,
-                      message.toUpperCase(),
+                  //Agrega Estadistica a Backend Typo3
+                  blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"PROGRAMA":"SERIE", rating.toInt(), dateStr);
+                  //Agrega Estadistica a firebase
+                  firebaseLogic
+                      .agregarEstadistica(
+                      uid,
+                      message,
                       (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      _deviceId,
                       rating.toInt(),
-                      dateStr);
+                      today.microsecondsSinceEpoch
+                  ).then((value) => {
+                    if (value == true)
+                      {
+                        print(">>> Estadistica agregada a firebase")
+                      }
+                    else
+                      {
+                        print(">>> No se puede  agregar la Estadistica a firebase")
+                      }
+                  });
+
                   showConfirmDialog(context, "STATISTIC");
+
                 },
               )),
           Container(

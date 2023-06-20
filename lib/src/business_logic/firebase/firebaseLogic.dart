@@ -2,20 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:rxdart/rxdart.dart';
 
-
-class FirebaseLogic{
-
+class FirebaseLogic {
   late final FirebaseFirestore db; //Gestiona el uso de firestore database
-  late final FirebaseMessaging _fcm; // Gestiona el uso de FirebaseMessagin (push notifications)
+  late final FirebaseMessaging
+      _fcm; // Gestiona el uso de FirebaseMessagin (push notifications)
 
-
-  FirebaseLogic(){
+  FirebaseLogic() {
     db = FirebaseFirestore.instance;
     _fcm = FirebaseMessaging.instance;
   }
 
-  Future<bool> agregarFavorito(uid, message, tipo, userId)async{
-
+  Future<bool> agregarFavorito(uid, message, tipo, userId) async {
     bool flag = false;
 
     // Agragar un favorito a la base de datos en firebase
@@ -26,26 +23,27 @@ class FirebaseLogic{
       "userId": userId
     };
 
-      // Add a new document with a generated ID
-      await db.collection("favoritos").add(newDocument).then((DocumentReference doc) =>
-      {
-          if(doc.id != null){
-            //print('DocumentSnapshot added with ID: ${doc.id}');
-            flag = true
-          }
-      }
-
-    );
+    // Add a new document with a generated ID
+    await db
+        .collection("favoritos")
+        .add(newDocument)
+        .then((DocumentReference doc) => {
+              if (doc.id != null)
+                {
+                  //print('DocumentSnapshot added with ID: ${doc.id}');
+                  flag = true
+                }
+            });
 
     return flag;
   }
+
   final _subjectFavorite = BehaviorSubject<bool>();
   BehaviorSubject<bool> get subjectFavorite => _subjectFavorite;
 
-  validateFavorite(uid, userId)  async {
+  validateFavorite(uid, userId) async {
     // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
     bool flag = false;
-
 
     final docRef = db
         .collection("favoritos")
@@ -53,27 +51,14 @@ class FirebaseLogic{
         .where("userId", isEqualTo: userId);
 
     docRef.snapshots().listen(
-
-          (event) => {
-            //print("current data: ${event.docs.length}"),
-            if(event.docs.length > 0){
-
-              flag = true,
-              _subjectFavorite.sink.add(flag)
-
-        }else{
-
-              flag = false,
-              _subjectFavorite.sink.add(flag)
-
-              }
-
-
-
-          },
-          onError: (error) => print("Listen failed: $error")
-
-    );
+        (event) => {
+              //print("current data: ${event.docs.length}"),
+              if (event.docs.length > 0)
+                {flag = true, _subjectFavorite.sink.add(flag)}
+              else
+                {flag = false, _subjectFavorite.sink.add(flag)}
+            },
+        onError: (error) => print("Listen failed: $error"));
 
     /*await db
         .collection("favoritos")
@@ -93,10 +78,9 @@ class FirebaseLogic{
 
     //return flag;
     //return false;
-
   }
 
-  Future<bool> eliminarFavorite(uid, userId)  async {
+  Future<bool> eliminarFavorite(uid, userId) async {
     bool flag = false;
 
     // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
@@ -107,23 +91,16 @@ class FirebaseLogic{
         .get()
         .then(
           (snapshot) async => {
-          for (var doc in snapshot.docs) {
-                await doc.reference.delete().then(
-                        (value) => {
-
-                  }
-                )
-          }
-
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+            for (var doc in snapshot.docs)
+              {await doc.reference.delete().then((value) => {})}
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
 
     return flag;
-
   }
 
-  Future<List<Map<String, dynamic>>> findFavoriteByUserUid(userId)  async {
+  Future<List<Map<String, dynamic>>> findFavoriteByUserUid(userId) async {
     List<Map<String, dynamic>> listDocs = [];
 
     //Busca todos los favoritos de un usuario
@@ -132,19 +109,15 @@ class FirebaseLogic{
         .where("userId", isEqualTo: userId)
         .get()
         .then(
-          (snapshot) async => {
-          listDocs = snapshot.docs.map((doc) => doc.data()).toList()
-
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+          (snapshot) async =>
+              {listDocs = snapshot.docs.map((doc) => doc.data()).toList()},
+          onError: (e) => print("Error completing: $e"),
+        );
 
     return listDocs;
-
   }
 
-  Future<bool> agregarSeguido(uid, message, tipo, userId)async{
-
+  Future<bool> agregarSeguido(uid, message, tipo, userId) async {
     bool flag = false;
 
     // Agragar un favorito a la base de datos en firebase
@@ -156,21 +129,21 @@ class FirebaseLogic{
     };
 
     // Add a new document with a generated ID
-    await db.collection("seguidos").add(newDocument).then((DocumentReference doc) =>
-    {
-      if(doc.id != null){
-        //print('DocumentSnapshot added with ID: ${doc.id}');
-        flag = true
-      }
-    }
-
-    );
+    await db
+        .collection("seguidos")
+        .add(newDocument)
+        .then((DocumentReference doc) => {
+              if (doc.id != null)
+                {
+                  //print('DocumentSnapshot added with ID: ${doc.id}');
+                  flag = true
+                }
+            });
 
     return flag;
   }
 
-
-  Future<List<Map<String, dynamic>>> findSeguidosByUserUid(userId)  async {
+  Future<List<Map<String, dynamic>>> findSeguidosByUserUid(userId) async {
     List<Map<String, dynamic>> listDocs = [];
 
     //Busca todos los favoritos de un usuario
@@ -179,18 +152,15 @@ class FirebaseLogic{
         .where("userId", isEqualTo: userId)
         .get()
         .then(
-          (snapshot) async => {
-        listDocs = snapshot.docs.map((doc) => doc.data()).toList()
-
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+          (snapshot) async =>
+              {listDocs = snapshot.docs.map((doc) => doc.data()).toList()},
+          onError: (e) => print("Error completing: $e"),
+        );
 
     return listDocs;
-
   }
 
-  Future<bool> eliminarSeguido(uid, userId)  async {
+  Future<bool> eliminarSeguido(uid, userId) async {
     bool flag = false;
 
     // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
@@ -201,24 +171,17 @@ class FirebaseLogic{
         .get()
         .then(
           (snapshot) async => {
-        for (var doc in snapshot.docs) {
-          await doc.reference.delete().then(
-                  (value) => {
-
-              }
-          )
-        }
-
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+            for (var doc in snapshot.docs)
+              {await doc.reference.delete().then((value) => {})}
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
 
     return flag;
-
   }
 
-  Future<bool> validateSeguido(uid, userId)  async {
-    // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
+  Future<bool> validateSeguido(uid, userId) async {
+    // Verifica si ya se encuentra en el listado de mis seguidos en Firebase
     bool flag = false;
     await db
         .collection("seguidos")
@@ -227,21 +190,63 @@ class FirebaseLogic{
         .get()
         .then(
           (res) => {
-        if(res.docs.length > 0){
-          flag = true
-        }
-
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+            if (res.docs.length > 0) {flag = true}
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
 
     return flag;
-
   }
 
+  Future<bool> agregarEstadistica(uid, message, tipo, userId, score, timeStamp) async {
+    bool flag = false;
 
+    // Agragar un favorito a la base de datos en firebase
+    final newDocument = <String, dynamic>{
+      "uid": uid,
+      "sitio": message, //RADIO o PODCAST
+      "tipo": tipo,
+      "userId": userId,
+      "score": score,
+      "timeStamp": timeStamp
+    };
 
+    // Add a new document with a generated ID
+    await db
+        .collection("estadisticas")
+        .add(newDocument)
+        .then((DocumentReference doc) => {
+              if (doc.id != null)
+                {
+                  //print('DocumentSnapshot added with ID: ${doc.id}');
+                  flag = true
+                }
+            });
 
+    return flag;
+  }
 
+  Future<int> validateEstadistica(uid, userId, sitio, tipoContent) async {
+    // Verifica si ya se encuentra en el listado de mis seguidos en Firebase
+    int score = 0;
+    await db
+        .collection("estadisticas")
+        .where("uid", isEqualTo: uid)
+        .where("userId", isEqualTo: userId)
+        .where("sitio", isEqualTo: sitio)
+        .where("tipo", isEqualTo: tipoContent)
+        .orderBy("timeStamp") // Ordena por el campo "timestamp" en orden descendente
+        .limit(1)
+        .get()
+        .then(
+          (res) => {
+            print(">>> N° ESTADISTICAS EN FIREBASE: "),
+            print(res.docs.length),
+            if (res.docs.length > 0) {score = res.docs.first.data()["score"]}
+          },
+          onError: (e) => print("Error completing: $e"),
+        );
 
+    return score;
+  }
 }
