@@ -67,7 +67,6 @@ class _DetailPageState extends State<DetailPage> {
   String? _deviceId;
   bool _isSeguido = false;
   int _currentScore =  0;
-
   late FirebaseLogic firebaseLogic;
   late PushNotification pushNotification;
 

@@ -235,7 +235,7 @@ class FirebaseLogic {
         .where("userId", isEqualTo: userId)
         .where("sitio", isEqualTo: sitio)
         .where("tipo", isEqualTo: tipoContent)
-        .orderBy("timeStamp") // Ordena por el campo "timestamp" en orden descendente
+        .orderBy("timeStamp", descending: true) // Ordena por el campo "timestamp" en orden descendente
         .limit(1)
         .get()
         .then(

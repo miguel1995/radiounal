@@ -7,6 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
@@ -41,8 +42,13 @@ class ItemPage extends StatefulWidget {
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
 
-   ItemPage(
-      {Key? key, required this.title, required this.message, required this.uid, required this.from, required this.callBackPlayMusic})
+  ItemPage(
+      {Key? key,
+      required this.title,
+      required this.message,
+      required this.uid,
+      required this.from,
+      required this.callBackPlayMusic})
       : super(key: key);
 
   @override
@@ -55,6 +61,9 @@ class _ItemPageState extends State<ItemPage> {
   late int uid;
   late String from;
 
+  int _currentScore = 0;
+  late FirebaseLogic firebaseLogic;
+
   final blocRadioEmision = RadioEmisionBloc();
   final blocRadioCalifica = RadioCalificaBloc();
   final blocPodcastEpisodio = PodcastEpisodioBloc();
@@ -64,12 +73,16 @@ class _ItemPageState extends State<ItemPage> {
   late TargetPlatform? platform;
   late String _localPath;
   late bool _permissionReady;
+  String? _deviceId;
 
   late FavoritoBtn favoritoBtn;
 
   @override
   void initState() {
     super.initState();
+    initPlatformState();
+
+    firebaseLogic = FirebaseLogic();
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -81,6 +94,17 @@ class _ItemPageState extends State<ItemPage> {
 
     favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
 
+    firebaseLogic
+        .validateEstadistica(uid, _deviceId, message.toUpperCase(),
+      (message == "RADIO") ? "EMISION" : "EPISODIO")
+        .then((value) => {
+              if (value != null && value != "" && value != null)
+                {
+                  setState(() {
+                    _currentScore = value;
+                  })
+                }
+            });
 
     if (message == "RADIO") {
       blocRadioEmision.fetchEmision(uid);
@@ -90,7 +114,6 @@ class _ItemPageState extends State<ItemPage> {
         });
       });
     } else if (message == "PODCAST") {
-
       blocPodcastEpisodio.fetchEpisodio(uid);
       blocPodcastEpisodio.subject.stream.listen((event) {
         setState(() {
@@ -104,31 +127,47 @@ class _ItemPageState extends State<ItemPage> {
     } else {
       platform = TargetPlatform.iOS;
     }
+  }
 
+// Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    String? deviceId;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      deviceId = await PlatformDeviceId.getDeviceId;
+    } on PlatformException {
+      deviceId = 'Failed to get deviceId.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _deviceId = deviceId;
+    });
+    print("deviceId->$_deviceId");
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-      Scaffold(
+    return Scaffold(
         endDrawer: Menu(),
-        appBar:  AppBarRadio(enableBack:true),
-      body:
-      DecoratedBox(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
-              fit: BoxFit.cover,
+        appBar: AppBarRadio(enableBack: true),
+        body: DecoratedBox(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child:
-      Center(
-        child: Column(children: [
-          drawContentDescription(element),
-          drawContentBtns(element)
-        ]),
-      ))
-    );
+            child: Center(
+              child: Column(children: [
+                drawContentDescription(element),
+                drawContentBtns(element)
+              ]),
+            )));
   }
 
   @override
@@ -139,10 +178,7 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Widget drawContentDescription(dynamic element) {
-    var w = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var w = MediaQuery.of(context).size.width;
     final DateTime now = (element != null)
         ? DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date)
         : DateTime.now();
@@ -161,7 +197,8 @@ class _ItemPageState extends State<ItemPage> {
               },
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
-                  child: SvgPicture.asset('assets/icons/icono_compartir_redes.svg')))
+                  child: SvgPicture.asset(
+                      'assets/icons/icono_compartir_redes.svg')))
         ]),
       ),
       Container(
@@ -184,41 +221,39 @@ class _ItemPageState extends State<ItemPage> {
               imageUrl: (element != null) ? element.imagen : "",
               placeholder: (context, url) => const Center(
                   child: SpinKitFadingCircle(
-                    color: Color(0xffb6b3c5),
-                    size: 50.0,
-                  )
-              ),
-              errorWidget: (context, url, error) =>
-                  Container(
-                      width: w * 0.40,
-                      child: Image.asset("assets/images/default.png")),
+                color: Color(0xffb6b3c5),
+                size: 50.0,
+              )),
+              errorWidget: (context, url, error) => Container(
+                  width: w * 0.40,
+                  child: Image.asset("assets/images/default.png")),
             ),
           )),
-      if(element != null && element.categoryTitle != null && element.categoryTitle != "")
+      if (element != null &&
+          element.categoryTitle != null &&
+          element.categoryTitle != "")
         Container(
-          alignment: Alignment.centerLeft,
-          child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            margin: const EdgeInsets.only(left: 20, top: 30),
-            decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .appBarTheme
-                  .foregroundColor,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xff121C4A).withOpacity(0.3),
-                  spreadRadius: 3,
-                  blurRadius: 10,
-                  offset: const Offset(5, 5), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Text(
-              (element != null) ? element.categoryTitle : "",
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          )),
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              margin: const EdgeInsets.only(left: 20, top: 30),
+              decoration: BoxDecoration(
+                color: Theme.of(context).appBarTheme.foregroundColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: const Offset(5, 5), // changes position of shadow
+                  ),
+                ],
+              ),
+              child: Text(
+                (element != null) ? element.categoryTitle : "",
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              ),
+            )),
       Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
@@ -234,7 +269,7 @@ class _ItemPageState extends State<ItemPage> {
         alignment: Alignment.centerLeft,
         margin: const EdgeInsets.only(left: 20),
         child: Text(
-          "$formatted ${(element!= null && element.duration!= null )?formatDurationString(element.duration):''}",
+          "$formatted ${(element != null && element.duration != null) ? formatDurationString(element.duration) : ''}",
           style: const TextStyle(fontSize: 11, color: Color(0xff666666)),
         ),
       ),
@@ -245,9 +280,7 @@ class _ItemPageState extends State<ItemPage> {
           (message == "RADIO") ? "Radio" : "Podcast",
           style: TextStyle(
             fontSize: 15,
-            color: Theme
-                .of(context)
-                .primaryColor,
+            color: Theme.of(context).primaryColor,
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
           ),
@@ -257,21 +290,50 @@ class _ItemPageState extends State<ItemPage> {
           padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
           alignment: Alignment.centerLeft,
           child: RatingBar(
-            initialRating: 0,
+            initialRating: _currentScore.toDouble(),
             direction: Axis.horizontal,
             allowHalfRating: true,
             itemCount: 5,
             itemSize: 20.0,
             ratingWidget: RatingWidget(
-              full: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
-              half: SvgPicture.asset('assets/icons/icono_estrellita_completa.svg'),
-              empty: SvgPicture.asset('assets/icons/icono_estrellita_borde.svg'),
+              full: SvgPicture.asset(
+                  'assets/icons/icono_estrellita_completa.svg'),
+              half: SvgPicture.asset(
+                  'assets/icons/icono_estrellita_completa.svg'),
+              empty:
+                  SvgPicture.asset('assets/icons/icono_estrellita_borde.svg'),
             ),
             itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
             onRatingUpdate: (rating) {
               DateTime today = DateTime.now();
               String dateStr = "${today.day}-${today.month}-${today.year}";
-              blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"EMISION":"EPISODIO", rating.toInt(), dateStr);
+              blocRadioCalifica.addEstadistica(
+                  element.uid,
+                  element.title,
+                  message.toUpperCase(),
+                  (message == "RADIO") ? "EMISION" : "EPISODIO",
+                  rating.toInt(),
+                  dateStr);
+
+              //Agrega Estadistica a firebase
+              firebaseLogic
+                  .agregarEstadistica(
+                      uid,
+                      message,
+                      (message == "RADIO") ? "EMISION" : "EPISODIO",
+                      _deviceId,
+                      rating.toInt(),
+                      today.microsecondsSinceEpoch)
+                  .then((value) => {
+                        if (value == true)
+                          {print(">>> Estadistica agregada a firebase")}
+                        else
+                          {
+                            print(
+                                ">>> No se puede  agregar la Estadistica a firebase")
+                          }
+                      });
+
               showConfirmDialog(context, "STATISTIC");
             },
           ))
@@ -279,73 +341,65 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Widget drawContentBtns(dynamic element) {
-    var w = MediaQuery
-        .of(context)
-        .size
-        .width;
+    var w = MediaQuery.of(context).size.width;
 
     return Column(children: [
-      if(element.audio != null && element.audio != "")
-      Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-          child: InkWell(
-              onTap: () {
-
-                widget.callBackPlayMusic!(
+      if (element.audio != null && element.audio != "")
+        Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+            child: InkWell(
+                onTap: () {
+                  widget.callBackPlayMusic!(
                     element.uid,
                     element.audio,
                     element.imagen,
                     element.categoryTitle,
                     element.title,
-                    (message == "RADIO")?element.bodytext:element.teaser,
+                    (message == "RADIO") ? element.bodytext : element.teaser,
                     element.date,
                     element.duration,
                     message,
                     element.url,
                     false,
                     favoritoBtn,
-
-                );
-
-              },
-              child: Container(
-                  width: w * 0.35,
-                  padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                  decoration: BoxDecoration(
-                    gradient: const RadialGradient(radius: 2, colors: [
-                      Color( 0xff216278),
-                      Color(0xff121C4A)
-                    ]),
-                    borderRadius: BorderRadius.circular(5),
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
-                  ),
-                  child:  Row(
-                    children: [
-                      Icon(
-                        Icons.play_arrow,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      Text(
-                        "Reproducir",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 16),
-                      )
-                    ],
-                  )))),
+                  );
+                },
+                child: Container(
+                    width: w * 0.35,
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                      gradient: const RadialGradient(
+                          radius: 2,
+                          colors: [Color(0xff216278), Color(0xff121C4A)]),
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).primaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xff121C4A).withOpacity(0.3),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: const Offset(5, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        Text(
+                          "Reproducir",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 16),
+                        )
+                      ],
+                    )))),
       Container(
         margin: const EdgeInsets.only(top: 20),
         child: Row(
@@ -354,22 +408,18 @@ class _ItemPageState extends State<ItemPage> {
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: InkWell(
-                    onTap: ()
-                    {
+                    onTap: () {
                       showFormDialog(context);
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
-                          gradient: const RadialGradient(radius: 0.8, colors: [
-                            Color(0xffFEE781),
-                            Color(0xffFFCC17)
-                          ]),
+                          gradient: const RadialGradient(
+                              radius: 0.8,
+                              colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme
-                              .of(context)
-                              .appBarTheme
-                              .foregroundColor,
+                          color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
                               color: const Color(0xff121C4A).withOpacity(0.3),
@@ -381,8 +431,7 @@ class _ItemPageState extends State<ItemPage> {
                         ),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flecha_descarga.svg',
-                            width: 20)
-                    ))),
+                            width: 20)))),
             Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -393,20 +442,19 @@ class _ItemPageState extends State<ItemPage> {
                       }
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+                        padding: const EdgeInsets.only(
+                            left: 10, right: 10, top: 5, bottom: 5),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 0.8, colors: [
-
-                            (message == "PODCAST")?const Color(0xffFCDC4D):Colors.white54.withOpacity(0.3),
+                            (message == "PODCAST")
+                                ? const Color(0xffFCDC4D)
+                                : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
                                 : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme
-                              .of(context)
-                              .appBarTheme
-                              .foregroundColor,
+                          color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
                               color: const Color(0xff121C4A).withOpacity(0.3),
@@ -416,12 +464,8 @@ class _ItemPageState extends State<ItemPage> {
                             ),
                           ],
                         ),
-                        child:
-                        SvgPicture.asset(
-                              "assets/icons/icono_rss.svg",
-                              width: 20)
-
-                    ))),
+                        child: SvgPicture.asset("assets/icons/icono_rss.svg",
+                            width: 20)))),
             Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -432,20 +476,19 @@ class _ItemPageState extends State<ItemPage> {
                       }
                     },
                     child: Container(
-                        padding: const EdgeInsets.only(top:5, bottom:5, left: 10, right: 10),
+                        padding: const EdgeInsets.only(
+                            top: 5, bottom: 5, left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1.5, colors: [
-                            (message == "PODCAST")?const Color(0xffFCDC4D):Colors.white54.withOpacity(0.3),
+                            (message == "PODCAST")
+                                ? const Color(0xffFCDC4D)
+                                : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
                                 : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
-                          color:
-                          Theme
-                              .of(context)
-                              .appBarTheme
-                              .foregroundColor,
+                          color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
                               color: const Color(0xff121C4A).withOpacity(0.3),
@@ -470,66 +513,62 @@ class _ItemPageState extends State<ItemPage> {
           ],
         ),
       ),
-      if(element != null && element.categoryTitle != null && element.categoryTitle != "")
+      if (element != null &&
+          element.categoryTitle != null &&
+          element.categoryTitle != "")
         Container(
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-          child: InkWell(
-              onTap: () {
-                if (from == "HOME_PAGE" || from == "FAVOURITES_PAGE" || from == "BROWSER_RESULT_PAGE") {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, "/detail",
-                      arguments: ScreenArguments(
-                          title,
-                          message,
-                          element.categoryUid
-                      )
-                  );
-                } else if (from == "DETAIL_PAGE") {
-                  Navigator.pop(context);
-                }
-              },
-              child: Container(
-                  width: w * 0.40,
-                  padding: const EdgeInsets.only(
-                      left: 10, right: 10, top: 5, bottom: 5),
-                  decoration: BoxDecoration(
-                    gradient: const RadialGradient(radius: 2, colors: [
-                      Color( 0xff216278),
-                      Color(0xff121C4A)
-                    ]),
-                    borderRadius: BorderRadius.circular(5),
-                    color: Theme
-                        .of(context)
-                        .primaryColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
-                        spreadRadius: 3,
-                        blurRadius: 10,
-                        offset: const Offset(5, 5),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children:  [
-                      const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                      Container(
-                          margin: EdgeInsets.only(left: 5),
-                          child:
-                      const Text(
-                        "Más episodios",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 16),
-                      ))
-                    ],
-                  ))))
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+            child: InkWell(
+                onTap: () {
+                  if (from == "HOME_PAGE" ||
+                      from == "FAVOURITES_PAGE" ||
+                      from == "BROWSER_RESULT_PAGE") {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, "/detail",
+                        arguments: ScreenArguments(
+                            title, message, element.categoryUid));
+                  } else if (from == "DETAIL_PAGE") {
+                    Navigator.pop(context);
+                  }
+                },
+                child: Container(
+                    width: w * 0.40,
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, top: 5, bottom: 5),
+                    decoration: BoxDecoration(
+                      gradient: const RadialGradient(
+                          radius: 2,
+                          colors: [Color(0xff216278), Color(0xff121C4A)]),
+                      borderRadius: BorderRadius.circular(5),
+                      color: Theme.of(context).primaryColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xff121C4A).withOpacity(0.3),
+                          spreadRadius: 3,
+                          blurRadius: 10,
+                          offset: const Offset(5, 5),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(left: 5),
+                            child: const Text(
+                              "Más episodios",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 16),
+                            ))
+                      ],
+                    ))))
     ]);
   }
 
@@ -556,8 +595,7 @@ class _ItemPageState extends State<ItemPage> {
       try {
         localPathName = "$_localPath/radiounal_$media${element.uid}.$extension";
         print(urlFile);
-        await Dio()
-            .download(urlFile, localPathName);
+        await Dio().download(urlFile, localPathName);
         final snackBar = SnackBar(
           content: Text('Archivo ${extension.toString()} descargado'),
           action: SnackBarAction(
@@ -613,37 +651,29 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
-
-
-
   showFormDialog(BuildContext context) {
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) {
-        return DownloadFormDialog(callBackFormDialog);
-      }
-    );
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return DownloadFormDialog(callBackFormDialog);
+        });
   }
 
-  callBackFormDialog(bool status){
-    if(status==true){
+  callBackFormDialog(bool status) {
+    if (status == true) {
       downloadFile(element.audio, "audio", "mp3");
     }
   }
 
-
   String formatDurationString(String duration) {
-
     String formatted = "";
-    if(duration != null && duration != "" ){
-
-      if(duration.substring(0,2) == "00"){
+    if (duration != null && duration != "") {
+      if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
-      }else{
+      } else {
         formatted = "| " + duration;
       }
-
     }
 
     return formatted;
@@ -659,14 +689,7 @@ class _ItemPageState extends State<ItemPage> {
             Navigator.pop(context);
             print(">>> ATRASS");
           });
-          return  ConfirmDialog(strTipo);
-        }
-    );
+          return ConfirmDialog(strTipo);
+        });
   }
-
 }
-
-
-
-
-
