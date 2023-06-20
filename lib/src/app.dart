@@ -122,6 +122,7 @@ class _MyAppState extends State<MyApp> {
                       child: childElement),
                 Positioned(
                     bottom: 0, child: BottomNavigationBarRadio(key: keyPlayer)),
+                    Splash()
                 /*Positioned(
                     bottom: 0,
                     child: Container(
