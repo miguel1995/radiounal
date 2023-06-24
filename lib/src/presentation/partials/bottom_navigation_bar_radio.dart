@@ -198,6 +198,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
           return Stack(
             children: [
               Container(
+                width: size.width,
                   height: lerpDouble(_minHeight, _maxHeight, value),
                   child: Container(
                       alignment: Alignment.bottomCenter,

@@ -14,6 +14,8 @@ class CreditsPage extends StatelessWidget {
         appBar: AppBarRadio(enableBack: true),
         body:
         Container(
+          padding: EdgeInsets.only(bottom: 20),
+          height: MediaQuery.of(context).size.height*0.8,
           margin: const EdgeInsets.only(top: 30, left: 30),
         child:
         SingleChildScrollView(
