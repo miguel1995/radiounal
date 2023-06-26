@@ -56,7 +56,7 @@ dependencies:
   flutter_launcher_icons: ^0.11.0 # Agrega el icono de arranque o launcher
   shared_preferences: ^2.0.17 # Almacena las preferencias de tipo Llave:valor
   adaptive_theme: ^3.2.0 # Permite la funcionalidad de cambiar entre Tema claro y tema oscuro
-  flutter_spinkit: ^5.1.0 #Agraga indicadores de carga
+  flutter_spinkit: ^5.1.0 #Agrega indicadores de carga
 
 
 dev_dependencies:

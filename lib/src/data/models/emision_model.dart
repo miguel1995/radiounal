@@ -104,6 +104,12 @@ class EmisionModel{
     _categoryTitle = parsedJson["categoryTitle"];
     _categoryUid = (parsedJson["categoryUid"]=="" || parsedJson["categoryUid"]==1)?0:parsedJson["categoryUid"];
     _duration = parsedJson["duration"]??"";
+    print(toString());
 
+  }
+  @override
+  String toString() {
+    // TODO: implement toString
+    return    '\n_uid: $_uid \ntitle: $_title \nteaser: $_teaser \nbodytext: $_bodytext \ndate: $_date \nimagen: $_imagen \nurl: $_url \naudio: $_audio \ncategoryTitle: $_categoryTitle \ncategoryUid: $_categoryUid \nduration: $_duration';
   }
 }

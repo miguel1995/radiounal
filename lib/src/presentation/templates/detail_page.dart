@@ -170,18 +170,20 @@ class _DetailPageState extends State<DetailPage> {
         _scrollControllerSilver.offset) {
       if (page < totalPages) {
         page++;
-        print(page);
+        print("listener -> page: $page");
         setState(() {
           isLoading = true;
         });
-        Future.delayed(Duration(milliseconds: 10000), () {
+        Future.delayed(Duration(milliseconds: 5000), () {
           setState(() {
             isLoading = false;
           });
         });
         if (message == "RADIO") {
+        print("fetch emisiones");
           blocRadioEmisiones.fetchEmisiones(uid, page);
         } else {
+        print("fetch episodios");
           blocPodcastEpisodios.fetchEpisodios(uid, page);
         }
       }
@@ -246,7 +248,12 @@ class _DetailPageState extends State<DetailPage> {
       SliverList sliverList = SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
-            return drawContentList(snapshot);
+            return Column(
+              children: [
+                drawContentList(snapshot),
+
+              ],
+            );
           },
           childCount: 1,
         ),
@@ -324,7 +331,7 @@ class _DetailPageState extends State<DetailPage> {
     totalPages = infoModel.pages;
 
     return Container(
-        //color: Colors.white,
+        //color: Colors.green,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,14 +361,7 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),*/
           buildList(snapshot),
-          if (isLoading)
-            Container(height: MediaQuery.of(context).size.height*0.2,
-              child: const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              )),
-            )
+    
         ]));
   }
 
@@ -369,8 +369,28 @@ class _DetailPageState extends State<DetailPage> {
     var list = snapshot.data!["result"];
     list?.forEach((element) => {cardList.add(buildCard(element))});
 
-    return ListView(
-        shrinkWrap: true, controller: _scrollController, children: cardList);
+    return Column(
+      children: [
+        //Container(height:isLoading?  MediaQuery.of(context).size.height*0.9:MediaQuery.of(context).size.height,
+          //child: 
+          ListView(
+             physics:NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+               controller: _scrollController, 
+               children: cardList),
+        //),
+                            if (isLoading)
+            Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height*0.1,
+              child: const Center(
+                  child: SpinKitFadingCircle(
+                color: Color(0xffb6b3c5),
+                size: 50.0,
+              )),
+            )
+      ],
+    );
   }
 
   Widget buildCard(element) {

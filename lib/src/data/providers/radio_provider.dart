@@ -153,8 +153,8 @@ class RadioProvider {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body);
-    print(url);
-    print(response);
+    print('url: $url');
+    print('response: $response');
     if (response.statusCode == 200) {
 
       List<EmisionModel> result = parseEmisiones(utf8.decode(response.bodyBytes));
