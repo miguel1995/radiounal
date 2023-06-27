@@ -8,8 +8,8 @@ import 'package:radiounal/src/business_logic/bloc/elastic_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
+import 'package:radiounal/src/presentation/partials/multi_tab_result.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
@@ -85,13 +85,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           elementFilters["sede"],
           elementFilters["canal"],
           elementFilters["area"],
-          elementFilters["contentType"]);
+          elementFilters["contentType"]
+      );
     } else if (elementFilters["contentType"] == "SERIES") {
       blocPodcastSeries.fetchSeries(page);
     } else if (elementFilters["contentType"] == "EPISODIOS") {
       blocPodcastSearch.fetchSearch(elementFilters["query"], page);
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      print(">>> VOY a Buscar en elasctic");
+      print(">>> VOY a Buscar en TODOS mis SITIOS");
 
       //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
       /*querySize = 100;
@@ -260,31 +261,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             return child;
           });
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      widget = StreamBuilder(
-          //TODO: descomentar cuando el servicio de bloc sea reestablecido
-          //stream: blocElasticSearch.subject.stream,
-          stream: blocRadioSearch.subject.stream,
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            Widget child;
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              ));
-            } else if (snapshot.hasData) {
-              child = drawContentList(snapshot);
-            } else if (snapshot.hasError) {
-              child = drawError(snapshot.error);
-            } else {
-              child = const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              ));
-            }
-            return child;
-          });
+      widget = getMultiTabResult();
     } else {
       var blocStream = null;
       if (elementFilters["contentType"] == "SERIES") {
@@ -412,7 +389,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     }
 
     print(">> cardList");
-
     print(cardList.length);
 
     return GridView.count(
@@ -681,4 +657,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
     return formatted;
   }
+
+  /*
+  * Realiza la busqueda en todos los sitios
+  * */
+  Widget getMultiTabResult(){
+    return MultiTabResult(tabIndex: 0, query: elementFilters["query"], page: page);
+  }
+
 }
