@@ -825,7 +825,7 @@ class _HomeState extends State<Home> {
   String formatDurationString(String duration) {
 
     String formatted = "";
-    if(duration != null){
+    if(duration != null || duration != ""){
 
       if(duration.substring(0,2) == "00"){
         formatted = "| " + duration.substring(3);

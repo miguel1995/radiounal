@@ -22,9 +22,11 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
       endDrawer: Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body: Container(
-        padding: EdgeInsets.only(top: 20),
-        child: Column(
-          children: [drawConfiguracion(), drawAcerca()],
+        padding: EdgeInsets.only(top: 20,bottom: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [drawConfiguracion(), drawAcerca()],
+          ),
         ),
       ),
     );
@@ -249,6 +251,9 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                 fontWeight: FontWeight.bold),
           ),
         ),
+        Container(
+          height: MediaQuery.of(context).size.height*0.05,
+        )
       ],
     );
   }
