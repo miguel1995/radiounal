@@ -44,6 +44,7 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
+  Function? reloadlist;
 class _DetailPageState extends State<DetailPage> {
   late String title;
   late String message;
@@ -51,6 +52,7 @@ class _DetailPageState extends State<DetailPage> {
   late int page;
   late dynamic elementContent; // almacena un objeto SerieModel o ProgramaModel
   bool isLoading = false;
+
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
@@ -177,6 +179,7 @@ class _DetailPageState extends State<DetailPage> {
         Future.delayed(Duration(milliseconds: 5000), () {
           setState(() {
             isLoading = false;
+            reloadlist!();
           });
         });
         if (message == "RADIO") {
@@ -373,11 +376,7 @@ class _DetailPageState extends State<DetailPage> {
       children: [
         //Container(height:isLoading?  MediaQuery.of(context).size.height*0.9:MediaQuery.of(context).size.height,
           //child: 
-          ListView(
-             physics:NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-               controller: _scrollController, 
-               children: cardList),
+          ReloadableListview(scrollController: _scrollController, cardList: cardList),
         //),
                             if (isLoading)
             Container(
@@ -749,5 +748,41 @@ class _DetailPageState extends State<DetailPage> {
           });
           return ConfirmDialog(strTipo);
         });
+  }
+}
+
+class ReloadableListview extends StatefulWidget {
+  const ReloadableListview({
+    super.key,
+    required ScrollController scrollController,
+    required this.cardList,
+  }) : _scrollController = scrollController;
+
+  final ScrollController _scrollController;
+  final List<Widget> cardList;
+
+  @override
+  State<ReloadableListview> createState() => _ReloadableListviewState();
+}
+
+class _ReloadableListviewState extends State<ReloadableListview> {
+  reload(){
+    setState(() {
+      
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    reloadlist=this.reload;
+  }
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+       physics:NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+         controller: widget._scrollController, 
+         children: widget.cardList);
   }
 }
