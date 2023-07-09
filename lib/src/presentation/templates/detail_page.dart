@@ -26,6 +26,8 @@ import 'package:share_plus/share_plus.dart';
 import '../../business_logic/firebase/push_notifications.dart';
 import '../partials/favorito_btn.dart';
 
+Function? globalCallbackRedrawableListView;
+
 class DetailPage extends StatefulWidget {
   final String title;
   final String message;
@@ -66,7 +68,7 @@ class _DetailPageState extends State<DetailPage> {
 
   String? _deviceId;
   bool _isSeguido = false;
-  int _currentScore =  0;
+  int _currentScore = 0;
   late FirebaseLogic firebaseLogic;
   late PushNotification pushNotification;
 
@@ -99,30 +101,23 @@ class _DetailPageState extends State<DetailPage> {
     print(page);
     print(elementContent.toString());*/
 
-    firebaseLogic.validateSeguido(uid, _deviceId)
-        .then((value) => {
-
-          setState((){
+    firebaseLogic.validateSeguido(uid, _deviceId).then((value) => {
+          setState(() {
             _isSeguido = value;
           })
+        });
 
-    });
-
-    firebaseLogic.validateEstadistica(
-    uid,
-    _deviceId,
-    message.toUpperCase(),
-    (message == "RADIO")?"PROGRAMA":"SERIE"
-    )
+    firebaseLogic
+        .validateEstadistica(uid, _deviceId, message.toUpperCase(),
+            (message == "RADIO") ? "PROGRAMA" : "SERIE")
         .then((value) => {
-
-        if(value != null && value != "" && value != null){
-          setState((){
-            _currentScore = value;
-          })
-        }
-
-    });
+              if (value != null && value != "" && value != null)
+                {
+                  setState(() {
+                    _currentScore = value;
+                  })
+                }
+            });
 
     print(">>> SI te estoy siguiendo: ${_isSeguido}");
 
@@ -161,38 +156,39 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     _scrollControllerSilver.addListener(() {
-    //   print(">> SILVER");
-    //   print(_scrollControllerSilver.position.maxScrollExtent);
-    //   print(_scrollControllerSilver.offset);
+      //   print(">> SILVER");
+      //   print(_scrollControllerSilver.position.maxScrollExtent);
+      //   print(_scrollControllerSilver.offset);
 
-    if (_scrollControllerSilver.position.maxScrollExtent ==
-        _scrollControllerSilver.offset) {
-      if (page < totalPages) {
-        page++;
-        print("listener -> page: $page");
-        setState(() {
-          isLoading = true;
-        });
-        Future.delayed(Duration(milliseconds: 5000), () {
+      if (_scrollControllerSilver.position.maxScrollExtent ==
+          _scrollControllerSilver.offset) {
+        if (page < totalPages) {
+          page++;
+          print("listener -> page: $page");
           setState(() {
-            isLoading = false;
+            isLoading = true;
           });
-        });
-        if (message == "RADIO") {
-        print("fetch emisiones");
-          blocRadioEmisiones.fetchEmisiones(uid, page);
-        } else {
-        print("fetch episodios");
-          blocPodcastEpisodios.fetchEpisodios(uid, page);
+          Future.delayed(Duration(milliseconds: 10000), () {
+            setState(() {
+              globalCallbackRedrawableListView!();
+              isLoading = false;
+            });
+          });
+          if (message == "RADIO") {
+            print("fetch emisiones");
+            blocRadioEmisiones.fetchEmisiones(uid, page);
+          } else {
+            print("fetch episodios");
+            blocPodcastEpisodios.fetchEpisodios(uid, page);
+          }
         }
       }
-    }
     });
     // _scrollController.addListener(() {
     //   print(">> listener");
     //   print(_scrollController.position.maxScrollExtent);
     //   print(_scrollController.offset);
-    
+
     //   if (_scrollController.position.maxScrollExtent ==
     //       _scrollController.offset) {
     //     print('bottom limit reached');
@@ -250,7 +246,6 @@ class _DetailPageState extends State<DetailPage> {
             return Column(
               children: [
                 drawContentList(snapshot),
-
               ],
             );
           },
@@ -336,6 +331,8 @@ class _DetailPageState extends State<DetailPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
           Container(
+            //color: Colors.cyan,
+            //height: MediaQuery.of(context).size.height * 0.1,
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
@@ -359,37 +356,35 @@ class _DetailPageState extends State<DetailPage> {
                     ),
                   ),
                 ),*/
-          buildList(snapshot),
-    
-        ]));
-  }
-
-  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
-    var list = snapshot.data!["result"];
-    list?.forEach((element) => {cardList.add(buildCard(element))});
-
-    return Column(
-      children: [
-        //Container(height:isLoading?  MediaQuery.of(context).size.height*0.9:MediaQuery.of(context).size.height,
-          //child: 
-          ListView(
-             physics:NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-               controller: _scrollController, 
-               children: cardList),
-        //),
-                            if (isLoading)
+          //Container(
+          // height: isLoading
+          //    ? MediaQuery.of(context).size.height * 0.8
+          //     : MediaQuery.of(context).size.height,
+          // child:
+          buildList(snapshot)
+          // )
+          ,
+          if (isLoading)
             Container(
-              color: Colors.white,
-              height: MediaQuery.of(context).size.height*0.1,
+              //color: Colors.white,
+              height: MediaQuery.of(context).size.height * 0.1,
               child: const Center(
                   child: SpinKitFadingCircle(
                 color: Color(0xffb6b3c5),
                 size: 50.0,
               )),
             )
-      ],
-    );
+        ]));
+  }
+
+  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
+    return (AsyncSnapshot<Map<String, dynamic>> snapshot) {
+      var list = snapshot.data!["result"];
+      list?.forEach((element) => {cardList.add(buildCard(element))});
+
+      return RedrawableListView(
+          scrollController: _scrollController, cardList: cardList);
+    }(snapshot);
   }
 
   Widget buildCard(element) {
@@ -636,34 +631,37 @@ class _DetailPageState extends State<DetailPage> {
                 ),
                 itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 onRatingUpdate: (rating) {
-
                   print(rating);
                   DateTime today = DateTime.now();
                   String dateStr = "${today.day}-${today.month}-${today.year}";
                   //Agrega Estadistica a Backend Typo3
-                  blocRadioCalifica.addEstadistica(element.uid, element.title, message.toUpperCase(), (message == "RADIO")?"PROGRAMA":"SERIE", rating.toInt(), dateStr);
+                  blocRadioCalifica.addEstadistica(
+                      element.uid,
+                      element.title,
+                      message.toUpperCase(),
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      rating.toInt(),
+                      dateStr);
                   //Agrega Estadistica a firebase
                   firebaseLogic
                       .agregarEstadistica(
-                      uid,
-                      message,
-                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                      _deviceId,
-                      rating.toInt(),
-                      today.microsecondsSinceEpoch
-                  ).then((value) => {
-                    if (value == true)
-                      {
-                        print(">>> Estadistica agregada a firebase")
-                      }
-                    else
-                      {
-                        print(">>> No se puede  agregar la Estadistica a firebase")
-                      }
-                  });
+                          uid,
+                          message,
+                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                          _deviceId,
+                          rating.toInt(),
+                          today.microsecondsSinceEpoch)
+                      .then((value) => {
+                            if (value == true)
+                              {print(">>> Estadistica agregada a firebase")}
+                            else
+                              {
+                                print(
+                                    ">>> No se puede  agregar la Estadistica a firebase")
+                              }
+                          });
 
                   showConfirmDialog(context, "STATISTIC");
-
                 },
               )),
           Container(
@@ -748,5 +746,44 @@ class _DetailPageState extends State<DetailPage> {
           });
           return ConfirmDialog(strTipo);
         });
+  }
+}
+
+class RedrawableListView extends StatefulWidget {
+  const RedrawableListView({
+    super.key,
+    required ScrollController scrollController,
+    required this.cardList,
+  }) : _scrollController = scrollController;
+
+  final ScrollController _scrollController;
+  final List<Widget> cardList;
+
+  @override
+  State<RedrawableListView> createState() => _RedrawableListViewState();
+}
+
+class _RedrawableListViewState extends State<RedrawableListView> {
+  callbackRedrawableListView() {
+    setState(() {});
+    widget._scrollController.jumpTo((widget._scrollController.offset - 100));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    globalCallbackRedrawableListView = callbackRedrawableListView;
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        controller: widget._scrollController,
+        children: widget.cardList);
   }
 }
