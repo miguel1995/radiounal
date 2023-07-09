@@ -171,18 +171,22 @@ class PodcastProvider {
   //http://podcastradio.unal.edu.co/rest/noticias/app/search
   Future<Map<String, dynamic>> getSearch(
       String query,
-      int page
+      int page,
+      String contentType
       ) async {
     var url = Uri.parse('http://$_hostDomain$_urlSearch');
     Map<String, dynamic> map = {};
 
     var body = jsonEncode(<String, dynamic>{
       "query":query,
-      "page":page
+      "page":page,
+      "filters":{
+        "contentType":contentType
+      }
     });
 
-    print(url);
-    print(body);
+    /*print(url);
+    print(body);*/
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(

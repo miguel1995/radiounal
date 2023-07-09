@@ -90,7 +90,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     } else if (elementFilters["contentType"] == "SERIES") {
       blocPodcastSeries.fetchSeries(page);
     } else if (elementFilters["contentType"] == "EPISODIOS") {
-      blocPodcastSearch.fetchSearch(elementFilters["query"], page);
+      blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
     } else if (elementFilters["contentType"] == "ELASTIC") {
       print(">>> VOY a Buscar en TODOS mis SITIOS");
 
@@ -126,8 +126,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           _scrollController.offset) {
         if (page < totalPages) {
           page++;
-          print(">>> PAGINA");
-          print(page);
+
           setState(() {
             isLoading = true;
           });
@@ -162,7 +161,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           } else if (elementFilters["contentType"] == "SERIES") {
             blocPodcastSeries.fetchSeries(page);
           } else if (elementFilters["contentType"] == "EPISODIOS") {
-            blocPodcastSearch.fetchSearch(elementFilters["query"], page);
+            blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
           }
         }
       }
@@ -380,16 +379,10 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   Widget buildGridList(AsyncSnapshot<dynamic> snapshot) {
     var list = snapshot.data!["result"];
 
-    print(">> Llegan nuevos elementos");
-    print(list.length);
-    print(cardList.length);
 
     for (var i = 0; i < list.length; i++) {
       cardList.add(buildCardForGridList(list[i]));
     }
-
-    print(">> cardList");
-    print(cardList.length);
 
     return GridView.count(
         controller: _scrollController, crossAxisCount: 2, children: cardList);
