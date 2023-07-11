@@ -11,6 +11,7 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_episodio_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_emision_bloc.dart';
+import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/confirm_dialog.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
@@ -344,26 +345,31 @@ class _ItemPageState extends State<ItemPage> {
     var w = MediaQuery.of(context).size.width;
 
     return Column(children: [
-      if (element.audio != null && element.audio != "")
         Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
             child: InkWell(
                 onTap: () {
-                  widget.callBackPlayMusic!(
-                    element.uid,
-                    element.audio,
-                    element.imagen,
-                    element.categoryTitle,
-                    element.title,
-                    (message == "RADIO") ? element.bodytext : element.teaser,
-                    element.date,
-                    element.duration,
-                    message,
-                    element.url,
-                    false,
-                    favoritoBtn,
-                  );
+                  if(element != null){
+                    if(element.audio != null){
+                      widget.callBackPlayMusic!(
+                        element.uid,
+                        element.audio,
+                        element.imagen,
+                        element.categoryTitle,
+                        element.title,
+                        (message == "RADIO") ? element.bodytext : element.teaser,
+                        element.date,
+                        element.duration,
+                        message,
+                        element.url,
+                        false,
+                        favoritoBtn,
+                      );
+
+                    }
+                  }
+
                 },
                 child: Container(
                     width: w * 0.35,

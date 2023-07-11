@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/bloc/elastic_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
+import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
@@ -72,12 +73,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
       blocPodcastMasEscuchados.fetchMasEscuchados();
     } else if (elementFilters["contentType"] == "PROGRAMAS" ||
         elementFilters["contentType"] == "EMISIONES") {
-      print(elementFilters["query"]);
-      print(page.toString());
-      print(elementFilters["sede"]);
-      print(elementFilters["canal"]);
-      print(elementFilters["area"]);
-      print(elementFilters["contentType"]);
 
       blocRadioSearch.fetchSearch(
           elementFilters["query"],
@@ -92,7 +87,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     } else if (elementFilters["contentType"] == "EPISODIOS") {
       blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      print(">>> VOY a Buscar en TODOS mis SITIOS");
 
       //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
       /*querySize = 100;
@@ -108,12 +102,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           "TODOS",
           "EMISIONES");
 
-      print(elementFilters["query"]);
-      print(page.toString());
-      print(elementFilters["sede"]);
-      print(elementFilters["canal"]);
-      print(elementFilters["area"]);
-      print(elementFilters["contentType"]);
     }
 
     initializeScrollListener();
@@ -260,7 +248,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             return child;
           });
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      widget = getMultiTabResult();
+      widget = Container(
+          child:getMultiTabResult());
     } else {
       var blocStream = null;
       if (elementFilters["contentType"] == "SERIES") {
@@ -402,6 +391,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
     return InkWell(
         onTap: () {
+
           if (elementFilters["contentType"] == "SERIES") {
             Navigator.pushNamed(context, "/detail",
                 arguments: ScreenArguments("SITE", "PODCAST", element.uid,
@@ -518,12 +508,41 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
+    var tipo = elementFilters["contentType"];
+    var messageStr = "";
+    var redirectTo = "";
+    if(tipo=="SERIES") {
+      messageStr = "PODCAST";
+      redirectTo = "/detail";
+    }else if(tipo=="EPISODIOS"){
+      messageStr = "PODCAST";
+      redirectTo = "/item";
+    }
+    else if(tipo=="PROGRAMAS"){
+      messageStr = "RADIO";
+      redirectTo = "/detail";
+    }
+    else if(tipo=="EMISIONES"){
+      messageStr = "RADIO";
+      redirectTo = "/item";
+    }else if(tipo == "MASESCUCHADO"){
+      if(element is EpisodioModel){
+        messageStr = "PODCAST";
+        redirectTo = "/item";
+      }else if(element is EmisionModel){
+        messageStr = "RADIO";
+        redirectTo = "/item";
+      }
+
+    }
+
     return InkWell(
         onTap: () {
+
           //TODO:14/05/23 ajustar esta redirección cuando el servicio elastic se reestablezca
-          Navigator.pushNamed(context, "/item",
+          Navigator.pushNamed(context, redirectTo,
               arguments: ScreenArguments("SITE",
-                  (element is EpisodioModel) ? "PODCAST" : "RADIO", element.uid,
+                  messageStr, element.uid,
                   from: "BROWSER_RESULT_PAGE"));
         },
         child: Container(
@@ -597,7 +616,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   Container drawCategoryTitle(element) {
     try {
-      if (element.categoryTitle != null && element.categoryTitle != "")
+      if (element.categoryTitle != null && element.categoryTitle != "") {
         return Container(
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
@@ -617,6 +636,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );
+      }
     } catch (e) {}
     return Container(
           margin: const EdgeInsets.only(left: 20, bottom: 10),

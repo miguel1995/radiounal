@@ -6,7 +6,9 @@ import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_search_series_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_search_bloc.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
+import '../../business_logic/ScreenArguments.dart';
 import '../../business_logic/bloc/radio_search_programas_bloc.dart';
+import '../../data/models/episodio_model.dart';
 
 
 class MultiTabResult extends StatefulWidget {
@@ -74,39 +76,64 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 90, bottom: 10),
+        padding: EdgeInsets.only(bottom: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Text(
+                "Resultados de busqueda",
+                style: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: const Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: const Color(0xFFFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                query,
+                style: const TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xFFFCDC4D),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20, bottom: 20),
+              child: Text(
+                "Sede Medellín | Radio Web | Actualidad",
+                style: const TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xFFFCDC4D),
+                ),
+              ),
+            ),
             TabBar(
               unselectedLabelColor: Colors.black,
               indicatorColor: Theme.of(context).appBarTheme.foregroundColor,
-
               tabs: [
-                Tab(
-                  child: Text("Series",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text("Episodios",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16
-                      )
-                  ),
-                ),
                 Tab(
                   child: Text("Programas",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16
+                          fontSize: 14
                       )
                   ),
                 ),
@@ -115,8 +142,27 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16
+                          fontSize: 14
                       )
+                  ),
+                ),
+                Tab(
+                  child: Text("Series",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text("Episodios",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14
+                      ),
+
                   ),
                 )
               ],
@@ -127,10 +173,10 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               child: TabBarView(
                 controller: _tabController,
                 children:  [
-                  drawResultList(blocPodcastSeriesSearch.subject.stream, isLoadingSeries, "SERIES"),
-                  drawResultList(blocPodcastSearch.subject.stream, isLoadingEpisodios, "EPISODIOS"),
                   drawResultList(blocRadioProgramasSearch.subject.stream, isLoadingProgramas, "PROGRAMAS"),
-                  drawResultList(blocRadioSearch.subject.stream, isLoadingEmisiones, "EMISIONES")
+                  drawResultList(blocRadioSearch.subject.stream, isLoadingEmisiones, "EMISIONES"),
+                  drawResultList(blocPodcastSeriesSearch.subject.stream, isLoadingSeries, "SERIES"),
+                  drawResultList(blocPodcastSearch.subject.stream, isLoadingEpisodios, "EPISODIOS")
 
                 ],
               ),
@@ -346,7 +392,6 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         children: <Widget>[
           const Icon(
             Icons.error_outline,
-            color: Colors.red,
             size: 60,
           ),
           Padding(
@@ -381,7 +426,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         shrinkWrap: true, controller: scrollController, children: cardList);
   }
 
-  Widget buildCardForVerticalList(element) {
+  Widget buildCardForVerticalList(element, String tipo) {
     var width = MediaQuery.of(context).size.width;
     DateTime now;
     try {
@@ -393,13 +438,32 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
+    var messageStr = "";
+    var redirectTo = "";
+    if(tipo=="SERIES") {
+      messageStr = "PODCAST";
+      redirectTo = "/detail";
+    }else if(tipo=="EPISODIOS"){
+      messageStr = "PODCAST";
+      redirectTo = "/item";
+    }
+    else if(tipo=="PROGRAMAS"){
+      messageStr = "RADIO";
+      redirectTo = "/detail";
+    }
+    else if(tipo=="EMISIONES"){
+      messageStr = "RADIO";
+      redirectTo = "/item";
+    }
+
     return InkWell(
         onTap: () {
-          //TODO:14/05/23 ajustar esta redirección cuando el servicio elastic se reestablezca
-          /*Navigator.pushNamed(context, "/item",
-              arguments: ScreenArguments("SITE",
-                  (element is EpisodioModel) ? "PODCAST" : "RADIO", element.uid,
-                  from: "BROWSER_RESULT_PAGE"));*/
+            Navigator.pushNamed(context, redirectTo,
+                arguments: ScreenArguments(
+                "SITE",
+                  messageStr,
+                  element.uid,
+                  element: element));
         },
         child: Container(
             padding:
@@ -531,15 +595,15 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
     list?.forEach(
             (element) => {
               if(tipo == "SERIES"){
-                cardListSeries.add(buildCardForVerticalList(element))
+                cardListSeries.add(buildCardForVerticalList(element, tipo))
               } else if(tipo == "EPISODIOS"){
-                cardListEpisodios.add(buildCardForVerticalList(element))
+                cardListEpisodios.add(buildCardForVerticalList(element, tipo))
               }
               else if(tipo == "PROGRAMAS"){
-                cardListProgramas.add(buildCardForVerticalList(element))
+                cardListProgramas.add(buildCardForVerticalList(element, tipo))
               }
               else if(tipo == "EMISIONES"){
-                cardListEmisiones.add(buildCardForVerticalList(element))
+                cardListEmisiones.add(buildCardForVerticalList(element, tipo))
               }
 
             });

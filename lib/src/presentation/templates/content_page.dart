@@ -240,15 +240,11 @@ class _ContentPageState extends State<ContentPage> {
 
     return InkWell(
         onTap: () {
-          print(">>>  Voy al detalle...");
-          print(title);
-          print(message);
-          print(element.uid);
-          print(element);
 
           Navigator.pushNamed(context, "/detail",
               arguments: ScreenArguments(title, message, element.uid,
                   element: element));
+
         },
         child: Container(
             padding:

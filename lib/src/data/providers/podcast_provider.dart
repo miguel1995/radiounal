@@ -195,12 +195,23 @@ class PodcastProvider {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body);
-    List<EpisodioModel> resultForEpisodios = [];
+
 
     if (response.statusCode == 200) {
 
-      resultForEpisodios = parseEpisodios(utf8.decode(response.bodyBytes));
+      List<SerieModel> resultForSeries = [];
+      List<EpisodioModel> resultForEpisodios = [];
+
+      if(contentType == "SERIES") {
+        resultForSeries = parseSeries(
+            utf8.decode(response.bodyBytes));
+        map["result"] = resultForSeries;
+      }else if(contentType == "EPISODIOS"){
+        resultForEpisodios = parseEpisodios(utf8.decode(response.bodyBytes));
         map["result"] = resultForEpisodios;
+      }
+
+
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
       map["info"] = info;
 
