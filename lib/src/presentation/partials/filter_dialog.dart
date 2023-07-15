@@ -48,7 +48,6 @@ class FilterDialogState extends State<FilterDialog> {
 
     blocSedes.fetchSedes();
     blocSedes.subject.stream.listen((value) {
-      print(value);
 
       if (value["result"] != null && value["result"].length > 0) {
         for (var e in value["result"]) {

@@ -63,7 +63,6 @@ class _ContentPageState extends State<ContentPage> {
     }
 
     _scrollController.addListener(() {
-      print("lower limit listener");
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
         if (page < totalPages) {

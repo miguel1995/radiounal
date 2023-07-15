@@ -148,7 +148,6 @@ class _ItemPageState extends State<ItemPage> {
     setState(() {
       _deviceId = deviceId;
     });
-    print("deviceId->$_deviceId");
   }
 
   @override
@@ -620,6 +619,7 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
+
   Future<bool> _checkPermission() async {
     if (platform == TargetPlatform.android) {
       final status = await Permission.storage.status;
@@ -693,7 +693,6 @@ class _ItemPageState extends State<ItemPage> {
           Future.delayed(Duration(seconds: 2), () {
             //Navigator.of(context).pop(true);
             Navigator.pop(context);
-            print(">>> ATRASS");
           });
           return ConfirmDialog(strTipo);
         });

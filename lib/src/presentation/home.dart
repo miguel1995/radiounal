@@ -62,7 +62,6 @@ class _HomeState extends State<Home> {
     blocRadioDestacados.fetchDestacados();
     blocPodcastDestacados.fetchDestacados();
     blocRadioProgramacion.fetchProgramacion();
-    print(">>> carga RADIO - mas escuchados");
 
     blocRadioMasEscuchados.fetchMasEscuchados();
     blocPodcastMasEscuchados.fetchMasEscuchados();
@@ -72,7 +71,6 @@ class _HomeState extends State<Home> {
 
       //Actualiza la transmision de podcast random
       EpisodioModel randomItem = (event..shuffle()).first;
-      print(">> random audio");
       print(randomItem.audio);
 
       setState((){
@@ -326,10 +324,8 @@ class _HomeState extends State<Home> {
                 Widget child;
 
                 if (snapshot.hasData) {
-                  print(">> snapshot tiene data");
                   child = buildListEscuchados(snapshot);
                 } else if (snapshot.hasError) {
-                  print(">>> snapshot tiene un error");
                   child = drawError(snapshot.error);
                 } else {
                   child = Container(
@@ -698,7 +694,6 @@ class _HomeState extends State<Home> {
 
   Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {
 
-    print(">>> build List Escuchados");
     print(snapshot1);
 
     var list1 = snapshot1.data![0];

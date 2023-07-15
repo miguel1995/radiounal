@@ -91,7 +91,6 @@ class _FavouritesPageState extends State<FavouritesPage> {
     setState(() {
       _deviceId = deviceId;
     });
-    print("deviceId->$_deviceId");
 
     firebaseLogic.findFavoriteByUserUid(_deviceId).then((value) => {
           //Filtra los IDs de los programas

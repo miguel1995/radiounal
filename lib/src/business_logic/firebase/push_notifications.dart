@@ -45,13 +45,11 @@ class PushNotification {
   //value: RADIO-{uidpPrograma}, PODCAST-{uidSerie}
   // ex: RADIO-5, PODCAST-10
   addNotificationItem(String value){
-    print(value);
     _firebaseMessaging.subscribeToTopic(value);
   }
 
   //value: RADIO-{uidpPrograma}, PODCAST-{uidSerie}
   removeNotificationItem(String value){
-    print(value);
     _firebaseMessaging.unsubscribeFromTopic(value);
   }
 

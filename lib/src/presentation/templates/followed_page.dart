@@ -92,7 +92,6 @@ class _FollowedPageState extends State<FollowedPage> {
     setState(() {
       _deviceId = deviceId;
     });
-    print("deviceId->$_deviceId");
 
     firebaseLogic.findSeguidosByUserUid(_deviceId).then((value) => {
           //Filtra los IDs de los programas

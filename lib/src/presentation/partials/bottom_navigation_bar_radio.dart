@@ -110,25 +110,20 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     Intl.defaultLocale = 'es_ES';
 
     audioPlayer.onPlayerStateChanged.listen((state) {
-      print(">> cambia el estado");
-      print(state);
 
       if (state == PlayerState.PLAYING) {
-        print(">> playing");
         setState(() {
           isPlaying = true;
         });
       }
 
       if (state == PlayerState.PAUSED) {
-        print(">> Completo y listo para ser escuchado");
         setState(() {
           isPlaying = false;
         });
       }
 
       if (state == PlayerState.COMPLETED) {
-        print(">> Completo y listo para ser escuchado");
         audioPlayer.play(audioUrl);
       }
     });
@@ -573,8 +568,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         hasDuration = false;
       });
     } else {
-      print(">>>> BNT");
-      print(favoritoBtn);
 
       setState(() {
         canExpand = true;
@@ -588,7 +581,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     setState(() {
       audioUrl = audioUrlParam;
     });
-    print(audioUrlParam);
     updateAudioUrl(audioUrlParam);
   }
 
