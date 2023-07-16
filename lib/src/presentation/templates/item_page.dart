@@ -96,7 +96,7 @@ class _ItemPageState extends State<ItemPage> {
 
     firebaseLogic
         .validateEstadistica(uid, _deviceId, message.toUpperCase(),
-      (message == "RADIO") ? "EMISION" : "EPISODIO")
+            (message == "RADIO") ? "EMISION" : "EPISODIO")
         .then((value) => {
               if (value != null && value != "" && value != null)
                 {
@@ -626,7 +626,37 @@ class _ItemPageState extends State<ItemPage> {
         return true;
       }
     } else {
-      return true;
+      if (await Permission.storage.request().isGranted) {
+        // Los permisos ya están otorgados, continúa con la descarga o creación de archivos.
+        print(
+            '>>>>>>>Los permisos ya están otorgados, continúa con la descarga o creación de archivos.>>>>>>');
+        return true;
+      } else {
+        // Los permisos no están otorgados, muestra una solicitud de permisos al usuario.
+        print(
+            '>>>>>>>>>>>>>>>>Los permisos no están otorgados, muestra una solicitud de permisos al usuario.>>>>>>>>>>>>>>>');
+
+        if (await Permission.storage.shouldShowRequestRationale) {
+          // El usuario ha rechazado los permisos anteriormente, muestra una explicación adicional si es necesario.
+          print(
+              '>>>>>>>>>>El usuario ha rechazado los permisos anteriormente, muestra una explicación adicional si es necesario.>>>>>>>>>>>>');
+          return false;
+        }
+        // Solicita los permisos.
+        print('>>>>>>>>>>>Solicita los permisos.>>>>>>>>>>>>');
+        PermissionStatus status = await Permission.storage.request();
+        if (status.isGranted) {
+          // Los permisos han sido otorgados, continúa con la descarga o creación de archivos.
+          return true;
+          print(
+              '>>>>>>>>>>>Los permisos han sido otorgados, continúa con la descarga o creación de archivos.>>>>>>>>>>>>>');
+        } else {
+          // Los permisos fueron denegados, maneja esta situación según tus necesidades.
+          print(
+              '>>>>>>>>>>>>Los permisos fueron denegados, maneja esta situación según tus necesidades.>>>>>>>>>>>');
+          return false;
+        }
+      }
     }
     return false;
   }
@@ -634,9 +664,11 @@ class _ItemPageState extends State<ItemPage> {
   Future<void> _prepareSaveDir() async {
     _localPath = (await _findLocalPath())!;
 
-    print(_localPath);
+    print('Ubicación: ' + _localPath);
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
+    await savedDir.create(recursive: true);
+
     if (!hasExisted) {
       savedDir.create();
     }
@@ -645,9 +677,12 @@ class _ItemPageState extends State<ItemPage> {
   Future<String?> _findLocalPath() async {
     if (platform == TargetPlatform.android) {
       return "/sdcard/download/";
+    } else if (platform == TargetPlatform.iOS) {
+      final appSupportDirectory = await getApplicationDocumentsDirectory();
+
+      return appSupportDirectory!.path;
     } else {
-      var directory = await getApplicationDocumentsDirectory();
-      return '${directory.path}${Platform.pathSeparator}Download';
+      throw UnsupportedError("Plataforma no compatible");
     }
   }
 
