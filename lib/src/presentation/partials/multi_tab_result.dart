@@ -6,7 +6,9 @@ import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_search_series_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_search_bloc.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
+import '../../business_logic/ScreenArguments.dart';
 import '../../business_logic/bloc/radio_search_programas_bloc.dart';
+import '../../data/models/episodio_model.dart';
 
 
 class MultiTabResult extends StatefulWidget {
@@ -14,8 +16,11 @@ class MultiTabResult extends StatefulWidget {
   int tabIndex;
   String query;
   int page;
+  int sede;
+  String canal;
+  String area;
 
-  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page}) : super(key: key);
+  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page, required int this.sede, required String this.canal, required String this.area}) : super(key: key);
 
   @override
   State<MultiTabResult> createState() => _MultiTabResultState();
@@ -26,21 +31,23 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   late TabController _tabController;
   int tabIndex = 0;
   String query = "";
-  int page = 0;
+  int _sede = 0;
+  String _canal = "TODOS";
+  String _area = "TODOS";
 
-  late int pageSeries;
+  late int pageSeries = 0;
   int totalPagesSeries = 0;
   bool isLoadingSeries = false;
 
-  late int pageEpisodios;
+  late int pageEpisodios = 0;
   int totalPagesEpisodios = 0;
   bool isLoadingEpisodios = false;
 
-  late int pageProgramas;
+  late int pageProgramas = 0;
   int totalPagesProgramas = 0;
   bool isLoadingProgramas = false;
 
-  late int pageEmisiones;
+  late int pageEmisiones = 0;
   int totalPagesEmisiones = 0;
   bool isLoadingEmisiones = false;
 
@@ -54,15 +61,60 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   final blocPodcastSeriesSearch = PodcastSearchSeriesBloc();
   final blocPodcastSearch = PodcastSearchBloc();
 
+  List<Widget> cardListSeries = [];
+  List<Widget> cardListEpisodios = [];
+  List<Widget> cardListProgramas = [];
+  List<Widget> cardListEmisiones = [];
+
+  bool enableSeriesSearch = true;
+  bool enableEpisodiosSearch = true;
+  bool enableProgramasSearch = true;
+  bool enableEmisionesSearch = true;
+
+
   @override
   void initState() {
 
     tabIndex = widget.tabIndex;
     query = widget.query;
-    page = widget.page;
 
     _tabController = TabController(length: 4, vsync: this);
     _tabController.animateTo(tabIndex);
+
+
+    if(widget.sede != null){
+      _sede = widget.sede;
+    }else{
+      _sede = 0;
+    }
+
+    if(widget.canal != null){
+      _canal = widget.canal;
+    }else{
+      _canal = "TODOS";
+    }
+
+    if(widget.area != null){
+      _area = widget.area;
+    }else{
+      _area = "TODOS";
+    }
+
+
+    if(_canal != null ){
+
+      //Si en los filtros viene canal Podcast,
+      // solo habilita busqueda de series
+      // y episodios
+      if(_canal == "POD"){
+        enableSeriesSearch = true;
+        enableEpisodiosSearch = true;
+        enableProgramasSearch = false;
+        enableEmisionesSearch = false;
+      }
+
+    }
+
     initializeScrollListener();
     initializeLoadData();
     super.initState();
@@ -71,39 +123,64 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 90, bottom: 10),
+        padding: EdgeInsets.only(bottom: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Container(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Text(
+                "Resultados de busqueda",
+                style: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: const Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: const Color(0xFFFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                query,
+                style: const TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xFFFCDC4D),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20, bottom: 20),
+              child: Text(
+                getFilterString(),
+                style: const TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xFFFCDC4D),
+                ),
+              ),
+            ),
             TabBar(
               unselectedLabelColor: Colors.black,
               indicatorColor: Theme.of(context).appBarTheme.foregroundColor,
-
               tabs: [
-                Tab(
-                  child: Text("Series",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text("Episodios",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16
-                      )
-                  ),
-                ),
                 Tab(
                   child: Text("Programas",
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16
+                          fontSize: 14
                       )
                   ),
                 ),
@@ -112,8 +189,27 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                       style: TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.bold,
-                          fontSize: 16
+                          fontSize: 14
                       )
+                  ),
+                ),
+                Tab(
+                  child: Text("Series",
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14
+                    ),
+                  ),
+                ),
+                Tab(
+                  child: Text("Episodios",
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14
+                      ),
+
                   ),
                 )
               ],
@@ -124,10 +220,10 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               child: TabBarView(
                 controller: _tabController,
                 children:  [
-                  drawResultList(blocPodcastSeriesSearch.subject.stream, "SERIES"),
-                  drawResultList(blocPodcastSearch.subject.stream, "EPISODIOS"),
-                  drawResultList(blocRadioProgramasSearch.subject.stream, "PROGRAMAS"),
-                  drawResultList(blocRadioSearch.subject.stream, "EMISIONES")
+                  drawResultList(blocRadioProgramasSearch.subject.stream, isLoadingProgramas, "PROGRAMAS"),
+                  drawResultList(blocRadioSearch.subject.stream, isLoadingEmisiones, "EMISIONES"),
+                  drawResultList(blocPodcastSeriesSearch.subject.stream, isLoadingSeries, "SERIES"),
+                  drawResultList(blocPodcastSearch.subject.stream, isLoadingEpisodios, "EPISODIOS")
 
                 ],
               ),
@@ -141,76 +237,144 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   @override
   void dispose() {
     _tabController.dispose();
+    _scrollControllerSeries.dispose();
+    _scrollControllerProgramas.dispose();
+    _scrollControllerEmisiones.dispose();
+    _scrollControllerEpisodios.dispose();
+    blocRadioProgramasSearch.dispose();
+    blocRadioSearch.dispose();
+    blocPodcastSearch.dispose();
+    blocPodcastSeriesSearch.dispose();
     super.dispose();
   }
 
   void initializeLoadData(){
+      if(enableEmisionesSearch) {
+        blocRadioSearch.fetchSearch(
+            query,
+            pageEmisiones,
+            _sede,
+            _canal,
+            _area,
+            "EMISIONES");
+      }
 
-    blocRadioSearch.fetchSearch(
-        query,
-        page,
-        0, //Buca en todas las sedes
-        "TODOS",
-        "TODOS",
-        "EMISIONES");
+      if(enableProgramasSearch) {
+        blocRadioProgramasSearch.fetchSearch(
+            query,
+            pageProgramas,
+            _sede,
+            _canal,
+            _area,
+            "PROGRAMAS");
+      }
 
-    blocRadioProgramasSearch.fetchSearch(
-        query,
-        page,
-        0, //Buca en todas las sedes
-        "TODOS",
-        "TODOS",
-        "SERIES");
+      if(enableSeriesSearch) {
+        blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
+      }
 
-    blocPodcastSeriesSearch.fetchSearch(query, page);
-
-    blocPodcastSearch.fetchSearch(query, page);
+      if(enableEpisodiosSearch) {
+        blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+      }
   }
 
   void initializeScrollListener() {
-    _scrollControllerSeries.addListener(() {
-      if (_scrollControllerSeries.position.maxScrollExtent ==
-          _scrollControllerSeries.offset) {
-
-        if (pageSeries < totalPagesSeries) {
-          pageSeries++;
-          setState(() {
-            isLoadingSeries = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
+    if (enableSeriesSearch) {
+      _scrollControllerSeries.addListener(() {
+        if (_scrollControllerSeries.position.maxScrollExtent ==
+            _scrollControllerSeries.offset) {
+          if (pageSeries < totalPagesSeries) {
+            pageSeries++;
             setState(() {
-              isLoadingSeries = false;
+              isLoadingSeries = true;
             });
-          });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingSeries = false;
+              });
+            });
 
-          //TODO: siguiente pagina de series
-      }
-    }});
+            blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
+          }
+        }
+      });
+    }
+    if (enableEpisodiosSearch) {
+      _scrollControllerEpisodios.addListener(() {
+        if (_scrollControllerEpisodios.position.maxScrollExtent ==
+            _scrollControllerEpisodios.offset) {
+          if (pageEpisodios < totalPagesEpisodios) {
+            pageEpisodios++;
+            setState(() {
+              isLoadingEpisodios = true;
+            });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingEpisodios = false;
+              });
+            });
 
-    _scrollControllerEpisodios.addListener(() {
-      if (_scrollControllerEpisodios.position.maxScrollExtent ==
-          _scrollControllerEpisodios.offset) {
+            blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+          }
+        }
+      });
+    }
+    if (enableProgramasSearch){
+      _scrollControllerProgramas.addListener(() {
+        if (_scrollControllerProgramas.position.maxScrollExtent ==
+            _scrollControllerProgramas.offset) {
+          if (pageProgramas < totalPagesProgramas) {
+            pageProgramas++;
+            setState(() {
+              isLoadingProgramas = true;
+            });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingProgramas = false;
+              });
+            });
 
-      }
-    });
+            blocRadioProgramasSearch.fetchSearch(
+                query,
+                pageProgramas,
+                0, //Buca en todas las sedes
+                "TODOS",
+                "TODOS",
+                "PROGRAMAS");
+          }
+        }
+      });
+    }
+    if(enableEmisionesSearch) {
+      _scrollControllerEmisiones.addListener(() {
+        if (_scrollControllerEmisiones.position.maxScrollExtent ==
+            _scrollControllerEmisiones.offset) {
+          if (pageEmisiones < totalPagesEmisiones) {
+            pageEmisiones++;
+            setState(() {
+              isLoadingEmisiones = true;
+            });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingEmisiones = false;
+              });
+            });
 
-    _scrollControllerProgramas.addListener(() {
-      if (_scrollControllerProgramas.position.maxScrollExtent ==
-          _scrollControllerProgramas.offset) {
-
-      }
-    });
-
-    _scrollControllerEmisiones.addListener(() {
-      if (_scrollControllerEmisiones.position.maxScrollExtent ==
-          _scrollControllerEmisiones.offset) {
-
-      }
-    });
+            blocRadioSearch.fetchSearch(
+                query,
+                pageEmisiones,
+                0, //Buca en todas las sedes
+                "TODOS",
+                "TODOS",
+                "EMISIONES");
+          }
+        }
+      });
+    }
   }
 
 
-  Widget drawResultList(blocStream, String tipo){
+  Widget drawResultList(blocStream, bool isLoading, String tipo){
     return StreamBuilder(
 
         stream: blocStream,
@@ -223,7 +387,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                   size: 50.0,
                 ));
           } else if (snapshot.hasData) {
-            child = drawContentList(snapshot, tipo);
+            child = drawContentList(snapshot, isLoading, tipo);
           } else if (snapshot.hasError) {
             child = drawError(snapshot.error);
           } else {
@@ -237,11 +401,15 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         });
   }
 
-  Widget drawContentList(AsyncSnapshot<dynamic> snapshot, String tipo) {
+  Widget drawContentList(AsyncSnapshot<dynamic> snapshot, bool isLoading, String tipo) {
 
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
-    totalPagesEmisiones = infoModel.pages;
+
+    if(tipo == "SERIES"){ totalPagesSeries = infoModel.pages;}
+    if(tipo == "EPISODIOS"){ totalPagesEpisodios = infoModel.pages;}
+    if(tipo == "PROGRAMAS"){ totalPagesProgramas = infoModel.pages;}
+    if(tipo == "EMISIONES"){ totalPagesEmisiones = infoModel.pages;}
 
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -259,13 +427,13 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               ),
             ),
           ),
-          Expanded(child: buildVerticalList(snapshot, tipo))
-          /*if (isLoading)
+          Expanded(child: buildVerticalList(snapshot, tipo)),
+          if (isLoading)
             const Center(
                 child: SpinKitFadingCircle(
                   color: Color(0xffb6b3c5),
                   size: 50.0,
-                ))*/
+                ))
         ]
     );
   }
@@ -276,7 +444,6 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         children: <Widget>[
           const Icon(
             Icons.error_outline,
-            color: Colors.red,
             size: 60,
           ),
           Padding(
@@ -290,26 +457,28 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
   Widget buildVerticalList(AsyncSnapshot<dynamic> snapshot, String tipo) {
     var list = snapshot.data!["result"];
-    List<Widget> cardList = [];
-    list?.forEach(
-            (element) => {cardList.add(buildCardForVerticalList(element))});
-
+    updateListToDraw(list, tipo);
+    List<Widget> cardList=[];
     ScrollController scrollController = _scrollControllerSeries;
     if(tipo == "SERIES"){
       scrollController = _scrollControllerSeries;
+      cardList = cardListSeries;
     }else if(tipo == "EPISODIOS"){
       scrollController = _scrollControllerEpisodios;
+      cardList = cardListEpisodios;
     }else if(tipo == "PROGRAMAS"){
       scrollController = _scrollControllerProgramas;
+      cardList = cardListProgramas;
     }else if(tipo == "EMISIONES"){
       scrollController = _scrollControllerEmisiones;
+      cardList = cardListEmisiones;
     }
 
     return ListView(
         shrinkWrap: true, controller: scrollController, children: cardList);
   }
 
-  Widget buildCardForVerticalList(element) {
+  Widget buildCardForVerticalList(element, String tipo) {
     var width = MediaQuery.of(context).size.width;
     DateTime now;
     try {
@@ -321,13 +490,32 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
+    var messageStr = "";
+    var redirectTo = "";
+    if(tipo=="SERIES") {
+      messageStr = "PODCAST";
+      redirectTo = "/detail";
+    }else if(tipo=="EPISODIOS"){
+      messageStr = "PODCAST";
+      redirectTo = "/item";
+    }
+    else if(tipo=="PROGRAMAS"){
+      messageStr = "RADIO";
+      redirectTo = "/detail";
+    }
+    else if(tipo=="EMISIONES"){
+      messageStr = "RADIO";
+      redirectTo = "/item";
+    }
+
     return InkWell(
         onTap: () {
-          //TODO:14/05/23 ajustar esta redirección cuando el servicio elastic se reestablezca
-          /*Navigator.pushNamed(context, "/item",
-              arguments: ScreenArguments("SITE",
-                  (element is EpisodioModel) ? "PODCAST" : "RADIO", element.uid,
-                  from: "BROWSER_RESULT_PAGE"));*/
+            Navigator.pushNamed(context, redirectTo,
+                arguments: ScreenArguments(
+                "SITE",
+                  messageStr,
+                  element.uid,
+                  element: element));
         },
         child: Container(
             padding:
@@ -454,6 +642,45 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
     return formatted;
   }
 
+  updateListToDraw(List list, String tipo){
+
+    list?.forEach(
+            (element) => {
+              if(tipo == "SERIES"){
+                cardListSeries.add(buildCardForVerticalList(element, tipo))
+              } else if(tipo == "EPISODIOS"){
+                cardListEpisodios.add(buildCardForVerticalList(element, tipo))
+              }
+              else if(tipo == "PROGRAMAS"){
+                cardListProgramas.add(buildCardForVerticalList(element, tipo))
+              }
+              else if(tipo == "EMISIONES"){
+                cardListEmisiones.add(buildCardForVerticalList(element, tipo))
+              }
+
+            });
+
+  }
+
+  String getFilterString(){
+
+    //"Sede Medellín | Radio Web | Actualidad"
+    String str = "";
+    if(_sede != null){
+      str = str + "Sede" + _sede.toString();
+    }
+
+    if(_canal != null){
+      str = str + " | " + _canal.toString();
+    }
+
+    if(_area != null){
+      str = str + " | " + _area.toString();
+    }
+
+    return str;
+
+  }
 
 }
 

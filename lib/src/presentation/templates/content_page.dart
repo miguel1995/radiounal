@@ -63,7 +63,6 @@ class _ContentPageState extends State<ContentPage> {
     }
 
     _scrollController.addListener(() {
-      print("lower limit listener");
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
         if (page < totalPages) {
@@ -240,15 +239,11 @@ class _ContentPageState extends State<ContentPage> {
 
     return InkWell(
         onTap: () {
-          print(">>>  Voy al detalle...");
-          print(title);
-          print(message);
-          print(element.uid);
-          print(element);
 
           Navigator.pushNamed(context, "/detail",
               arguments: ScreenArguments(title, message, element.uid,
                   element: element));
+
         },
         child: Container(
             padding:

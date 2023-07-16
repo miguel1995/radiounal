@@ -56,8 +56,8 @@ class ElasticSearchProvider {
         "recordDate",
       ]
     });
-    print(url);
-    print(body);
+    /*print(url);
+    print(body);*/
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -67,9 +67,9 @@ class ElasticSearchProvider {
           'Authorization': 'Basic ZWxhc3RpY19idXNjYWRvcjprMXVqN1NuRlFibDRKRDIzZlU='
         },
         body: body);
-    print("### elastic 3333");
+    /*print("### elastic 3333");
     print(response);
-    print(utf8.decode(response.bodyBytes));
+    print(utf8.decode(response.bodyBytes));*/
     if (response.statusCode == 200) {
       String responseBody = utf8.decode(response.bodyBytes);
       final parsed = json.decode(responseBody);

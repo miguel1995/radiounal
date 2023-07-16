@@ -57,7 +57,7 @@ class CountriesNowProvider {
   Future<List<DepartamentoModel>> getDepartamentos(String pais) async {
 
     var url = Uri.parse('https://$_hostDomain$_urlDepartamentos/q?country=$pais');
-    print(url);
+    //print(url);
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -73,7 +73,7 @@ class CountriesNowProvider {
 
     var url = Uri.parse('https://$_hostDomain${_urlCiudades}/q?country=$pais&state=${departamento}');
     // Await the http get response, then decode the json-formatted response.
-    print(url);
+    //print(url);
 
     var response = await http.get(url);
 

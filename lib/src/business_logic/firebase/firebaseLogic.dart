@@ -30,7 +30,6 @@ class FirebaseLogic {
         .then((DocumentReference doc) => {
               if (doc.id != null)
                 {
-                  //print('DocumentSnapshot added with ID: ${doc.id}');
                   flag = true
                 }
             });
@@ -52,7 +51,6 @@ class FirebaseLogic {
 
     docRef.snapshots().listen(
         (event) => {
-              //print("current data: ${event.docs.length}"),
               if (event.docs.length > 0)
                 {flag = true, _subjectFavorite.sink.add(flag)}
               else
@@ -135,7 +133,6 @@ class FirebaseLogic {
         .then((DocumentReference doc) => {
               if (doc.id != null)
                 {
-                  //print('DocumentSnapshot added with ID: ${doc.id}');
                   flag = true
                 }
             });
@@ -218,7 +215,6 @@ class FirebaseLogic {
         .then((DocumentReference doc) => {
               if (doc.id != null)
                 {
-                  //print('DocumentSnapshot added with ID: ${doc.id}');
                   flag = true
                 }
             });
@@ -240,8 +236,6 @@ class FirebaseLogic {
         .get()
         .then(
           (res) => {
-            print(">>> N° ESTADISTICAS EN FIREBASE: "),
-            print(res.docs.length),
             if (res.docs.length > 0) {score = res.docs.first.data()["score"]}
           },
           onError: (e) => print("Error completing: $e"),

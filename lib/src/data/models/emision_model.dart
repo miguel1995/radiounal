@@ -91,7 +91,7 @@ class EmisionModel{
 
     //print(">> RADIO - CASTEA A UNA EMISION");
     //print(parsedJson);
-    print("------------Emision: "+ parsedJson["id"].toString());
+    //print("------------Emision: "+ parsedJson["id"].toString());
 
     _uid = parsedJson["id"];
     _title = parsedJson["title"]??"";
@@ -104,7 +104,7 @@ class EmisionModel{
     _categoryTitle = parsedJson["categoryTitle"];
     _categoryUid = (parsedJson["categoryUid"]=="" || parsedJson["categoryUid"]==1)?0:parsedJson["categoryUid"];
     _duration = parsedJson["duration"]??"";
-    print(toString());
+    //print(toString());
 
   }
   @override

@@ -10,8 +10,8 @@ class PodcastSearchSeriesBloc{
   final _repository = PodcastRepository();
   final _subject = BehaviorSubject<Map<String, dynamic>>();
 
-  fetchSearch(String query, int page) async {
-    Map<String, dynamic> map = await _repository.findSearch(query, page);
+  fetchSearch(String query, int page, String contentType) async {
+    Map<String, dynamic> map = await _repository.findSearch(query, page, contentType);
     _subject.sink.add(map);
   }
 
