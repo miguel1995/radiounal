@@ -68,44 +68,44 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     elementFilters = widget.element;
     page = widget.page;
 
-    if (elementFilters["contentType"] == "MASESCUCHADO") {
-      blocRadioMasEscuchados.fetchMasEscuchados();
-      blocPodcastMasEscuchados.fetchMasEscuchados();
-    } else if (elementFilters["contentType"] == "PROGRAMAS" ||
-        elementFilters["contentType"] == "EMISIONES") {
+      if (elementFilters["contentType"] == "MASESCUCHADO") {
+        blocRadioMasEscuchados.fetchMasEscuchados();
+        blocPodcastMasEscuchados.fetchMasEscuchados();
+      } else if (elementFilters["contentType"] == "PROGRAMAS" ||
+          elementFilters["contentType"] == "EMISIONES") {
+        blocRadioSearch.fetchSearch(
+            elementFilters["query"],
+            page,
+            elementFilters["sede"],
+            elementFilters["canal"],
+            elementFilters["area"],
+            elementFilters["contentType"]
+        );
+      } else if (elementFilters["contentType"] == "SERIES") {
+        blocPodcastSeries.fetchSeries(page);
+      } else if (elementFilters["contentType"] == "EPISODIOS") {
+        blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
+      } else if (elementFilters["contentType"] == "ELASTIC") {
+        //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
+        /*querySize = 100;
+        start = page * querySize;
+        blocElasticSearch.fetchSearch(elementFilters["query"], page, start);*/
 
-      blocRadioSearch.fetchSearch(
-          elementFilters["query"],
-          page,
-          elementFilters["sede"],
-          elementFilters["canal"],
-          elementFilters["area"],
-          elementFilters["contentType"]
-      );
-    } else if (elementFilters["contentType"] == "SERIES") {
-      blocPodcastSeries.fetchSeries(page);
-    } else if (elementFilters["contentType"] == "EPISODIOS") {
-      blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
-    } else if (elementFilters["contentType"] == "ELASTIC") {
+        //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
+        /*blocRadioSearch.fetchSearch(
+            elementFilters["query"],
+            page,
+            0, //Buca en todas las sedes
+            "TODOS",
+            "TODOS",
+            "EMISIONES");*/
 
-      //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
-      /*querySize = 100;
-      start = page * querySize;
-      blocElasticSearch.fetchSearch(elementFilters["query"], page, start);*/
+      }
 
-      //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
-      blocRadioSearch.fetchSearch(
-          elementFilters["query"],
-          page,
-          0, //Buca en todas las sedes
-          "TODOS",
-          "TODOS",
-          "EMISIONES");
 
-    }
+      initializeScrollListener();
+      initializeStopLoading();
 
-    initializeScrollListener();
-    initializeStopLoading();
   }
 
   void initializeScrollListener() {
@@ -134,18 +134,18 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 elementFilters["area"],
                 elementFilters["contentType"]);
           } else if (elementFilters["contentType"] == "ELASTIC") {
-            start = page * querySize;
+            //start = page * querySize;
 
             /*blocElasticSearch.fetchSearch(
                 elementFilters["query"], start, querySize);*/
             //TODO: 14/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
-            blocRadioSearch.fetchSearch(
+            /*blocRadioSearch.fetchSearch(
                 elementFilters["query"],
                 page,
                 0, //Buca en todas las sedes
                 "TODOS",
                 "TODOS",
-                "EMISIONES");
+                "EMISIONES");*/
           } else if (elementFilters["contentType"] == "SERIES") {
             blocPodcastSeries.fetchSeries(page);
           } else if (elementFilters["contentType"] == "EPISODIOS") {
@@ -675,7 +675,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   * Realiza la busqueda en todos los sitios
   * */
   Widget getMultiTabResult(){
-    return MultiTabResult(tabIndex: 0, query: elementFilters["query"], page: page);
+    return MultiTabResult(
+      tabIndex: 0,
+      query: elementFilters["query"],
+      page: page,
+      sede: elementFilters["sede"],
+      canal: elementFilters["canal"],
+      area: elementFilters["area"],
+    );
   }
 
 }

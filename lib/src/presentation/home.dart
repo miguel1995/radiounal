@@ -71,7 +71,6 @@ class _HomeState extends State<Home> {
 
       //Actualiza la transmision de podcast random
       EpisodioModel randomItem = (event..shuffle()).first;
-      print(randomItem.audio);
 
       setState((){
         potcastRandom = randomItem.audio;
@@ -694,7 +693,6 @@ class _HomeState extends State<Home> {
 
   Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {
 
-    print(snapshot1);
 
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];

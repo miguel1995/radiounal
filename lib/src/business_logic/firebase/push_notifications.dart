@@ -24,7 +24,16 @@ class PushNotification {
       print(token);
     });
 
+    FirebaseMessaging.onMessage.listen((event) {
+      print(">>>  onMessage");
+      print(event);
+    });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+
+      print(">>>  Oprimir Push: ");
+      print(message);
+
       if (Platform.isAndroid) {
         if (message != null) {
           if (message.data != null) {

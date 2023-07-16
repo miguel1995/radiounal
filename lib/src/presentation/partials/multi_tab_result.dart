@@ -16,8 +16,11 @@ class MultiTabResult extends StatefulWidget {
   int tabIndex;
   String query;
   int page;
+  int sede;
+  String canal;
+  String area;
 
-  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page}) : super(key: key);
+  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page, required int this.sede, required String this.canal, required String this.area}) : super(key: key);
 
   @override
   State<MultiTabResult> createState() => _MultiTabResultState();
@@ -28,6 +31,9 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   late TabController _tabController;
   int tabIndex = 0;
   String query = "";
+  int _sede = 0;
+  String _canal = "TODOS";
+  String _area = "TODOS";
 
   late int pageSeries = 0;
   int totalPagesSeries = 0;
@@ -60,6 +66,12 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   List<Widget> cardListProgramas = [];
   List<Widget> cardListEmisiones = [];
 
+  bool enableSeriesSearch = true;
+  bool enableEpisodiosSearch = true;
+  bool enableProgramasSearch = true;
+  bool enableEmisionesSearch = true;
+
+
   @override
   void initState() {
 
@@ -68,6 +80,41 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
     _tabController = TabController(length: 4, vsync: this);
     _tabController.animateTo(tabIndex);
+
+
+    if(widget.sede != null){
+      _sede = widget.sede;
+    }else{
+      _sede = 0;
+    }
+
+    if(widget.canal != null){
+      _canal = widget.canal;
+    }else{
+      _canal = "TODOS";
+    }
+
+    if(widget.area != null){
+      _area = widget.area;
+    }else{
+      _area = "TODOS";
+    }
+
+
+    if(_canal != null ){
+
+      //Si en los filtros viene canal Podcast,
+      // solo habilita busqueda de series
+      // y episodios
+      if(_canal == "POD"){
+        enableSeriesSearch = true;
+        enableEpisodiosSearch = true;
+        enableProgramasSearch = false;
+        enableEmisionesSearch = false;
+      }
+
+    }
+
     initializeScrollListener();
     initializeLoadData();
     super.initState();
@@ -115,7 +162,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             Container(
               padding: const EdgeInsets.only(left: 20, bottom: 20),
               child: Text(
-                "Sede Medellín | Radio Web | Actualidad",
+                getFilterString(),
                 style: const TextStyle(
                   color: Color(0xff121C4A),
                   fontSize: 10,
@@ -202,123 +249,128 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   }
 
   void initializeLoadData(){
+      if(enableEmisionesSearch) {
+        blocRadioSearch.fetchSearch(
+            query,
+            pageEmisiones,
+            _sede,
+            _canal,
+            _area,
+            "EMISIONES");
+      }
 
-    blocRadioSearch.fetchSearch(
-        query,
-        pageEmisiones,
-        0, //Buca en todas las sedes
-        "TODOS",
-        "TODOS",
-        "EMISIONES");
+      if(enableProgramasSearch) {
+        blocRadioProgramasSearch.fetchSearch(
+            query,
+            pageProgramas,
+            _sede,
+            _canal,
+            _area,
+            "PROGRAMAS");
+      }
 
+      if(enableSeriesSearch) {
+        blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
+      }
 
-    blocRadioProgramasSearch.fetchSearch(
-        query,
-        pageProgramas,
-        0, //Buca en todas las sedes
-        "TODOS",
-        "TODOS",
-        "PROGRAMAS");
-
-    blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
-
-    blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+      if(enableEpisodiosSearch) {
+        blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+      }
   }
 
   void initializeScrollListener() {
-    _scrollControllerSeries.addListener(() {
-      if (_scrollControllerSeries.position.maxScrollExtent ==
-          _scrollControllerSeries.offset) {
-
-        if (pageSeries < totalPagesSeries) {
-          pageSeries++;
-          setState(() {
-            isLoadingSeries = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
+    if (enableSeriesSearch) {
+      _scrollControllerSeries.addListener(() {
+        if (_scrollControllerSeries.position.maxScrollExtent ==
+            _scrollControllerSeries.offset) {
+          if (pageSeries < totalPagesSeries) {
+            pageSeries++;
             setState(() {
-              isLoadingSeries = false;
+              isLoadingSeries = true;
             });
-          });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingSeries = false;
+              });
+            });
 
-          blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
-
+            blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
+          }
         }
-    }});
-
-    _scrollControllerEpisodios.addListener(() {
-      if (_scrollControllerEpisodios.position.maxScrollExtent ==
-          _scrollControllerEpisodios.offset) {
-
-        if (pageEpisodios < totalPagesEpisodios) {
-          pageEpisodios++;
-          setState(() {
-            isLoadingEpisodios = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
+      });
+    }
+    if (enableEpisodiosSearch) {
+      _scrollControllerEpisodios.addListener(() {
+        if (_scrollControllerEpisodios.position.maxScrollExtent ==
+            _scrollControllerEpisodios.offset) {
+          if (pageEpisodios < totalPagesEpisodios) {
+            pageEpisodios++;
             setState(() {
-              isLoadingEpisodios = false;
+              isLoadingEpisodios = true;
             });
-          });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingEpisodios = false;
+              });
+            });
 
-          blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+            blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
+          }
         }
-
-      }
-    });
-
-    _scrollControllerProgramas.addListener(() {
-      if (_scrollControllerProgramas.position.maxScrollExtent ==
-          _scrollControllerProgramas.offset) {
-
-        if (pageProgramas < totalPagesProgramas) {
-          pageProgramas++;
-          setState(() {
-            isLoadingProgramas = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
+      });
+    }
+    if (enableProgramasSearch){
+      _scrollControllerProgramas.addListener(() {
+        if (_scrollControllerProgramas.position.maxScrollExtent ==
+            _scrollControllerProgramas.offset) {
+          if (pageProgramas < totalPagesProgramas) {
+            pageProgramas++;
             setState(() {
-              isLoadingProgramas = false;
+              isLoadingProgramas = true;
             });
-          });
-
-          blocRadioProgramasSearch.fetchSearch(
-              query,
-              pageProgramas,
-              0, //Buca en todas las sedes
-              "TODOS",
-              "TODOS",
-              "PROGRAMAS");        }
-
-      }
-    });
-
-    _scrollControllerEmisiones.addListener(() {
-      if (_scrollControllerEmisiones.position.maxScrollExtent ==
-          _scrollControllerEmisiones.offset) {
-
-        if (pageEmisiones < totalPagesEmisiones) {
-          pageEmisiones++;
-          setState(() {
-            isLoadingEmisiones = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
-            setState(() {
-              isLoadingEmisiones = false;
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingProgramas = false;
+              });
             });
-          });
 
-          blocRadioSearch.fetchSearch(
-              query,
-              pageEmisiones,
-              0, //Buca en todas las sedes
-              "TODOS",
-              "TODOS",
-              "EMISIONES");
+            blocRadioProgramasSearch.fetchSearch(
+                query,
+                pageProgramas,
+                0, //Buca en todas las sedes
+                "TODOS",
+                "TODOS",
+                "PROGRAMAS");
+          }
         }
+      });
+    }
+    if(enableEmisionesSearch) {
+      _scrollControllerEmisiones.addListener(() {
+        if (_scrollControllerEmisiones.position.maxScrollExtent ==
+            _scrollControllerEmisiones.offset) {
+          if (pageEmisiones < totalPagesEmisiones) {
+            pageEmisiones++;
+            setState(() {
+              isLoadingEmisiones = true;
+            });
+            Future.delayed(Duration(milliseconds: 1000), () {
+              setState(() {
+                isLoadingEmisiones = false;
+              });
+            });
 
-      }
-    });
+            blocRadioSearch.fetchSearch(
+                query,
+                pageEmisiones,
+                0, //Buca en todas las sedes
+                "TODOS",
+                "TODOS",
+                "EMISIONES");
+          }
+        }
+      });
+    }
   }
 
 
@@ -610,6 +662,25 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
   }
 
+  String getFilterString(){
+
+    //"Sede Medellín | Radio Web | Actualidad"
+    String str = "";
+    if(_sede != null){
+      str = str + "Sede" + _sede.toString();
+    }
+
+    if(_canal != null){
+      str = str + " | " + _canal.toString();
+    }
+
+    if(_area != null){
+      str = str + " | " + _area.toString();
+    }
+
+    return str;
+
+  }
 
 }
 
