@@ -19,8 +19,9 @@ class MultiTabResult extends StatefulWidget {
   int sede;
   String canal;
   String area;
+  String filterString;
 
-  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page, required int this.sede, required String this.canal, required String this.area}) : super(key: key);
+  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page, required int this.sede, required String this.canal, required String this.area, required String this.filterString}) : super(key: key);
 
   @override
   State<MultiTabResult> createState() => _MultiTabResultState();
@@ -34,6 +35,8 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   int _sede = 0;
   String _canal = "TODOS";
   String _area = "TODOS";
+  String filterString = "";
+
 
   late int pageSeries = 0;
   int totalPagesSeries = 0;
@@ -100,6 +103,12 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
       _area = "TODOS";
     }
 
+    if(widget.filterString != null){
+      filterString = widget.filterString;
+    }else{
+      filterString = "";
+    }
+
 
     if(_canal != null ){
 
@@ -162,7 +171,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             Container(
               padding: const EdgeInsets.only(left: 20, bottom: 20),
               child: Text(
-                getFilterString(),
+                filterString,
                 style: const TextStyle(
                   color: Color(0xff121C4A),
                   fontSize: 10,
@@ -220,10 +229,14 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               child: TabBarView(
                 controller: _tabController,
                 children:  [
-                  drawResultList(blocRadioProgramasSearch.subject.stream, isLoadingProgramas, "PROGRAMAS"),
-                  drawResultList(blocRadioSearch.subject.stream, isLoadingEmisiones, "EMISIONES"),
-                  drawResultList(blocPodcastSeriesSearch.subject.stream, isLoadingSeries, "SERIES"),
-                  drawResultList(blocPodcastSearch.subject.stream, isLoadingEpisodios, "EPISODIOS")
+                  (enableProgramasSearch)?
+                  drawResultList(blocRadioProgramasSearch.subject.stream, isLoadingProgramas, "PROGRAMAS"): getZeroResults(),
+                  (enableEmisionesSearch)?
+                  drawResultList(blocRadioSearch.subject.stream, isLoadingEmisiones, "EMISIONES"):getZeroResults(),
+                  (enableSeriesSearch)?
+                  drawResultList(blocPodcastSeriesSearch.subject.stream, isLoadingSeries, "SERIES"):getZeroResults(),
+                  (enableEpisodiosSearch)?
+                  drawResultList(blocPodcastSearch.subject.stream, isLoadingEpisodios, "EPISODIOS"):getZeroResults()
 
                 ],
               ),
@@ -662,25 +675,21 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
   }
 
-  String getFilterString(){
-
-    //"Sede Medellín | Radio Web | Actualidad"
-    String str = "";
-    if(_sede != null){
-      str = str + "Sede" + _sede.toString();
-    }
-
-    if(_canal != null){
-      str = str + " | " + _canal.toString();
-    }
-
-    if(_area != null){
-      str = str + " | " + _area.toString();
-    }
-
-    return str;
-
+  Widget getZeroResults(){
+    return Container(
+      padding: const EdgeInsets.only(left: 20),
+      child: const Text(
+        "0 resultados",
+        style: TextStyle(
+          color: Color(0xff121C4A),
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+          decorationColor: Color(0xFFFCDC4D),
+        ),
+      ),
+    );
   }
+
 
 }
 

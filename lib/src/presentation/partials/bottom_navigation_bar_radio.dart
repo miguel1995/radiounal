@@ -183,7 +183,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     _maxHeight = size.height * 0.88;
-    _minHeight = 110;
+    _minHeight = size.height * 0.1335;
 
     return AnimatedBuilder(
         animation: _controller,
@@ -200,8 +200,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       child: _expanded
                           ? audioPlayerExpanded()
                           : audioPlayerMini()))
-
-
             ],
           );
         });
@@ -453,7 +451,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         child: Column(children: [
           Row(children: [
             getImageMini(),
-            Column(
+           Column(
               children: [
                 Container(
                     padding: EdgeInsets.only(left: 20),
@@ -492,7 +490,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                   : null)
                         ])),
                 Row(children: [
-                  IconButton(
+                  Container(
+                      child:IconButton(
                     color: const Color(0xffFCDC4D),
                     iconSize: 40,
                     icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
@@ -503,7 +502,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         await audioPlayer.play(audioUrl);
                       }
                     },
-                  ),
+                  )),
+                  Container(
+                      child:
                   Slider(
                       activeColor: const Color(0xffFCDC4D),
                       min: 0,
@@ -511,11 +512,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       value: position.inSeconds.toDouble(),
                       onChanged: (value) async {
                         audioPlayer.seek(Duration(seconds: value.toInt()));
-                      }),
-                  Text(formatTimeString(position),
+                      })),
+                  Container(
+                      child:
+                      Text(formatTimeString(position),
                       style: const TextStyle(
                           color: Color(0xffFCDC4D),
                           fontStyle: FontStyle.italic))
+                  )
                 ])
               ],
             )
@@ -615,8 +619,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     }
 
     widget = Container(
-        padding: const EdgeInsets.only(left: 10),
-        width: MediaQuery.of(context).size.width * 0.2,
+        padding: const EdgeInsets.only(left: 10, top: 10),
+        height: MediaQuery.of(context).size.height * 0.10,
         child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0),
             child: Stack(children: [

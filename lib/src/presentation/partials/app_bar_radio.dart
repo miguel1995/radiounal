@@ -30,8 +30,9 @@ class AppBarRadio extends StatelessWidget implements PreferredSizeWidget {
 
               },
               child:SvgPicture.asset(
-                  "assets/icons/identificador_radioUNAL.svg",
-                  width: MediaQuery.of(context).size.width * 0.40)
+                  "assets/icons/identificador_radioUNAL.svg"
+                  //width: MediaQuery.of(context).size.width * 0.40
+              )
             ),
             ),
         centerTitle: true,

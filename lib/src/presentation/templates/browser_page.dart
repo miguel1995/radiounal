@@ -248,7 +248,7 @@ class _BrowserPageState extends State<BrowserPage> {
         });
   }
 
-  callBackDialog(int sede, String canal, String area) {
+  callBackDialog(int sede, String canal, String area, String filterString) {
 
     Navigator.pushNamed(context, "/browser-result",
         arguments: ScreenArguments('NONE', 'Resultados', 1, element: {
@@ -257,7 +257,8 @@ class _BrowserPageState extends State<BrowserPage> {
           "canal": canal,
           "area": area,
           "contentType": "ELASTIC",
-          "numColumn": 1
+          "numColumn": 1,
+          "filterString": filterString
         }
 
         ));

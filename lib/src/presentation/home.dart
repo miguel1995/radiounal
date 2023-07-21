@@ -795,6 +795,7 @@ class _HomeState extends State<Home> {
                           fontStyle: FontStyle.italic),
                     ),
                   ),
+
                   Container(
                     child: Text(
                       "$formatted ${formatDurationString(element.duration)}",
@@ -816,10 +817,9 @@ class _HomeState extends State<Home> {
   }
 
   String formatDurationString(String duration) {
-
     String formatted = "";
-    if(duration != null || duration != ""){
-
+    if(duration != null && duration.trim() != ""){
+      print(">> No es null");
       if(duration.substring(0,2) == "00"){
         formatted = "| " + duration.substring(3);
       }else{

@@ -157,6 +157,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   }
 
   void initializeStopLoading() {
+
     blocPodcastSeries.subject.stream.listen((event) {
       if (event.values.isNotEmpty) {
         setState(() {
@@ -682,6 +683,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
       sede: elementFilters["sede"],
       canal: elementFilters["canal"],
       area: elementFilters["area"],
+      filterString: elementFilters["filterString"],
     );
   }
 

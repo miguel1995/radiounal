@@ -68,7 +68,8 @@ class _MenuState extends State<Menu> {
       padding: const EdgeInsets.only( left: 35, top: 60, bottom: 10),
         child: Row(children: [
           Image.asset('assets/images/logo.png',
-              width: MediaQuery.of(context).size.width * 0.35),
+              width: 150
+          ),
       Container(
           margin: EdgeInsets.only(left:60),
           child:IconButton(
@@ -122,7 +123,8 @@ class _MenuState extends State<Menu> {
                   ),
                   if (_menuTitles[i].iconPath != "")
                     SvgPicture.asset(_menuTitles[i].iconPath,
-                        width: MediaQuery.of(context).size.width * 0.05)
+                        //width: MediaQuery.of(context).size.width * 0.05
+                   )
                 ],
               ))));
     }
@@ -148,8 +150,9 @@ class _MenuState extends State<Menu> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   if (_menuUrls[i].iconPath != "")
-                    SvgPicture.asset(_menuUrls[i].iconPath,
-                        width: MediaQuery.of(context).size.width * 0.05)
+                    SvgPicture.asset(_menuUrls[i].iconPath
+                        //width: MediaQuery.of(context).size.width * 0.05
+                    )
                 ])),
           ),
           IconButton(
@@ -179,7 +182,8 @@ class _MenuState extends State<Menu> {
                   ),
                   if (_menuUrls[i].iconPath != "")
                     SvgPicture.asset(_menuUrls[i].iconPath,
-                        width: MediaQuery.of(context).size.width * 0.05)
+                        width: MediaQuery.of(context).size.width * 0.05
+                  )
                 ])),
           ));
         }
