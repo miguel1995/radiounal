@@ -236,7 +236,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             Widget child;
 
             if (snapshot.hasData) {
-              child = buildListEscuchados(snapshot);
+              child = drawListEscuchados(snapshot);
             } else if (snapshot.hasError) {
               child = drawError(snapshot.error);
             } else {
@@ -288,7 +288,9 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     infoModel = snapshot.data!["info"];
     totalPages = infoModel.pages;
 
-    return Column(
+    return
+
+      Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -484,9 +486,63 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             )));
   }
 
-  Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {
-    var list1 = snapshot1.data![0];
-    var list2 = snapshot1.data![1];
+  Widget drawListEscuchados(AsyncSnapshot<List<dynamic>> snapshot){
+    var list1 = snapshot.data![0];
+    var list2 = snapshot.data![1];
+    var countEscuchados = list1.length + list2.length;
+
+    return
+      Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Text(
+                message,
+                style: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: const Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: const Color(0xFFFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                "${countEscuchados} resultados",
+                style: const TextStyle(
+                  color: Color(0xff121C4A),
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: Color(0xFFFCDC4D),
+                ),
+              ),
+            ),
+            Expanded(
+                child: buildListEscuchados(list1, list2)),
+            if (isLoading)
+              const Center(
+                  child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  ))
+          ]);
+
+
+
+  }
+
+  Widget buildListEscuchados(list1, list2) {
+
 
     list1?.forEach((element) => {cardList.add(buildCardForVerticalList(element))});
 

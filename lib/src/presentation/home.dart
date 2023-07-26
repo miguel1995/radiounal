@@ -328,7 +328,7 @@ class _HomeState extends State<Home> {
                   child = drawError(snapshot.error);
                 } else {
                   child = Container(
-                      child: Text("en progreso..."),
+                      //child: Text("en progreso..."),
                       );
                 }
                 return child;
@@ -819,7 +819,6 @@ class _HomeState extends State<Home> {
   String formatDurationString(String duration) {
     String formatted = "";
     if(duration != null && duration.trim() != ""){
-      print(">> No es null");
       if(duration.substring(0,2) == "00"){
         formatted = "| " + duration.substring(3);
       }else{

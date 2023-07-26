@@ -239,6 +239,9 @@ class _ContactPageState extends State<ContactsPage> {
                            SnackBar(content: Text(event.toString())),
                         );
                       });
+
+                      Navigator.pop(context);
+
                     }
                   },
                   child: Text(

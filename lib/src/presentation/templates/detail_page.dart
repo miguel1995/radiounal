@@ -101,26 +101,6 @@ class _DetailPageState extends State<DetailPage> {
     print(page);
     print(elementContent.toString());*/
 
-    firebaseLogic.validateSeguido(uid, _deviceId).then((value) => {
-          setState(() {
-            _isSeguido = value;
-          })
-        });
-
-    firebaseLogic
-        .validateEstadistica(uid, _deviceId, message.toUpperCase(),
-            (message == "RADIO") ? "PROGRAMA" : "SERIE")
-        .then((value) => {
-              if (value != null && value != "" && value != null)
-                {
-                  setState(() {
-                    _currentScore = value;
-                  })
-                }
-            });
-
-    print(">>> SI te estoy siguiendo: ${_isSeguido}");
-
     if (message == "RADIO") {
       blocRadioEmisiones.fetchEmisiones(uid, page);
     } else if (message == "PODCAST") {
@@ -499,6 +479,8 @@ class _DetailPageState extends State<DetailPage> {
     setState(() {
       _deviceId = deviceId;
     });
+    loadFirebaseData();
+
     print("deviceId->$_deviceId");
   }
 
@@ -519,9 +501,9 @@ class _DetailPageState extends State<DetailPage> {
       dynamic element,
       var w,
       int uid,
-      var _deviceId,
+      var deviceId,
       String message,
-      bool _isSeguido,
+      bool isSeguido,
       PushNotification pushNotification,
       FirebaseLogic firebaseLogic,
       FavoritoBtn favoritoBtn) {
@@ -648,7 +630,7 @@ class _DetailPageState extends State<DetailPage> {
                           uid,
                           message,
                           (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                          _deviceId,
+                          deviceId,
                           rating.toInt(),
                           today.microsecondsSinceEpoch)
                       .then((value) => {
@@ -669,14 +651,14 @@ class _DetailPageState extends State<DetailPage> {
               padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
               child: InkWell(
                   onTap: () {
-                    if (_isSeguido == true) {
+                    if (isSeguido == true) {
                       firebaseLogic
-                          .eliminarSeguido(uid, _deviceId)
+                          .eliminarSeguido(uid, deviceId)
                           .then((value) => {
                                 pushNotification.removeNotificationItem(
                                     "${message.toUpperCase()}-$uid"),
                                 setState(() {
-                                  _isSeguido = false;
+                                  isSeguido = false;
                                 })
                               });
                     } else {
@@ -685,7 +667,7 @@ class _DetailPageState extends State<DetailPage> {
                               uid,
                               message,
                               (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                              _deviceId)
+                              deviceId)
                           .then((value) => {
                                 if (value == true)
                                   {
@@ -694,7 +676,7 @@ class _DetailPageState extends State<DetailPage> {
                                         "${message.toUpperCase()}-$uid"),
                                     showConfirmDialog(context, "FOLLOWED"),
                                     setState(() {
-                                      _isSeguido = true;
+                                      isSeguido = true;
                                     })
                                   }
                                 else
@@ -726,7 +708,7 @@ class _DetailPageState extends State<DetailPage> {
                         ],
                       ),
                       child: Text(
-                        (_isSeguido) ? "Dejar de Seguir" : "Seguir",
+                        (isSeguido) ? "Dejar de Seguir" : "Seguir",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       )))),
@@ -746,6 +728,34 @@ class _DetailPageState extends State<DetailPage> {
           });
           return ConfirmDialog(strTipo);
         });
+  }
+
+  loadFirebaseData(){
+    firebaseLogic.validateSeguido(uid, _deviceId).then((value) =>
+    {
+      print("### Consulta en firebase"),
+      print("### uid ${uid}"),
+      print("### deviceId ${_deviceId}"),
+      print("### value ${value}"),
+
+      setState(() {
+        _isSeguido = value;
+      })
+    });
+
+
+    firebaseLogic
+        .validateEstadistica(uid, _deviceId, message.toUpperCase(),
+        (message == "RADIO") ? "PROGRAMA" : "SERIE")
+        .then((value) =>
+    {
+      if (value != null && value != "" && value != null)
+        {
+          setState(() {
+            _currentScore = value;
+          })
+        }
+    });
   }
 }
 

@@ -141,11 +141,14 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               padding: const EdgeInsets.only(left: 20, top: 20),
               child: Text(
                 "Resultados de busqueda",
-                style: TextStyle(
+                style:
+
+                TextStyle(
                   shadows: [
                     Shadow(
                         color: Theme.of(context).primaryColor,
-                        offset: const Offset(0, -5))
+                        offset: const Offset(0, -5)
+                    )
                   ],
                   color: Colors.transparent,
                   decorationThickness: 2,
@@ -181,49 +184,45 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               ),
             ),
             TabBar(
-              unselectedLabelColor: Colors.black,
-              indicatorColor: Theme.of(context).appBarTheme.foregroundColor,
-              tabs: [
-                Tab(
-                  child: Text("Programas",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14
-                      )
-                  ),
-                ),
-                Tab(
-                  child: Text("Emisiones",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14
-                      )
-                  ),
-                ),
-                Tab(
-                  child: Text("Series",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text("Episodios",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14
-                      ),
+              unselectedLabelColor: Colors.transparent,
+              labelColor: Colors.transparent,
+              indicatorColor: Colors.transparent,
+              labelStyle:
+              TextStyle(
+                shadows: [
+                  Shadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: const Offset(0, -5)
+                  )
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                decorationColor: const Color(0xFFFCDC4D),
+                decoration: TextDecoration.underline,
+              ),
 
-                  ),
-                )
-              ],
+
+              unselectedLabelStyle: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color: Theme.of(context).primaryColor,
+                        offset: const Offset(0, -5)
+                    )
+                  ],
+                  color: Colors.transparent,
+                  fontSize: 13
+              ),
               controller: _tabController,
               indicatorSize: TabBarIndicatorSize.tab,
+              tabs: const [
+                Tab(child: Text("Programas")),
+                Tab(child: Text("Emisiones")),
+                Tab(child: Text("Series")),
+                Tab(child: Text("Episodios"))
+              ],
+
             ),
             Expanded(
               child: TabBarView(
@@ -492,6 +491,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   }
 
   Widget buildCardForVerticalList(element, String tipo) {
+    var site = "";
     var width = MediaQuery.of(context).size.width;
     DateTime now;
     try {
@@ -508,17 +508,21 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
     if(tipo=="SERIES") {
       messageStr = "PODCAST";
       redirectTo = "/detail";
+      site = "Podcast";
     }else if(tipo=="EPISODIOS"){
       messageStr = "PODCAST";
       redirectTo = "/item";
+      site = "Radio";
     }
     else if(tipo=="PROGRAMAS"){
       messageStr = "RADIO";
       redirectTo = "/detail";
+      site = "Radio";
     }
     else if(tipo=="EMISIONES"){
       messageStr = "RADIO";
       redirectTo = "/item";
+      site = "Radio";
     }
 
     return InkWell(
@@ -575,6 +579,16 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                             ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            site,
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Theme.of(context).primaryColor,
+                                fontStyle: FontStyle.italic),
                           ),
                         ),
                         Container(
