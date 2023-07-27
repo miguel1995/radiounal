@@ -339,8 +339,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawSiguenos() {
+    var marginBottom = MediaQuery.of(context).size.height.toDouble() * 0.2;
+
     return Container(
-        margin: const EdgeInsets.only(bottom: 10, top: 10),
+        margin:  EdgeInsets.only(bottom: marginBottom, top: 10),
         padding: const EdgeInsets.only(bottom: 10, top: 10),
         child: Column(children: [
           Align(
@@ -556,7 +558,7 @@ class _HomeState extends State<Home> {
     final String formatted = formatter.format(now);
 
     List<Widget> rowList = [];
-    var widthBox = MediaQuery.of(context).size.width * 0.35;
+    var widthBox = 144.0;
 
     rowList.add(Container(
       padding: const EdgeInsets.only(top:5, bottom: 5),
