@@ -371,7 +371,6 @@ class _ItemPageState extends State<ItemPage> {
 
                 },
                 child: Container(
-                    width: w * 0.35,
                     padding: const EdgeInsets.only(
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
@@ -390,7 +389,7 @@ class _ItemPageState extends State<ItemPage> {
                       ],
                     ),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.play_arrow,
                           color: Colors.white,

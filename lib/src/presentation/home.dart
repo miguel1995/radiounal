@@ -339,7 +339,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget drawSiguenos() {
-    var marginBottom = MediaQuery.of(context).size.height.toDouble() * 0.2;
+    var marginBottom = MediaQuery.of(context).size.height.toDouble() * 0.10;
 
     return Container(
         margin:  EdgeInsets.only(bottom: marginBottom, top: 10),

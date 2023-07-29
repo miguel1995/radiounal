@@ -204,7 +204,7 @@ class _DetailPageState extends State<DetailPage> {
           Container(),
         ],
         backgroundColor: Colors.transparent,
-        expandedHeight: 450,
+        expandedHeight: 550,
         flexibleSpace: FlexibleSpaceBar(
             titlePadding: EdgeInsets.all(0.0),
             collapseMode: CollapseMode.pin,

@@ -488,7 +488,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                               'assets/icons/icono_flechita_up.svg',
                                               width: 20)))
                                   : null)
-                        ])),
+                        ]
+                    )
+
+                ),
+
                 Row(children: [
                   Container(
                       child:IconButton(
@@ -504,7 +508,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     },
                   )),
                   Container(
-                      child:
+                      color:Colors.red,
+                      child: Expanded(child:
                   Slider(
                       activeColor: const Color(0xffFCDC4D),
                       min: 0,
@@ -512,7 +517,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       value: position.inSeconds.toDouble(),
                       onChanged: (value) async {
                         audioPlayer.seek(Duration(seconds: value.toInt()));
-                      })),
+                      }))),
                   Container(
                       child:
                       Text(formatTimeString(position),
@@ -521,6 +526,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           fontStyle: FontStyle.italic))
                   )
                 ])
+
               ],
             )
           ]),
