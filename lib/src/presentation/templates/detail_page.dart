@@ -47,6 +47,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> {
+
   late String title;
   late String message;
   late int uid;
@@ -198,13 +199,13 @@ class _DetailPageState extends State<DetailPage> {
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
-    SliverAppBar sliverAppBar = SliverAppBar(
+    /*SliverAppBar sliverAppBar = SliverAppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
           Container(),
         ],
         backgroundColor: Colors.transparent,
-        expandedHeight: 550,
+        expandedHeight: MediaQuery.of(context).size.height * 0.35 + MediaQuery.of(context).size.width * 0.4,
         flexibleSpace: FlexibleSpaceBar(
             titlePadding: EdgeInsets.all(0.0),
             collapseMode: CollapseMode.pin,
@@ -217,7 +218,9 @@ class _DetailPageState extends State<DetailPage> {
                 _isSeguido!,
                 pushNotification!,
                 firebaseLogic!,
-                favoritoBtn!)));
+                favoritoBtn!,
+                _currentScore.toDouble()
+            )));*/
 
     _sliverList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
       SliverList sliverList = SliverList(
@@ -257,7 +260,27 @@ class _DetailPageState extends State<DetailPage> {
                   if (snapshot.hasData) {
                     child = CustomScrollView(
                       controller: _scrollControllerSilver,
-                      slivers: <Widget>[sliverAppBar, _sliverList(snapshot)],
+                      slivers: <Widget>[
+                        SliverPersistentHeader(
+                          pinned: false,
+                          floating: false,
+                          delegate: _CustomHeaderDelegate(
+                              elementContent,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height,
+                              uid!,
+                              _deviceId!,
+                              message!,
+                              _isSeguido!,
+                              pushNotification!,
+                              firebaseLogic!,
+                              favoritoBtn!,
+                              _currentScore.toDouble(),
+                              blocRadioCalifica
+                          ),
+                        ),
+                        _sliverList(snapshot)
+                      ],
                     );
                   } else if (snapshot.hasError) {
                     child = drawError(snapshot.error);
@@ -497,247 +520,14 @@ class _DetailPageState extends State<DetailPage> {
     return formatted;
   }
 
-  Widget drawContentDescription(
-      dynamic element,
-      var w,
-      int uid,
-      var deviceId,
-      String message,
-      bool isSeguido,
-      PushNotification pushNotification,
-      FirebaseLogic firebaseLogic,
-      FavoritoBtn favoritoBtn) {
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return Column(children: [
-          Container(
-            padding: const EdgeInsets.only(top: 20, right: 20),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              favoritoBtn,
-              InkWell(
-                  onTap: () {
-                    Share.share("Escucha Radio UNAL -  ${element.url}",
-                        subject: "Radio UNAL - ${element.title}");
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.only(left: 3, right: 3),
-                      child: SvgPicture.asset(
-                          'assets/icons/icono_compartir_redes.svg')))
-            ]),
-          ),
-          Container(
-              width: w * 0.40,
-              height: w * 0.40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xff121C4A).withOpacity(0.3),
-                    spreadRadius: 3,
-                    blurRadius: 10,
-                    offset: const Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: element.imagen,
-                  placeholder: (context, url) => const Center(
-                      child: SpinKitFadingCircle(
-                    color: Color(0xffb6b3c5),
-                    size: 50.0,
-                  )),
-                  errorWidget: (context, url, error) => Container(
-                      width: w * 0.40,
-                      child: Image.asset("assets/images/default.png")),
-                ),
-              )),
-          Container(
-            padding: const EdgeInsets.only(top: 20),
-            child: Text(
-              element.title,
-              style: TextStyle(
-                shadows: [
-                  Shadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: const Offset(0, -5))
-                ],
-                color: Colors.transparent,
-                decorationThickness: 2,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-            child: Text(
-              element.description,
-              maxLines: 4,
-              style: const TextStyle(color: Color(0xff121C4A), fontSize: 12),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              (message == "RADIO") ? "Radio" : "Podcast",
-              style: TextStyle(
-                fontSize: 15,
-                color: Theme.of(context).primaryColor,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              alignment: Alignment.centerLeft,
-              child: RatingBar(
-                initialRating: _currentScore.toDouble(),
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 20.0,
-                ratingWidget: RatingWidget(
-                  full: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_completa.svg'),
-                  half: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_completa.svg'),
-                  empty: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_borde.svg'),
-                ),
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                  DateTime today = DateTime.now();
-                  String dateStr = "${today.day}-${today.month}-${today.year}";
-                  //Agrega Estadistica a Backend Typo3
-                  blocRadioCalifica.addEstadistica(
-                      element.uid,
-                      element.title,
-                      message.toUpperCase(),
-                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                      rating.toInt(),
-                      dateStr);
-                  //Agrega Estadistica a firebase
-                  firebaseLogic
-                      .agregarEstadistica(
-                          uid,
-                          message,
-                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                          deviceId,
-                          rating.toInt(),
-                          today.microsecondsSinceEpoch)
-                      .then((value) => {
-                            if (value == true)
-                              {print(">>> Estadistica agregada a firebase")}
-                            else
-                              {
-                                print(
-                                    ">>> No se puede  agregar la Estadistica a firebase")
-                              }
-                          });
 
-                  showConfirmDialog(context, "STATISTIC");
-                },
-              )),
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: InkWell(
-                  onTap: () {
-                    if (isSeguido == true) {
-                      firebaseLogic
-                          .eliminarSeguido(uid, deviceId)
-                          .then((value) => {
-                                pushNotification.removeNotificationItem(
-                                    "${message.toUpperCase()}-$uid"),
-                                setState(() {
-                                  isSeguido = false;
-                                })
-                              });
-                    } else {
-                      firebaseLogic
-                          .agregarSeguido(
-                              uid,
-                              message,
-                              (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                              deviceId)
-                          .then((value) => {
-                                if (value == true)
-                                  {
-                                    //print('DocumentSnapshot added with ID: ${doc.id}');
-                                    pushNotification.addNotificationItem(
-                                        "${message.toUpperCase()}-$uid"),
-                                    showConfirmDialog(context, "FOLLOWED"),
-                                    setState(() {
-                                      isSeguido = true;
-                                    })
-                                  }
-                                else
-                                  {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "Se ha presentado un problema, intentelo más tarde")))
-                                  }
-                              });
-                    }
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 5, bottom: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        gradient: const RadialGradient(
-                            radius: 3,
-                            colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(5, 5),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        (isSeguido) ? "Dejar de Seguir" : "Seguir",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      )))),
-        ]);
-      },
-    );
-  }
 
-  showConfirmDialog(BuildContext context, String strTipo) {
-    showDialog(
-        barrierDismissible: true,
-        context: context,
-        builder: (BuildContext context) {
-          Future.delayed(Duration(seconds: 2), () {
-            //Navigator.of(context).pop(true);
-            Navigator.pop(context);
-          });
-          return ConfirmDialog(strTipo);
-        });
-  }
+
+
 
   loadFirebaseData(){
     firebaseLogic.validateSeguido(uid, _deviceId).then((value) =>
     {
-      print("### Consulta en firebase"),
-      print("### uid ${uid}"),
-      print("### deviceId ${_deviceId}"),
-      print("### value ${value}"),
-
       setState(() {
         _isSeguido = value;
       })
@@ -796,4 +586,303 @@ class _RedrawableListViewState extends State<RedrawableListView> {
         controller: widget._scrollController,
         children: widget.cardList);
   }
+}
+
+
+class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
+  dynamic element;
+  var w;
+  var h;
+  int uid;
+  var _deviceId;
+  String message;
+  bool _isSeguido;
+  PushNotification pushNotification;
+  FirebaseLogic firebaseLogic;
+  FavoritoBtn favoritoBtn;
+  double _currentScore;
+  RadioCalificaBloc blocRadioCalifica;
+
+
+
+  _CustomHeaderDelegate(this.element, this.w, this.h, this.uid, this._deviceId,
+      this.message, this._isSeguido, this.pushNotification, this.firebaseLogic,
+      this.favoritoBtn, this._currentScore, this.blocRadioCalifica);
+
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
+    return drawContentDescription(
+        element,
+        MediaQuery
+            .of(context)
+            .size
+            .width,
+        uid!,
+        _deviceId!,
+        message!,
+        _isSeguido!,
+        pushNotification!,
+        firebaseLogic!,
+        favoritoBtn!
+    );
+  }
+
+  @override
+  double get maxExtent => h * 0.35 + w * 0.4; // Altura máxima del header
+
+  @override
+  double get minExtent => h * 0.35 + w * 0.4; // Altura mínima del header
+
+  @override
+  bool shouldRebuild(covariant _CustomHeaderDelegate oldDelegate) {
+    return false;
+  }
+
+  Widget drawContentDescription(dynamic element,
+      var w,
+      int uid,
+      var deviceId,
+      String message,
+      bool isSeguido,
+      PushNotification pushNotification,
+      FirebaseLogic firebaseLogic,
+      FavoritoBtn favoritoBtn) {
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Column(children: [
+          Container(
+            padding: const EdgeInsets.only(top: 20, right: 20),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              favoritoBtn,
+              InkWell(
+                  onTap: () {
+                    Share.share("Escucha Radio UNAL -  ${element.url}",
+                        subject: "Radio UNAL - ${element.title}");
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(left: 3, right: 3),
+                      child: SvgPicture.asset(
+                          'assets/icons/icono_compartir_redes.svg')))
+            ]),
+          ),
+          Container(
+              width: w * 0.40,
+              height: w * 0.40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: const Offset(5, 5),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: element.imagen,
+                  placeholder: (context, url) =>
+                  const Center(
+                      child: SpinKitFadingCircle(
+                        color: Color(0xffb6b3c5),
+                        size: 50.0,
+                      )),
+                  errorWidget: (context, url, error) =>
+                      Container(
+                          width: w * 0.40,
+                          child: Image.asset("assets/images/default.png")),
+                ),
+              )),
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+              element.title,
+              style: TextStyle(
+                shadows: [
+                  Shadow(
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
+                      offset: const Offset(0, -5))
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decorationColor: Color(0xFFFCDC4D),
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          Container(
+            height: 80,
+            padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+            child: Text(
+              element.description,
+              maxLines: 4,
+              style: const TextStyle(color: Color(0xff121C4A), fontSize: 12),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              (message == "RADIO") ? "Radio" : "Podcast",
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              alignment: Alignment.centerLeft,
+              child: RatingBar(
+                initialRating: _currentScore,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 20.0,
+                ratingWidget: RatingWidget(
+                  full: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_completa.svg'),
+                  half: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_completa.svg'),
+                  empty: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_borde.svg'),
+                ),
+                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                  DateTime today = DateTime.now();
+                  String dateStr = "${today.day}-${today.month}-${today.year}";
+                  //Agrega Estadistica a Backend Typo3
+                  blocRadioCalifica.addEstadistica(
+                      element.uid,
+                      element.title,
+                      message.toUpperCase(),
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      rating.toInt(),
+                      dateStr);
+                  //Agrega Estadistica a firebase
+                  firebaseLogic
+                      .agregarEstadistica(
+                      uid,
+                      message,
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      deviceId,
+                      rating.toInt(),
+                      today.microsecondsSinceEpoch)
+                      .then((value) =>
+                  {
+                    if (value == true)
+                      {print(">>> Estadistica agregada a firebase")}
+                    else
+                      {
+                        print(
+                            ">>> No se puede  agregar la Estadistica a firebase")
+                      }
+                  });
+
+                  showConfirmDialog(context, "STATISTIC");
+                },
+              )),
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: InkWell(
+                  onTap: () {
+                    if (isSeguido == true) {
+                      firebaseLogic
+                          .eliminarSeguido(uid, deviceId)
+                          .then((value) =>
+                      {
+                        pushNotification.removeNotificationItem(
+                            "${message.toUpperCase()}-$uid"),
+                        setState(() {
+                          isSeguido = false;
+                        })
+                      });
+                    } else {
+                      firebaseLogic
+                          .agregarSeguido(
+                          uid,
+                          message,
+                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                          deviceId)
+                          .then((value) =>
+                      {
+                        if (value == true)
+                          {
+                            //print('DocumentSnapshot added with ID: ${doc.id}');
+                            pushNotification.addNotificationItem(
+                                "${message.toUpperCase()}-$uid"),
+                            showConfirmDialog(context, "FOLLOWED"),
+                            setState(() {
+                              isSeguido = true;
+                            })
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        "Se ha presentado un problema, intentelo más tarde")))
+                          }
+                      });
+                    }
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme
+                            .of(context)
+                            .appBarTheme
+                            .foregroundColor,
+                        gradient: const RadialGradient(
+                            radius: 3,
+                            colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(5, 5),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        (isSeguido) ? "Dejar de Seguir" : "Seguir",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      )))),
+        ]);
+      },
+    );
+  }
+
+  showConfirmDialog(BuildContext context, String strTipo) {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (BuildContext context) {
+          Future.delayed(Duration(seconds: 2), () {
+            //Navigator.of(context).pop(true);
+            Navigator.pop(context);
+          });
+          return ConfirmDialog(strTipo);
+        });
+  }
+
 }

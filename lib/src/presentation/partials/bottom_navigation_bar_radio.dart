@@ -71,6 +71,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   late FavoritoBtn? myFavoritoBtn;
 
+  GlobalKey _buttonKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
+
+
   @override
   void initState() {
     super.initState();
@@ -179,6 +182,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   @override
   Widget build(BuildContext context) {
+
+
     final size = MediaQuery.of(context).size;
     _maxHeight = size.height * 0.88;
     _minHeight = size.height * 0.1335;
@@ -211,6 +216,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   Widget drawAudioPlayer() {
+
     return Container(
         margin: const EdgeInsets.only(top: 20, left: 20, right: 40),
         child: Column(
@@ -218,9 +224,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
                 Column(
                   children: [
                     IconButton(
+                      key: _buttonKey,
                       color: Colors.white,
                       iconSize: 40,
                       icon: const Icon(Icons.volume_down),
@@ -403,8 +411,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
             ]),
             if (showVolumenSlider)
               Positioned(
-                  bottom: 200,
-                  left: 20,
+                  top: _getButtonTopPosition(),
+                  left: _getButtonLeftPosition(),
                   child: RotatedBox(
                     quarterTurns: 3,
                     child: Slider(
@@ -421,7 +429,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         }),
                   )),
             if (showSpeedList)
-              Positioned(bottom: 200, right: 25, child: drawListSpeed())
+              Positioned(
+                  top: _getButtonTopPosition(),
+                  left: _getButtonRightPosition(),
+                  child: drawListSpeed())
           ],
         ));
   }
@@ -454,9 +465,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 children: [
                   if (title != "")
                     Container(
-                        //width: double.infinity,
 
-                        //width: 220,
                         padding: EdgeInsets.only(top: 20),
                         child: Text(
                             (title.length > 35)
@@ -687,4 +696,36 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
     return Column(children: list);
   }
+
+  double _getButtonTopPosition() {
+    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (buttonRenderBox != null) {
+      final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
+      var diferencia = MediaQuery.of(context).size.height - (buttonPosition.dy + buttonRenderBox.size.height);
+      diferencia = (0-(MediaQuery.of(context).size.height*(1-0.88))+buttonPosition.dy-200);
+
+      return  diferencia;
+
+    }
+    return 0;
+  }
+
+  double _getButtonLeftPosition() {
+    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (buttonRenderBox != null) {
+      final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
+      return buttonPosition.dx;
+    }
+    return 0;
+  }
+
+  double _getButtonRightPosition() {
+    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (buttonRenderBox != null) {
+      final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
+      return (MediaQuery.of(context).size.width - buttonPosition.dx) - buttonRenderBox.size.width-12;
+    }
+    return 0;
+  }
+
 }
