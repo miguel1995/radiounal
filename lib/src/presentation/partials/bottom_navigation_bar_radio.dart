@@ -57,7 +57,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   String currentSpeedText = "1.0";
   List<String> listSpeedText = ['0.5', '1.0', '1.5', '2.0'];
 
-
   var speedListItems = const [
     DropdownMenuItem<double>(value: 0.5, child: Text("0.5x")),
     DropdownMenuItem<double>(value: 1.0, child: Text("1.0x")),
@@ -110,7 +109,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     Intl.defaultLocale = 'es_ES';
 
     audioPlayer.onPlayerStateChanged.listen((state) {
-
       if (state == PlayerState.PLAYING) {
         setState(() {
           isPlaying = true;
@@ -193,7 +191,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
           return Stack(
             children: [
               Container(
-                width: size.width,
+                  width: size.width,
                   height: lerpDouble(_minHeight, _maxHeight, value),
                   child: Container(
                       alignment: Alignment.bottomCenter,
@@ -268,21 +266,15 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     }),
                 Container(
                     child: InkWell(
-                      onTap: (){
-                        setState(() {
-                          showSpeedList = !showSpeedList;
-                        });
-                      },
-                      child: Text("${currentSpeedText}x",
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18
-                          )
-                      ),
-                    )
-
-
-                )
+                  onTap: () {
+                    setState(() {
+                      showSpeedList = !showSpeedList;
+                    });
+                  },
+                  child: Text("${currentSpeedText}x",
+                      style:
+                          const TextStyle(color: Colors.white, fontSize: 18)),
+                ))
               ],
             ),
             Row(children: [
@@ -429,111 +421,105 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         }),
                   )),
             if (showSpeedList)
-              Positioned(
-                  bottom: 200,
-                  right: 25,
-                  child:
-                    drawListSpeed()
-              )
-
+              Positioned(bottom: 200, right: 25, child: drawListSpeed())
           ],
         ));
   }
 
   Widget audioPlayerMini() {
     return Container(
-        width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.only(top: 1),
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: Color(0xff121C4A)),
-        child: Column(children: [
-          Row(children: [
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.only(top: 1),
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          color: Color(0xff121C4A)),
+      child:
+      Column(
+          children: [
+      Row(
+          children: [
+
             getImageMini(),
-           Column(
-              children: [
-                Container(
-                    padding: EdgeInsets.only(left: 20),
-                    width: MediaQuery.of(context).size.width * 0.75,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (title != "")
-                            Container(
-                                //width: double.infinity,
+            Expanded(child: Column(
 
-                                //width: 220,
-                                padding: EdgeInsets.only(top: 20),
-                                child: Text(
-                                    (title.length > 35)
-                                        ? "${title.substring(0, 35)}..."
-                                        : title,
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold))),
-                          Container(
-                              //padding: EdgeInsets.only(left: 40),
-                              child: (canExpand)
-                                  ? Align(
-                                      alignment: Alignment.centerRight,
-                                      child: InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _expanded = !_expanded;
-                                            });
-                                            _controller.forward();
-                                          },
-                                          child: SvgPicture.asset(
-                                              'assets/icons/icono_flechita_up.svg',
-                                              width: 20)))
-                                  : null)
-                        ]
-                    )
+          children: [
+        Container(
+            padding: EdgeInsets.only(left: 20),
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (title != "")
+                    Container(
+                        //width: double.infinity,
 
-                ),
-
-                Row(children: [
+                        //width: 220,
+                        padding: EdgeInsets.only(top: 20),
+                        child: Text(
+                            (title.length > 35)
+                                ? "${title.substring(0, 35)}..."
+                                : title,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))),
                   Container(
-                      child:IconButton(
-                    color: const Color(0xffFCDC4D),
-                    iconSize: 40,
-                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                    onPressed: () async {
-                      if (isPlaying) {
-                        await audioPlayer.pause();
-                      } else {
-                        await audioPlayer.play(audioUrl);
-                      }
-                    },
-                  )),
-                  Container(
-                      color:Colors.red,
-                      child: Expanded(child:
-                  Slider(
-                      activeColor: const Color(0xffFCDC4D),
-                      min: 0,
-                      max: duration.inSeconds.toDouble(),
-                      value: position.inSeconds.toDouble(),
-                      onChanged: (value) async {
-                        audioPlayer.seek(Duration(seconds: value.toInt()));
-                      }))),
-                  Container(
-                      child:
-                      Text(formatTimeString(position),
-                      style: const TextStyle(
-                          color: Color(0xffFCDC4D),
-                          fontStyle: FontStyle.italic))
-                  )
-                ])
-
-              ],
-            )
-          ]),
+                      //padding: EdgeInsets.only(left: 40),
+                      child: (canExpand)
+                          ? Align(
+                              alignment: Alignment.centerRight,
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      _expanded = !_expanded;
+                                    });
+                                    _controller.forward();
+                                  },
+                                  child: SvgPicture.asset(
+                                      'assets/icons/icono_flechita_up.svg',
+                                      width: 20)))
+                          : null)
+                ])),
+        Row(
+            children: [
           Container(
-            child: SvgPicture.asset('assets/images/firma.svg', width: 180),
-          )
-        ]));
+              child: IconButton(
+            color: const Color(0xffFCDC4D),
+            iconSize: 40,
+            icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+            onPressed: () async {
+              if (isPlaying) {
+                await audioPlayer.pause();
+              } else {
+                await audioPlayer.play(audioUrl);
+              }
+            },
+          )),
+          Expanded(
+              child: Slider(
+                  activeColor: const Color(0xffFCDC4D),
+                  min: 0,
+                  max: duration.inSeconds.toDouble(),
+                  value: position.inSeconds.toDouble(),
+                  onChanged: (value) async {
+                    audioPlayer.seek(Duration(seconds: value.toInt()));
+                  })),
+              Container(
+                padding: EdgeInsets.only(right: 20),
+                  child:
+          Text(formatTimeString(position),
+              style: const TextStyle(
+                  color: Color(0xffFCDC4D), fontStyle: FontStyle.italic)))
+        ])
+      ]))
+
+      ]),
+            Container(
+              child: SvgPicture.asset('assets/images/firma.svg', width: 180),
+            )
+
+          ]),
+    );
   }
 
   playMusic(
@@ -578,7 +564,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         hasDuration = false;
       });
     } else {
-
       setState(() {
         canExpand = true;
         hasDuration = true;
@@ -669,49 +654,35 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     return widgetImg;
   }
 
-  Widget drawListSpeed(){
-
+  Widget drawListSpeed() {
     List<Widget> list = [];
     for (var element in listSpeedText) {
-      list.add(
-
-        Container(
+      list.add(Container(
           padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.white, // Color del borde
-                width: 0, // Ancho del borde
-              ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.white, // Color del borde
+              width: 0, // Ancho del borde
             ),
-          child:
-              InkWell(
-                  onTap: (){
-                    setState(() {
-                      currentSpeedText = element;
-                    });
-                    audioPlayer.setPlaybackRate(double.parse(currentSpeedText));
-                    setState(() {
-                      showSpeedList = false;
-                    });
-
-                  },
-                  child:
-
-              Text(
+          ),
+          child: InkWell(
+              onTap: () {
+                setState(() {
+                  currentSpeedText = element;
+                });
+                audioPlayer.setPlaybackRate(double.parse(currentSpeedText));
+                setState(() {
+                  showSpeedList = false;
+                });
+              },
+              child: Text(
                 "${element}x",
                 style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).primaryColor
-                ),
-              )
-              )
-        )
-      );
+                    fontSize: 18, color: Theme.of(context).primaryColor),
+              ))));
     }
 
-    return Column(
-      children: list
-    );
+    return Column(children: list);
   }
 }
