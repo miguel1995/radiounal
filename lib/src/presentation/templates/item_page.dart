@@ -201,34 +201,48 @@ class _ItemPageState extends State<ItemPage> {
                       'assets/icons/icono_compartir_redes.svg')))
         ]),
       ),
+
       Container(
-          width: w * 0.40,
-          height: w * 0.40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xff121C4A).withOpacity(0.3),
-                spreadRadius: 3,
-                blurRadius: 10,
-                offset: const Offset(5, 5),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
             child: CachedNetworkImage(
               imageUrl: (element != null) ? element.imagen : "",
+              imageBuilder: (context, imageProvider) =>
+
+                  SizedBox(
+                    width: w * 0.4,
+                  height: w * 0.4,
+                  child:
+                  Container(
+                //width: w * 0.40,
+                //height: w * 0.40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff121C4A).withOpacity(0.3),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: const Offset(5, 5),
+                    ),
+                  ],
+                image: DecorationImage(
+                      image: imageProvider,
+                  fit: BoxFit.fitWidth,
+
+                ),
+
+                ),
+              )),
               placeholder: (context, url) => const Center(
                   child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              )),
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )),
               errorWidget: (context, url, error) => Container(
                   width: w * 0.40,
                   child: Image.asset("assets/images/default.png")),
             ),
-          )),
+
+      ),
       if (element != null &&
           element.categoryTitle != null &&
           element.categoryTitle != "")
@@ -344,7 +358,8 @@ class _ItemPageState extends State<ItemPage> {
     var w = MediaQuery.of(context).size.width;
 
     return Column(children: [
-        Container(
+      Row(children:
+      [Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
             child: InkWell(
@@ -370,7 +385,9 @@ class _ItemPageState extends State<ItemPage> {
                   }
 
                 },
-                child: Container(
+                child:
+
+                Container(
                     padding: const EdgeInsets.only(
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
@@ -403,7 +420,8 @@ class _ItemPageState extends State<ItemPage> {
                               fontSize: 16),
                         )
                       ],
-                    )))),
+                    )))
+      )]),
       Container(
         margin: const EdgeInsets.only(top: 20),
         child: Row(
@@ -520,6 +538,9 @@ class _ItemPageState extends State<ItemPage> {
       if (element != null &&
           element.categoryTitle != null &&
           element.categoryTitle != "")
+
+        Row(children:[
+
         Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
@@ -537,7 +558,6 @@ class _ItemPageState extends State<ItemPage> {
                   }
                 },
                 child: Container(
-                    width: w * 0.40,
                     padding: const EdgeInsets.only(
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
@@ -572,7 +592,7 @@ class _ItemPageState extends State<ItemPage> {
                                   fontSize: 16),
                             ))
                       ],
-                    ))))
+                    ))))])
     ]);
   }
 
