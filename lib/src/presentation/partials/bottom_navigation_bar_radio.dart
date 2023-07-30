@@ -320,10 +320,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     },
                     child: Container(
                         margin: const EdgeInsets.only(
-                            right: 20, top: 20, bottom: 10),
+                            right: 30, top: 20, bottom: 10),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flechita_down.svg',
-                            width: MediaQuery.of(context).size.width * 0.05)))
+                            width: 20)))
               ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -429,11 +429,13 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Widget audioPlayerMini() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.only(top: 1),
+      padding: const EdgeInsets.only(top: 1),
       decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-          color: Color(0xff121C4A)),
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)
+          ),
+          color: Color(0xff121C4A)
+      ),
       child:
       Column(
           children: [
