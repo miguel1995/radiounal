@@ -46,6 +46,7 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
+  Function? reloadlist;
 class _DetailPageState extends State<DetailPage> {
 
   late String title;
@@ -54,6 +55,7 @@ class _DetailPageState extends State<DetailPage> {
   late int page;
   late dynamic elementContent; // almacena un objeto SerieModel o ProgramaModel
   bool isLoading = false;
+List elementList=[];
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
@@ -148,6 +150,7 @@ class _DetailPageState extends State<DetailPage> {
           print("listener -> page: $page");
           setState(() {
             isLoading = true;
+            //reloadlist!=null?reloadlist!():{};
           });
           Future.delayed(Duration(milliseconds: 10000), () {
             setState(() {
@@ -213,7 +216,7 @@ class _DetailPageState extends State<DetailPage> {
                 elementContent,
                 MediaQuery.of(context).size.width,
                 uid!,
-                _deviceId!,
+                _deviceId!=null?_deviceId:"",
                 message!,
                 _isSeguido!,
                 pushNotification!,
@@ -383,8 +386,10 @@ class _DetailPageState extends State<DetailPage> {
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     return (AsyncSnapshot<Map<String, dynamic>> snapshot) {
       var list = snapshot.data!["result"];
-      list?.forEach((element) => {cardList.add(buildCard(element))});
-
+    list?.forEach((element) => {
+          if (!elementList.contains(element))
+            {cardList.add(buildCard(element)), elementList.add(element)}
+        });
       return RedrawableListView(
           scrollController: _scrollController, cardList: cardList);
     }(snapshot);

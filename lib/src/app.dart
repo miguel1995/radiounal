@@ -79,8 +79,23 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark,
           primarySwatch: Colors.red,
           primaryColor: Color(0xFFFCDC4D),
+            fontFamily: 'AncizarSans',
           textTheme: const TextTheme(
-              bodyText2: TextStyle(fontSize: 14.0, color: Colors.white)),
+              // bodyText2: TextStyle(
+              //     // fontSize: 14.0,
+              //       fontWeight: FontWeight.bold,
+              //     color: Colors.white),
+              headline1: TextStyle(
+                  // fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  color: Colors.white),
+                  ),
+            appBarTheme:  AppBarTheme(
+                color: Color.fromARGB(255, 100, 100, 100), foregroundColor: Color(0xFFFCDC4D)
+                //color: Color(0xFFFCDC4D), 
+                // backgroundColor: Color(0xff121C4A),
+                // foregroundColor:Color(0xFFFCDC4D)
+                ),
         ),
         light: ThemeData(
             // Define the default brightness and colors.
@@ -91,7 +106,7 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'AncizarSans',
             textTheme: const TextTheme(
                 headline1: TextStyle(
-                    fontSize: 72.0,
+                    // fontSize: 72.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.red),
                 headline2: TextStyle(color: Colors.red),
@@ -99,11 +114,13 @@ class _MyAppState extends State<MyApp> {
                 headline4: TextStyle(color: Colors.red),
                 headline5: TextStyle(color: Colors.red),
                 headline6: TextStyle(
-                    fontSize: 36.0,
+                    // fontSize: 36.0,
                     fontStyle: FontStyle.italic,
                     color: Colors.red),
                 bodyText1: TextStyle(color: Colors.red),
-                bodyText2: TextStyle(fontSize: 14.0, color: Color(0xff121C4A))),
+                bodyText2: TextStyle(
+                    // fontSize: 14.0,
+                    color: Color(0xff121C4A))),
             appBarTheme: const AppBarTheme(
                 color: Color(0xff121C4A), foregroundColor: Color(0xFFFCDC4D)),
             drawerTheme:
