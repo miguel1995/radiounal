@@ -78,9 +78,11 @@ List elementList=[];
   List<Widget> cardList = [];
   late FavoritoBtn favoritoBtn;
   bool isListLoading = false;
+ bool isDarkMode =false;
 
   @override
-  initState() {
+  initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     initPlatformState();

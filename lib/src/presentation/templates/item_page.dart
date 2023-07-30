@@ -77,9 +77,11 @@ class _ItemPageState extends State<ItemPage> {
   String? _deviceId;
 
   late FavoritoBtn favoritoBtn;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
 

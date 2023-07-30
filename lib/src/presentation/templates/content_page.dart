@@ -48,9 +48,11 @@ class _ContentPageState extends State<ContentPage> {
 
   int totalPages = 0;
   late FavoritoBtn favoritoBtn;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     title = widget.title;

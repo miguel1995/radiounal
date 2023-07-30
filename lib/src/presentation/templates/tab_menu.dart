@@ -20,9 +20,11 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
 
   late TabController _tabController;
   int tabIndex = 0;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     _tabController = TabController(length: 2, vsync: this);
     tabIndex = widget.tabIndex;
     _tabController.animateTo(tabIndex);

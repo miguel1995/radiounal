@@ -71,9 +71,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var _minHeight = 0.0;
 
   late FavoritoBtn? myFavoritoBtn;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     _controller = AnimationController(

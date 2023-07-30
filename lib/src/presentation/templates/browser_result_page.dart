@@ -60,9 +60,11 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   int totalPages = 0;
   bool isLoading = false;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     title = widget.title;
     message = widget.message;
     elementFilters = widget.element;

@@ -70,11 +70,13 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   bool enableEpisodiosSearch = true;
   bool enableProgramasSearch = true;
   bool enableEmisionesSearch = true;
+ bool isDarkMode =false;
 
 
   @override
   void initState() {
-
+ var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     tabIndex = widget.tabIndex;
     query = widget.query;
 

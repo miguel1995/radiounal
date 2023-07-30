@@ -52,9 +52,11 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
   final TextEditingController _controllerNombre = TextEditingController();
   final TextEditingController _controllerEdad = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     initializePreference();
 
     blocPais.fetchPaises();

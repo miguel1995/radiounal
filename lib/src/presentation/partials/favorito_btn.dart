@@ -32,9 +32,11 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
   late bool isPrimaryColor;
 
   FavoritoBloc blocFavorito = FavoritoBloc();
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     uid = widget.uid;
     message = widget.message;
     isPrimaryColor = widget.isPrimaryColor;

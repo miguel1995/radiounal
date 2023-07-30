@@ -25,9 +25,11 @@ class _SwitchButtonState extends State<SwitchButton> {
   bool light0 = true;
 
   late SharedPreferences prefs;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
 
 
     initializePreference();

@@ -50,10 +50,12 @@ class _HomeState extends State<Home> {
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
   String potcastRandom = "";
+ bool isDarkMode =false;
 
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     initializeDateFormatting('es_ES');

@@ -42,9 +42,11 @@ class FilterDialogState extends State<FilterDialog> {
   final blocSedes = RadioSedesBloc();
   int? dropdownValueSedes = 0;
 
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
 
     blocSedes.fetchSedes();
     blocSedes.subject.stream.listen((value) {
@@ -100,7 +102,7 @@ class FilterDialogState extends State<FilterDialog> {
                             decoration: BoxDecoration(
                               gradient:
                                   const RadialGradient(radius: 1.5, colors: [
-                                    Color( 0xff216278),
+                                    Color(0xff216278),
                                     Color(0xff121C4A)
                               ]),
                               borderRadius: BorderRadius.circular(5),

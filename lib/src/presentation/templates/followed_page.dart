@@ -37,9 +37,11 @@ class _FollowedPageState extends State<FollowedPage> {
 
   List<int> listSeriesIds = [];
   List<int> listProgramasIds = [];
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();

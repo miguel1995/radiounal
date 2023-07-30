@@ -32,9 +32,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   GlobalKey<BottomNavigationBarRadioState> keyPlayer = GlobalKey();
-
+ bool isDarkMode =false;
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     ).then((value) => {initPushNotifications()});
@@ -79,6 +80,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark,
           primarySwatch: Colors.red,
           primaryColor: Color(0xFFFCDC4D),
+          primaryColorDark: Color(0xFFFCDC4D),
             fontFamily: 'AncizarSans',
           textTheme: const TextTheme(
               // bodyText2: TextStyle(

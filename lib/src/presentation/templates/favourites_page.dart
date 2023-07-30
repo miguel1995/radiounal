@@ -37,9 +37,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
   List<int> listEpisodiosIds = [];
   List<int> listProgramasIds = [];
   List<int> listEmisionesIds = [];
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();

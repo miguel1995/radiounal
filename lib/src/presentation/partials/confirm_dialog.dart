@@ -20,9 +20,11 @@ class ConfirmDialog extends StatefulWidget {
 
 class _ConfirmDialogState extends State<ConfirmDialog> {
   late String tipo;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     tipo = widget.tipo;
   }
 
