@@ -249,21 +249,21 @@ class _BrowserPageState extends State<BrowserPage> {
   }
 
   callBackDialog(int sede, String canal, String area) {
-    String contentType = "";
-    if (canal == "POD") {
-      contentType = "EPISODIOS";
-    } else {
-      contentType = "EMISIONES";
-    }
+
     Navigator.pushNamed(context, "/browser-result",
         arguments: ScreenArguments('NONE', 'Resultados', 1, element: {
           "query": _controllerQuery.value.text,
           "sede": sede,
           "canal": canal,
           "area": area,
-          "contentType": contentType,
+          "contentType": "ELASTIC",
           "numColumn": 1
-        }));
+        }
+
+        ));
+
+
+
   }
 
   Widget drawFrecuenciaBtn(String texto, Map<String, dynamic> mapFilter) {

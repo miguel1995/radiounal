@@ -35,7 +35,8 @@ class _ContentPageState extends State<ContentPage> {
   late String title;
   late String message;
   late int page;
-  bool isLoading = false;//
+  bool isLoading = false; //
+  List elementList = [];
 
   final blocRadioProgramas = RadioProgramasBloc();
   final blocPodcastSeries = PodcastSeriesBloc();
@@ -63,7 +64,6 @@ class _ContentPageState extends State<ContentPage> {
     }
 
     _scrollController.addListener(() {
-      print("lower limit listener");
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.offset) {
         if (page < totalPages) {
@@ -75,22 +75,15 @@ class _ContentPageState extends State<ContentPage> {
             blocPodcastSeries.fetchSeries(page);
           }
 
+          setState(() {
+            isLoading = true;
+          });
 
+          Future.delayed(Duration(milliseconds: 1000), () {
             setState(() {
-              
-              isLoading=true;
+              isLoading = false;
             });
-
-
-             Future.delayed(Duration(milliseconds: 1000),
-            (){
-              setState(() {
-              isLoading=false;
-              });
-            }
-            );
-                
-          
+          });
         }
       }
     });
@@ -199,7 +192,7 @@ class _ContentPageState extends State<ContentPage> {
                   ),
                 ),*/
           Expanded(child: buildList(snapshot)),
-            if (isLoading)
+          if (isLoading)
             const Center(
                 child: SpinKitFadingCircle(
               color: Color(0xffb6b3c5),
@@ -229,7 +222,10 @@ class _ContentPageState extends State<ContentPage> {
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     var list = snapshot.data!["result"];
 
-    list?.forEach((element) => {cardList.add(buildCard(element))});
+    list?.forEach((element) => {
+          if (!elementList.contains(element))
+            {cardList.add(buildCard(element)), elementList.add(element)}
+        });
 
     return GridView.count(
         controller: _scrollController, crossAxisCount: 2, children: cardList);
@@ -240,12 +236,6 @@ class _ContentPageState extends State<ContentPage> {
 
     return InkWell(
         onTap: () {
-          print(">>>  Voy al detalle...");
-          print(title);
-          print(message);
-          print(element.uid);
-          print(element);
-
           Navigator.pushNamed(context, "/detail",
               arguments: ScreenArguments(title, message, element.uid,
                   element: element));
@@ -270,18 +260,15 @@ class _ContentPageState extends State<ContentPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child:
-
-                    AspectRatio(
-                      aspectRatio: 1.0, // Relación de aspecto 1:1 (cuadrado)
-                      child:
-                    CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: element.imagen,
-                      placeholder: (context, url) => Text(""),
-                      errorWidget: (context, url, error) =>
-                          Image.asset("assets/images/default.png"),
-                    )),
+                    child: AspectRatio(
+                        aspectRatio: 1.0, // Relación de aspecto 1:1 (cuadrado)
+                        child: CachedNetworkImage(
+                          fit: BoxFit.cover,
+                          imageUrl: element.imagen,
+                          placeholder: (context, url) => Text(""),
+                          errorWidget: (context, url, error) =>
+                              Image.asset("assets/images/default.png"),
+                        )),
                   ),
                 )),
                 Container(
@@ -310,7 +297,4 @@ class _ContentPageState extends State<ContentPage> {
               ],
             )));
   }
-
-
-
 }

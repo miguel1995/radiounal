@@ -4,7 +4,8 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../data/repositories/podcast_repository.dart';
 
-class PodcastSearchBloc{
+class PodcastSearchSeriesBloc{
+
 
   final _repository = PodcastRepository();
   final _subject = BehaviorSubject<Map<String, dynamic>>();
@@ -18,5 +19,4 @@ class PodcastSearchBloc{
     _subject.close();
   }
 
-  BehaviorSubject<dynamic> get subject => _subject;
-}
+  BehaviorSubject<dynamic> get subject => _subject;}

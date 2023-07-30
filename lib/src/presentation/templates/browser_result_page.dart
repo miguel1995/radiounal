@@ -6,10 +6,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/bloc/elastic_search_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
+import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
+import 'package:radiounal/src/presentation/partials/multi_tab_result.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
@@ -67,56 +68,44 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     elementFilters = widget.element;
     page = widget.page;
 
-    if (elementFilters["contentType"] == "MASESCUCHADO") {
-      blocRadioMasEscuchados.fetchMasEscuchados();
-      blocPodcastMasEscuchados.fetchMasEscuchados();
-    } else if (elementFilters["contentType"] == "PROGRAMAS" ||
-        elementFilters["contentType"] == "EMISIONES") {
-      print(elementFilters["query"]);
-      print(page.toString());
-      print(elementFilters["sede"]);
-      print(elementFilters["canal"]);
-      print(elementFilters["area"]);
-      print(elementFilters["contentType"]);
+      if (elementFilters["contentType"] == "MASESCUCHADO") {
+        blocRadioMasEscuchados.fetchMasEscuchados();
+        blocPodcastMasEscuchados.fetchMasEscuchados();
+      } else if (elementFilters["contentType"] == "PROGRAMAS" ||
+          elementFilters["contentType"] == "EMISIONES") {
+        blocRadioSearch.fetchSearch(
+            elementFilters["query"],
+            page,
+            elementFilters["sede"],
+            elementFilters["canal"],
+            elementFilters["area"],
+            elementFilters["contentType"]
+        );
+      } else if (elementFilters["contentType"] == "SERIES") {
+        blocPodcastSeries.fetchSeries(page);
+      } else if (elementFilters["contentType"] == "EPISODIOS") {
+        blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
+      } else if (elementFilters["contentType"] == "ELASTIC") {
+        //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
+        /*querySize = 100;
+        start = page * querySize;
+        blocElasticSearch.fetchSearch(elementFilters["query"], page, start);*/
 
-      blocRadioSearch.fetchSearch(
-          elementFilters["query"],
-          page,
-          elementFilters["sede"],
-          elementFilters["canal"],
-          elementFilters["area"],
-          elementFilters["contentType"]);
-    } else if (elementFilters["contentType"] == "SERIES") {
-      blocPodcastSeries.fetchSeries(page);
-    } else if (elementFilters["contentType"] == "EPISODIOS") {
-      blocPodcastSearch.fetchSearch(elementFilters["query"], page);
-    } else if (elementFilters["contentType"] == "ELASTIC") {
-      print(">>> VOY a Buscar en elasctic");
+        //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
+        /*blocRadioSearch.fetchSearch(
+            elementFilters["query"],
+            page,
+            0, //Buca en todas las sedes
+            "TODOS",
+            "TODOS",
+            "EMISIONES");*/
 
-      //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
-      /*querySize = 100;
-      start = page * querySize;
-      blocElasticSearch.fetchSearch(elementFilters["query"], page, start);*/
+      }
 
-      //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
-      blocRadioSearch.fetchSearch(
-          elementFilters["query"],
-          page,
-          0, //Buca en todas las sedes
-          "TODOS",
-          "TODOS",
-          "EMISIONES");
 
-      print(elementFilters["query"]);
-      print(page.toString());
-      print(elementFilters["sede"]);
-      print(elementFilters["canal"]);
-      print(elementFilters["area"]);
-      print(elementFilters["contentType"]);
-    }
+      initializeScrollListener();
+      initializeStopLoading();
 
-    initializeScrollListener();
-    initializeStopLoading();
   }
 
   void initializeScrollListener() {
@@ -125,8 +114,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           _scrollController.offset) {
         if (page < totalPages) {
           page++;
-          print(">>> PAGINA");
-          print(page);
+
           setState(() {
             isLoading = true;
           });
@@ -146,22 +134,22 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 elementFilters["area"],
                 elementFilters["contentType"]);
           } else if (elementFilters["contentType"] == "ELASTIC") {
-            start = page * querySize;
+            //start = page * querySize;
 
             /*blocElasticSearch.fetchSearch(
                 elementFilters["query"], start, querySize);*/
             //TODO: 14/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
-            blocRadioSearch.fetchSearch(
+            /*blocRadioSearch.fetchSearch(
                 elementFilters["query"],
                 page,
                 0, //Buca en todas las sedes
                 "TODOS",
                 "TODOS",
-                "EMISIONES");
+                "EMISIONES");*/
           } else if (elementFilters["contentType"] == "SERIES") {
             blocPodcastSeries.fetchSeries(page);
           } else if (elementFilters["contentType"] == "EPISODIOS") {
-            blocPodcastSearch.fetchSearch(elementFilters["query"], page);
+            blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
           }
         }
       }
@@ -260,31 +248,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             return child;
           });
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      widget = StreamBuilder(
-          //TODO: descomentar cuando el servicio de bloc sea reestablecido
-          //stream: blocElasticSearch.subject.stream,
-          stream: blocRadioSearch.subject.stream,
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            Widget child;
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              ));
-            } else if (snapshot.hasData) {
-              child = drawContentList(snapshot);
-            } else if (snapshot.hasError) {
-              child = drawError(snapshot.error);
-            } else {
-              child = const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              ));
-            }
-            return child;
-          });
+      widget = Container(
+          child:getMultiTabResult());
     } else {
       var blocStream = null;
       if (elementFilters["contentType"] == "SERIES") {
@@ -403,17 +368,10 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   Widget buildGridList(AsyncSnapshot<dynamic> snapshot) {
     var list = snapshot.data!["result"];
 
-    print(">> Llegan nuevos elementos");
-    print(list.length);
-    print(cardList.length);
 
     for (var i = 0; i < list.length; i++) {
       cardList.add(buildCardForGridList(list[i]));
     }
-
-    print(">> cardList");
-
-    print(cardList.length);
 
     return GridView.count(
         controller: _scrollController, crossAxisCount: 2, children: cardList);
@@ -433,6 +391,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
     return InkWell(
         onTap: () {
+
           if (elementFilters["contentType"] == "SERIES") {
             Navigator.pushNamed(context, "/detail",
                 arguments: ScreenArguments("SITE", "PODCAST", element.uid,
@@ -549,12 +508,41 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
+    var tipo = elementFilters["contentType"];
+    var messageStr = "";
+    var redirectTo = "";
+    if(tipo=="SERIES") {
+      messageStr = "PODCAST";
+      redirectTo = "/detail";
+    }else if(tipo=="EPISODIOS"){
+      messageStr = "PODCAST";
+      redirectTo = "/item";
+    }
+    else if(tipo=="PROGRAMAS"){
+      messageStr = "RADIO";
+      redirectTo = "/detail";
+    }
+    else if(tipo=="EMISIONES"){
+      messageStr = "RADIO";
+      redirectTo = "/item";
+    }else if(tipo == "MASESCUCHADO"){
+      if(element is EpisodioModel){
+        messageStr = "PODCAST";
+        redirectTo = "/item";
+      }else if(element is EmisionModel){
+        messageStr = "RADIO";
+        redirectTo = "/item";
+      }
+
+    }
+
     return InkWell(
         onTap: () {
+
           //TODO:14/05/23 ajustar esta redirección cuando el servicio elastic se reestablezca
-          Navigator.pushNamed(context, "/item",
+          Navigator.pushNamed(context, redirectTo,
               arguments: ScreenArguments("SITE",
-                  (element is EpisodioModel) ? "PODCAST" : "RADIO", element.uid,
+                  messageStr, element.uid,
                   from: "BROWSER_RESULT_PAGE"));
         },
         child: Container(
@@ -628,7 +616,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   Container drawCategoryTitle(element) {
     try {
-      if (element.categoryTitle != null && element.categoryTitle != "")
+      if (element.categoryTitle != null && element.categoryTitle != "") {
         return Container(
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
@@ -648,6 +636,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );
+      }
     } catch (e) {}
     return Container(
           margin: const EdgeInsets.only(left: 20, bottom: 10),
@@ -681,4 +670,19 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
     return formatted;
   }
+
+  /*
+  * Realiza la busqueda en todos los sitios
+  * */
+  Widget getMultiTabResult(){
+    return MultiTabResult(
+      tabIndex: 0,
+      query: elementFilters["query"],
+      page: page,
+      sede: elementFilters["sede"],
+      canal: elementFilters["canal"],
+      area: elementFilters["area"],
+    );
+  }
+
 }

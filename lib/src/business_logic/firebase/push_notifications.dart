@@ -24,7 +24,16 @@ class PushNotification {
       print(token);
     });
 
+    FirebaseMessaging.onMessage.listen((event) {
+      print(">>>  onMessage");
+      print(event);
+    });
+
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+
+      print(">>>  Oprimir Push: ");
+      print(message);
+
       if (Platform.isAndroid) {
         if (message != null) {
           if (message.data != null) {
@@ -45,13 +54,11 @@ class PushNotification {
   //value: RADIO-{uidpPrograma}, PODCAST-{uidSerie}
   // ex: RADIO-5, PODCAST-10
   addNotificationItem(String value){
-    print(value);
     _firebaseMessaging.subscribeToTopic(value);
   }
 
   //value: RADIO-{uidpPrograma}, PODCAST-{uidSerie}
   removeNotificationItem(String value){
-    print(value);
     _firebaseMessaging.unsubscribeFromTopic(value);
   }
 

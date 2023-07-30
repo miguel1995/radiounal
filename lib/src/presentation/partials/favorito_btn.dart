@@ -61,7 +61,6 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
     setState(() {
       _deviceId = deviceId;
     });
-    print("deviceId->$_deviceId");
 
     blocFavorito.validateFavorite(uid, _deviceId);
     blocFavorito.subject.stream.listen((event) {

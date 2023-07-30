@@ -70,9 +70,9 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
-    print(">>> URL destacados ");
+    /*print(">>> URL destacados ");
     print(url);
-    print(response.body);
+    print(response.body);*/
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -88,8 +88,8 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
-    print(">>>> URL:");
-    print(url);
+    /*print(">>>> URL:");
+    print(url);*/
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -122,8 +122,8 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
-    print(url);
-    print(response);
+    /*print(url);
+    print(response);*/
 
     if (response.statusCode == 200) {
       List<ProgramaModel> result = parseProgramas(utf8.decode(response.bodyBytes));
@@ -153,8 +153,8 @@ class RadioProvider {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: body);
-    print('url: $url');
-    print('response: $response');
+    /*print('url: $url');
+    print('response: $response');*/
     if (response.statusCode == 200) {
 
       List<EmisionModel> result = parseEmisiones(utf8.decode(response.bodyBytes));
@@ -177,8 +177,8 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
-    print(url);
-    print(response);
+    /*print(url);
+    print(response);*/
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));
@@ -223,8 +223,8 @@ class RadioProvider {
       "mensaje":mensaje
     });
 
-    print(">>> URL: ${url}");
-    print(">>> Body: ${body}");
+    /*print(">>> URL: ${url}");
+    print(">>> Body: ${body}");*/
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -359,11 +359,11 @@ class RadioProvider {
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
-    print(">>> URL");
+    /*print(">>> URL");
     print(url);
 
     print(">> Response");
-    print(response);
+    print(response);*/
 
 
     if (response.statusCode == 200) {
@@ -404,8 +404,7 @@ class RadioProvider {
       }
     });
 
-    print(">>> BODY");
-    print(body);
+    //print(body);
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -429,8 +428,7 @@ class RadioProvider {
 
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));
       map["info"] = info;
-      print(">>> map: ");
-      print(map);
+   
       return map;
 
     } else {
