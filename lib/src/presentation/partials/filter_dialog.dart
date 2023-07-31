@@ -370,13 +370,6 @@ class FilterDialogState extends State<FilterDialog> {
       }
     }
 
-    print(dropdownValueCanales.toString());
-    print(listCanales[dropdownValueCanales.toString()]);
-    print(dropdownValueAreas.toString());
-    print(listAreas[dropdownValueAreas.toString()]);
-
-
-
     if(dropdownValueCanales.toString().compareTo("TODOS") == 0 ){
       canalStr = " | Todos los canales";
     }else {

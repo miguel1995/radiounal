@@ -13,15 +13,15 @@ import '../../data/models/episodio_model.dart';
 
 class MultiTabResult extends StatefulWidget {
 
-  int tabIndex;
-  String query;
-  int page;
-  int sede;
-  String canal;
-  String area;
-  String filterString;
+   int tabIndex;
+   String query;
+   int page;
+   int? sede;
+   String? canal;
+   String? area;
+   String? filterString;
 
-  MultiTabResult({Key? key, required this.tabIndex, required String this.query, required int this.page, required int this.sede, required String this.canal, required String this.area, required String this.filterString}) : super(key: key);
+  MultiTabResult({Key? key, required this.tabIndex, required this.query, required  this.page, required   this.sede, required  this.canal, required  this.area, required  this.filterString}) : super(key: key);
 
   @override
   State<MultiTabResult> createState() => _MultiTabResultState();
@@ -32,10 +32,10 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
   late TabController _tabController;
   int tabIndex = 0;
   String query = "";
-  int _sede = 0;
-  String _canal = "TODOS";
-  String _area = "TODOS";
-  String filterString = "";
+  int? _sede = 0;
+  String? _canal = "TODOS";
+  String? _area = "TODOS";
+  String? filterString = "";
 
 
   late int pageSeries = 0;
@@ -174,7 +174,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             Container(
               padding: const EdgeInsets.only(left: 20, bottom: 20),
               child: Text(
-                filterString,
+                filterString??"",
                 style: const TextStyle(
                   color: Color(0xff121C4A),
                   fontSize: 10,
@@ -265,9 +265,9 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         blocRadioSearch.fetchSearch(
             query,
             pageEmisiones,
-            _sede,
-            _canal,
-            _area,
+            _sede??0,
+            _canal??"TODOS",
+            _area??"TODOS",
             "EMISIONES");
       }
 
@@ -275,9 +275,9 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         blocRadioProgramasSearch.fetchSearch(
             query,
             pageProgramas,
-            _sede,
-            _canal,
-            _area,
+            _sede??0,
+            _canal??"TODOS",
+            _area??"TODOS",
             "PROGRAMAS");
       }
 
@@ -615,7 +615,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
   Container drawCategoryTitle(element) {
     try {
-      if (element.categoryTitle != null && element.categoryTitle != "")
+      if (element.categoryTitle != null && element.categoryTitle != "") {
         return Container(
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
@@ -635,6 +635,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         );
+      }
     } catch (e) {}
     return Container(
       margin: const EdgeInsets.only(left: 20, bottom: 10),
@@ -649,9 +650,9 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         //   ),
         // ],
       ),
-      child: Text(
+      child: const Text(
         '',
-        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       ),
     );
   }
