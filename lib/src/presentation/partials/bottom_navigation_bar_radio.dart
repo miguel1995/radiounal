@@ -1,9 +1,11 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -70,12 +72,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var _minHeight = 0.0;
 
   late FavoritoBtn? myFavoritoBtn;
+ bool isDarkMode =false;
 
   GlobalKey _buttonKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
 
 
   @override
-  void initState() {
+  void initState() { 
+    
     super.initState();
 
     _controller = AnimationController(
@@ -95,12 +99,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     durationContent = "";
     canExpand = false;
     hasDuration = false;
-    speedListItemsBuilder = const [
-      Text("0.5x", style: TextStyle(color: Colors.white)),
-      Text("1.0x", style: TextStyle(color: Colors.white)),
-      Text("1.5x", style: TextStyle(color: Colors.white)),
-      Text("2.0x", style: TextStyle(color: Colors.white))
-    ];
+    // speedListItemsBuilder = const [
+    //   Text("0.5x", style: TextStyle(color: Colors.white)),
+    //   Text("1.0x", style: TextStyle(color: Colors.white)),
+    //   Text("1.5x", style: TextStyle(color: Colors.white)),
+    //   Text("2.0x", style: TextStyle(color: Colors.white))
+    // ];
 
     audioPlayer = AudioPlayer();
     audioPlayer.setVolume(currentVolumen);
@@ -180,8 +184,21 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     return formatted;
   }
 
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+
+}
   @override
   Widget build(BuildContext context) {
+
+       themeMethod().then((value) {
+        print("------------------->>>>value:"+value.toString());
+     setState(() {
+     isDarkMode=(value==AdaptiveThemeMode.dark);
+  
+});
+    });
 
 
     final size = MediaQuery.of(context).size;
@@ -228,10 +245,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 Column(
                   children: [
                     IconButton(
-                      key: _buttonKey,
-                      color: Colors.white,
+                      color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                       iconSize: 40,
-                      icon: const Icon(Icons.volume_down),
+                      icon: const Icon(Icons.volume_down
+                      
+                      ),
                       onPressed: () async {
                         setState(() {
                           showVolumenSlider = !showVolumenSlider;
@@ -241,7 +259,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   ],
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color: Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                   iconSize: 50,
                   icon: const Icon(Icons.arrow_left),
                   onPressed: () async {
@@ -251,7 +269,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                   iconSize: 80,
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () async {
@@ -263,7 +281,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                    color: Colors.white,
+                    color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                     iconSize: 50,
                     icon: const Icon(Icons.arrow_right),
                     onPressed: () async {
@@ -274,21 +292,27 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     }),
                 Container(
                     child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      showSpeedList = !showSpeedList;
-                    });
-                  },
-                  child: Text("${currentSpeedText}x",
-                      style:
-                          const TextStyle(color: Colors.white, fontSize: 18)),
-                ))
+                      onTap: (){
+                        setState(() {
+                          showSpeedList = !showSpeedList;
+                        });
+                      },
+                      child: Text("${currentSpeedText}x",
+                          style:  TextStyle(
+                             color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                              fontSize: 18
+                          )
+                      ),
+                    )
+
+
+                )
               ],
             ),
             Row(children: [
               Expanded(
                   child: Slider(
-                      activeColor: const Color(0xffFCDC4D),
+                      activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                       min: 0,
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
@@ -297,8 +321,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       })),
               Text(
                   "${formatTimeString(position)}/${formatTimeString(duration)}",
-                  style: const TextStyle(
-                      color: Color(0xffFCDC4D), fontStyle: FontStyle.italic))
+                  style:  TextStyle(
+                      color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), fontStyle: FontStyle.italic))
             ]),
           ],
         ));
@@ -307,14 +331,15 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Widget audioPlayerExpanded() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"),
+        decoration:  BoxDecoration(
+            image:isDarkMode?null: DecorationImage(
+              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"
+               ),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            color: Color(0xff121C4A)),
+            color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A)),
         child: Stack(
           children: [
             Column(children: [
@@ -331,6 +356,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                             right: 30, top: 20, bottom: 10),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flechita_down.svg',
+                            color: Color(isDarkMode?
+                            0xff121C4A:
+                            0xFFFCDC4D
+                            ),
                             width: 20)))
               ]),
               Row(
@@ -338,7 +367,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 children: [
                   myFavoritoBtn!,
                   IconButton(
-                    color: const Color(0xffFCDC4D),
+                    color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     icon: const Icon(Icons.share),
                     onPressed: () {
                       Share.share("Escucha Radio UNAL -  ${url}",
@@ -362,11 +391,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         margin: const EdgeInsets.only(left: 30, right: 30),
                         child: Container(
                             padding: const EdgeInsets.only(left: 10, right: 10),
-                            color: const Color(0xffFCDC4D),
+                            color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                             child: Text(
                               textParent,
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                                   TextStyle(fontWeight: FontWeight.bold,
+                                  color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
+                                  
+                                  ),
                             )),
                       ),
                     if (title != "")
@@ -375,8 +407,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           margin: const EdgeInsets.only(
                               top: 10, left: 30, right: 30),
                           child: Text(title,
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style:  TextStyle(
+                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold))),
                     if (date != null)
@@ -386,8 +418,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                               top: 10, left: 30, right: 30),
                           child: Text(
                               "${formatDateString(date)} ${formatDurationString(durationContent)}",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.white))),
+                              style:  TextStyle(
+                                  fontSize: 12, color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),))),
                     if (type != "")
                       Container(
                           alignment: Alignment.centerLeft,
@@ -396,8 +428,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           child: Text(
                               type[0].toUpperCase() +
                                   type.substring(1, type.length).toLowerCase(),
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style:  TextStyle(
+                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                                   fontStyle: FontStyle.italic)))
                   ])),
               drawAudioPlayer(),
@@ -407,6 +439,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       child: Container(
                           padding: const EdgeInsets.only(bottom: 5),
                           child: SvgPicture.asset('assets/images/firma.svg',
+                          color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                               width: 180))))
             ]),
             if (showVolumenSlider)
@@ -417,7 +450,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     quarterTurns: 3,
                     child: Slider(
                         inactiveColor: Colors.white70,
-                        activeColor: const Color(0xffFCDC4D),
+                        activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                         min: 0,
                         max: 1.0,
                         value: currentVolumen,
@@ -439,98 +472,107 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   Widget audioPlayerMini() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(top: 1),
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)
-          ),
-          color: Color(0xff121C4A)
-      ),
-      child:
-      Column(
-          children: [
-      Row(
-          children: [
-
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.only(top: 1),
+        decoration:  BoxDecoration(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            color: isDarkMode?
+            
+            Color(0xFFFCDC4D):
+            Color(0xff121C4A)
+            ),
+        child: Column(children: [
+          Row(children: [
             getImageMini(),
-            Expanded(child: Column(
+            Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.only(left: 20),
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (title != "")
+                            Container(
+                                //width: double.infinity,
 
-          children: [
-        Container(
-            padding: EdgeInsets.only(left: 20),
-            width: MediaQuery.of(context).size.width * 0.75,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  if (title != "")
-                    Container(
-
-                        padding: EdgeInsets.only(top: 20),
-                        child: Text(
-                            (title.length > 35)
-                                ? "${title.substring(0, 35)}..."
-                                : title,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold))),
-                  Container(
-                      //padding: EdgeInsets.only(left: 40),
-                      child: (canExpand)
-                          ? Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      _expanded = !_expanded;
-                                    });
-                                    _controller.forward();
-                                  },
-                                  child: SvgPicture.asset(
-                                      'assets/icons/icono_flechita_up.svg',
-                                      width: 20)))
-                          : null)
-                ])),
-        Row(
-            children: [
-          Container(
-              child: IconButton(
-            color: const Color(0xffFCDC4D),
-            iconSize: 40,
-            icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-            onPressed: () async {
-              if (isPlaying) {
-                await audioPlayer.pause();
-              } else {
-                await audioPlayer.play(audioUrl);
-              }
-            },
-          )),
-          Expanded(
-              child: Slider(
-                  activeColor: const Color(0xffFCDC4D),
-                  min: 0,
-                  max: duration.inSeconds.toDouble(),
-                  value: position.inSeconds.toDouble(),
-                  onChanged: (value) async {
-                    audioPlayer.seek(Duration(seconds: value.toInt()));
-                  })),
-              Container(
-                padding: EdgeInsets.only(right: 20),
-                  child:
-          Text(formatTimeString(position),
-              style: const TextStyle(
-                  color: Color(0xffFCDC4D), fontStyle: FontStyle.italic)))
-        ])
-      ]))
-
-      ]),
-            Container(
-              child: SvgPicture.asset('assets/images/firma.svg', width: 180),
+                                //width: 220,
+                                padding: EdgeInsets.only(top: 20),
+                                child: Text(
+                                    (title.length > 35)
+                                        ? "${title.substring(0, 35)}..."
+                                        : title,
+                                    style:  TextStyle(
+                                        color: isDarkMode? 
+                                        Color(0xff121C4A):
+                                        Color(0xFFFFFFFF),
+                                        fontWeight: FontWeight.bold))),
+                          Container(
+                              //padding: EdgeInsets.only(left: 40),
+                              child: (canExpand)
+                                  ? Align(
+                                      alignment: Alignment.centerRight,
+                                      child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              _expanded = !_expanded;
+                                            });
+                                            _controller.forward();
+                                          },
+                                          child: SvgPicture.asset(
+                                              'assets/icons/icono_flechita_up.svg',
+                                            color: isDarkMode? 
+                                            Color(0xff121C4A):
+                                            Color(0xFFFCDC4D),
+                                              
+                                              width: 20)))
+                                  : null)
+                        ])),
+                Row(children: [
+                  IconButton(
+                    color:  Color(isDarkMode?
+                    0xff121C4A:
+                    0xFFFCDC4D
+                    ),
+                    // color:  Colors.red,
+                    iconSize: 40,
+                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                    onPressed: () async {
+                      if (isPlaying) {
+                        await audioPlayer.pause();
+                      } else {
+                        await audioPlayer.play(audioUrl);
+                      }
+                    },
+                  ),
+                  Slider(
+                      activeColor:  isDarkMode?
+                      Color(0xff121C4A)
+                      :
+                      Color(0xFFFCDC4D)
+                      ,
+                      min: 0,
+                      max: duration.inSeconds.toDouble(),
+                      value: position.inSeconds.toDouble(),
+                      onChanged: (value) async {
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
+                      }),
+                  Text(formatTimeString(position),
+                      style:  TextStyle(
+                          color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                          fontStyle: FontStyle.italic))
+                ])
+              ],
             )
-
           ]),
-    );
+          Container(
+            child: SvgPicture.asset('assets/images/firma.svg', width: 180,
+            
+            color:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
+            ),
+          )
+        ]));
   }
 
   playMusic(
@@ -670,11 +712,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     for (var element in listSpeedText) {
       list.add(Container(
           padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.white, // Color del borde
-              width: 0, // Ancho del borde
+            decoration: BoxDecoration(
+              color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+              border: Border.all(
+                color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF), // Color del borde
+                width: 0, // Ancho del borde
+              ),
             ),
           ),
           child: InkWell(

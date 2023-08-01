@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -37,9 +38,11 @@ class _FollowedPageState extends State<FollowedPage> {
 
   List<int> listSeriesIds = [];
   List<int> listProgramasIds = [];
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();
@@ -205,7 +208,7 @@ class _FollowedPageState extends State<FollowedPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xff121C4A).withOpacity(0.3),
+                          color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset: const Offset(5, 5),
@@ -224,7 +227,8 @@ class _FollowedPageState extends State<FollowedPage> {
                         errorWidget: (context, url, error) => Container(
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
-                            child: Image.asset("assets/images/logo.png")),
+                            child: Image.asset(isDarkMode?'assets/images/logo_dark.png':"assets/images/logo.png",
+              color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D))),
                       ),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -235,7 +239,7 @@ class _FollowedPageState extends State<FollowedPage> {
                       color: Theme.of(context).appBarTheme.foregroundColor,
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xff121C4A).withOpacity(0.3),
+                          color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset:

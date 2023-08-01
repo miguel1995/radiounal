@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 
 class Menu extends StatefulWidget {
-
-
-
-  const  Menu({super.key});
+  const Menu({super.key});
 
   @override
   State<Menu> createState() => _MenuState();
@@ -15,7 +13,7 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   bool isHidden = true;
-
+  bool isDarkMode = false;
   final List<MenuItem> _menuTitles = [
     MenuItem('Programas Radio UNAL', "/content", "",
         ScreenArguments('SITE', 'RADIO', 1)),
@@ -25,15 +23,17 @@ class _MenuState extends State<Menu> {
         'Favoritos ',
         "/favourites",
         "assets/icons/icono_corazon_blanco.svg",
-        ScreenArguments('NONE', 'NONE', 0)
-    ),
+        ScreenArguments('NONE', 'NONE', 0)),
     MenuItem('Siguiendo', "/followed", "", ScreenArguments('NONE', 'NONE', 1)),
     MenuItem('Configuración', "/configurations", "", null),
-    MenuItem('Acerca de esta App', "/configurations", "", null)];
+    MenuItem('Acerca de esta App', "/configurations", "", null)
+  ];
 
   final List<MenuItem> _menuUrls = [
-    MenuItem('UNIMEDIOS  ', "https://unimedios.unal.edu.co/", "assets/icons/icono_links_externos.svg", null),
-    MenuItem('Agencia UNAL', "https://agenciadenoticias.unal.edu.co/", "", null),
+    MenuItem('UNIMEDIOS  ', "https://unimedios.unal.edu.co/",
+        "assets/icons/icono_links_externos.svg", null),
+    MenuItem(
+        'Agencia UNAL', "https://agenciadenoticias.unal.edu.co/", "", null),
     MenuItem('Periódico UNAL', "https://periodico.unal.edu.co/", "", null),
     MenuItem('Televisión UNAL ', "https://television.unal.edu.co/", "", null),
     MenuItem("Radio UNAL", "http://radio.unal.edu.co/", "", null),
@@ -41,12 +41,11 @@ class _MenuState extends State<Menu> {
     MenuItem("Circular UNAL", "http://circular.unal.edu.co/", "", null),
     MenuItem("Orgullo UNAL", "http://orgullo.unal.edu.co/", "", null),
     MenuItem("Debates UNAL", "http://www.debates.unal.edu.co/", "", null),
-    MenuItem("Identidad visual", "http://identidad.unal.edu.co/identidad-visual/", "", null),
-    MenuItem("Solicitudes Unimedios", "http://solicitudesunimedios.unal.edu.co/", "", null)
+    MenuItem("Identidad visual",
+        "http://identidad.unal.edu.co/identidad-visual/", "", null),
+    MenuItem("Solicitudes Unimedios",
+        "http://solicitudesunimedios.unal.edu.co/", "", null)
   ];
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -65,22 +64,24 @@ class _MenuState extends State<Menu> {
 
   Widget _buildFlutterLogo() {
     return Container(
-      padding: const EdgeInsets.only( left: 35, top: 60, bottom: 10),
+        padding: const EdgeInsets.only(left: 35, top: 60, bottom: 10),
         child: Row(children: [
-          Image.asset('assets/images/logo.png',
-              width: 150
-          ),
-      Container(
-          margin: EdgeInsets.only(left:60),
-          child:IconButton(
-          onPressed: () {
-            //Navigator.of(context).pop();
-            Navigator.pop(context);
-
-          },
-          icon: const Icon(Icons.close, color: Color(0xffFCDC4D)))),
-
-    ]));
+          Image.asset(
+              isDarkMode
+                  ? 'assets/images/logo_dark.png'
+                  : 'assets/images/logo.png',
+              width: 150,
+              color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)),
+          Container(
+              margin: EdgeInsets.only(left: 60),
+              child: IconButton(
+                  onPressed: () {
+                    //Navigator.of(context).pop();
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.close,
+                      color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)))),
+        ]));
   }
 
   Widget _buildContent() {
@@ -88,8 +89,8 @@ class _MenuState extends State<Menu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ..._buildListItems(),
-        const Divider(
-          color: Color(0xffFCDC4D),
+        Divider(
+          color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
           indent: 30,
           endIndent: 30,
         ),
@@ -106,7 +107,8 @@ class _MenuState extends State<Menu> {
           onTap: () {
             //Navigator.popUntil(context, ModalRoute.withName("/"));
             //Navigator.of(context).pop();
-            Navigator.of(context).pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+            Navigator.of(context)
+                .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
 
             Navigator.pushNamed(context, _menuTitles[i].url,
                 arguments: _menuTitles[i].arguments);
@@ -122,9 +124,10 @@ class _MenuState extends State<Menu> {
                     style: const TextStyle(color: Colors.white),
                   ),
                   if (_menuTitles[i].iconPath != "")
-                    SvgPicture.asset(_menuTitles[i].iconPath,
-                        //width: MediaQuery.of(context).size.width * 0.05
-                   )
+                    SvgPicture.asset(
+                      _menuTitles[i].iconPath,
+                      //width: MediaQuery.of(context).size.width * 0.05
+                    )
                 ],
               ))));
     }
@@ -152,12 +155,15 @@ class _MenuState extends State<Menu> {
                   if (_menuUrls[i].iconPath != "")
                     SvgPicture.asset(_menuUrls[i].iconPath
                         //width: MediaQuery.of(context).size.width * 0.05
-                    )
+                        )
                 ])),
           ),
           IconButton(
               onPressed: () {
                 setState(() {
+                  var brightness =
+                      SchedulerBinding.instance.window.platformBrightness;
+                  isDarkMode = brightness == Brightness.dark;
                   isHidden = !isHidden;
                 });
               },
@@ -182,8 +188,7 @@ class _MenuState extends State<Menu> {
                   ),
                   if (_menuUrls[i].iconPath != "")
                     SvgPicture.asset(_menuUrls[i].iconPath,
-                        width: MediaQuery.of(context).size.width * 0.05
-                  )
+                        width: MediaQuery.of(context).size.width * 0.05)
                 ])),
           ));
         }

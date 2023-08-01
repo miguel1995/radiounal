@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -46,16 +47,16 @@ class DetailPage extends StatefulWidget {
   State<DetailPage> createState() => _DetailPageState();
 }
 
-  Function? reloadlist;
-class _DetailPageState extends State<DetailPage> {
+Function? reloadlist;
 
+class _DetailPageState extends State<DetailPage> {
   late String title;
   late String message;
   late int uid;
   late int page;
   late dynamic elementContent; // almacena un objeto SerieModel o ProgramaModel
   bool isLoading = false;
-List elementList=[];
+  List elementList = [];
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
@@ -79,9 +80,12 @@ List elementList=[];
   List<Widget> cardList = [];
   late FavoritoBtn favoritoBtn;
   bool isListLoading = false;
+  bool isDarkMode = false;
 
   @override
   initState() {
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     initPlatformState();
@@ -246,9 +250,11 @@ List elementList=[];
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -279,8 +285,7 @@ List elementList=[];
                               firebaseLogic!,
                               favoritoBtn!,
                               _currentScore.toDouble(),
-                              blocRadioCalifica
-                          ),
+                              blocRadioCalifica),
                         ),
                         _sliverList(snapshot)
                       ],
@@ -342,11 +347,11 @@ List elementList=[];
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style: const TextStyle(
-                color: Color(0xff121C4A),
+              style: TextStyle(
+                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
               ),
             ),
           ),
@@ -355,10 +360,10 @@ List elementList=[];
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
                     style: const TextStyle(
-                      color: Color(0xff121C4A),
+                      color: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(0xFFFCDC4D),
+                      decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     ),
                   ),
                 ),*/
@@ -386,10 +391,10 @@ List elementList=[];
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     return (AsyncSnapshot<Map<String, dynamic>> snapshot) {
       var list = snapshot.data!["result"];
-    list?.forEach((element) => {
-          if (!elementList.contains(element))
-            {cardList.add(buildCard(element)), elementList.add(element)}
-        });
+      list?.forEach((element) => {
+            if (!elementList.contains(element))
+              {cardList.add(buildCard(element)), elementList.add(element)}
+          });
       return RedrawableListView(
           scrollController: _scrollController, cardList: cardList);
     }(snapshot);
@@ -420,7 +425,8 @@ List elementList=[];
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                            .withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -452,7 +458,8 @@ List elementList=[];
                         color: Theme.of(context).appBarTheme.foregroundColor,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                .withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -525,32 +532,248 @@ List elementList=[];
     return formatted;
   }
 
+  Widget drawContentDescription(
+      dynamic element,
+      var w,
+      int uid,
+      var _deviceId,
+      String message,
+      bool _isSeguido,
+      PushNotification pushNotification,
+      FirebaseLogic firebaseLogic,
+      FavoritoBtn favoritoBtn) {
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Column(children: [
+          Container(
+            padding: const EdgeInsets.only(top: 20, right: 20),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              favoritoBtn,
+              InkWell(
+                  onTap: () {
+                    Share.share("Escucha Radio UNAL -  ${element.url}",
+                        subject: "Radio UNAL - ${element.title}");
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(left: 3, right: 3),
+                      child: SvgPicture.asset(
+                          'assets/icons/icono_compartir_redes.svg')))
+            ]),
+          ),
+          Container(
+              width: w * 0.40,
+              height: w * 0.40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                        .withOpacity(0.3),
+                    spreadRadius: 3,
+                    blurRadius: 10,
+                    offset: const Offset(5, 5),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: element.imagen,
+                  placeholder: (context, url) => const Center(
+                      child: SpinKitFadingCircle(
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )),
+                  errorWidget: (context, url, error) => Container(
+                      width: w * 0.40,
+                      child: Image.asset("assets/images/default.png")),
+                ),
+              )),
+          Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: Text(
+              element.title,
+              style: TextStyle(
+                shadows: [
+                  Shadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: const Offset(0, -5))
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+            child: Text(
+              element.description,
+              maxLines: 4,
+              style: TextStyle(
+                  color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+                  fontSize: 12),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              (message == "RADIO") ? "Radio" : "Podcast",
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).primaryColor,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Container(
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              alignment: Alignment.centerLeft,
+              child: RatingBar(
+                initialRating: _currentScore.toDouble(),
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 20.0,
+                ratingWidget: RatingWidget(
+                  full: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_completa.svg'),
+                  half: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_completa.svg'),
+                  empty: SvgPicture.asset(
+                      'assets/icons/icono_estrellita_borde.svg'),
+                ),
+                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                  DateTime today = DateTime.now();
+                  String dateStr = "${today.day}-${today.month}-${today.year}";
+                  //Agrega Estadistica a Backend Typo3
+                  blocRadioCalifica.addEstadistica(
+                      element.uid,
+                      element.title,
+                      message.toUpperCase(),
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      rating.toInt(),
+                      dateStr);
+                  //Agrega Estadistica a firebase
+                  firebaseLogic
+                      .agregarEstadistica(
+                          uid,
+                          message,
+                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                          _deviceId,
+                          rating.toInt(),
+                          today.microsecondsSinceEpoch)
+                      .then((value) => {
+                            if (value == true)
+                              {print(">>> Estadistica agregada a firebase")}
+                            else
+                              {
+                                print(
+                                    ">>> No se puede  agregar la Estadistica a firebase")
+                              }
+                          });
 
+                  showConfirmDialog(context, "STATISTIC");
+                },
+              )),
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: InkWell(
+                  onTap: () {
+                    if (_isSeguido == true) {
+                      firebaseLogic
+                          .eliminarSeguido(uid, _deviceId)
+                          .then((value) => {
+                                pushNotification.removeNotificationItem(
+                                    "${message.toUpperCase()}-$uid"),
+                                setState(() {
+                                  _isSeguido = false;
+                                })
+                              });
+                    } else {
+                      firebaseLogic
+                          .agregarSeguido(
+                              uid,
+                              message,
+                              (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                              _deviceId)
+                          .then((value) => {
+                                if (value == true)
+                                  {
+                                    //print('DocumentSnapshot added with ID: ${doc.id}');
+                                    pushNotification.addNotificationItem(
+                                        "${message.toUpperCase()}-$uid"),
+                                    showConfirmDialog(context, "FOLLOWED"),
+                                    setState(() {
+                                      _isSeguido = true;
+                                    })
+                                  }
+                                else
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                "Se ha presentado un problema, intentelo más tarde")))
+                                  }
+                              });
+                    }
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme.of(context).appBarTheme.foregroundColor,
+                        gradient: const RadialGradient(
+                            radius: 3,
+                            colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                .withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(5, 5),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        (_isSeguido) ? "Dejar de Seguir" : "Seguir",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      )))),
+        ]);
+      },
+    );
+  }
 
-
-
-
-  loadFirebaseData(){
-    firebaseLogic.validateSeguido(uid, _deviceId).then((value) =>
-    {
-      setState(() {
-        _isSeguido = value;
-      })
-    });
-
+  loadFirebaseData() {
+    firebaseLogic.validateSeguido(uid, _deviceId).then((value) => {
+          setState(() {
+            _isSeguido = value;
+          })
+        });
 
     firebaseLogic
         .validateEstadistica(uid, _deviceId, message.toUpperCase(),
-        (message == "RADIO") ? "PROGRAMA" : "SERIE")
-        .then((value) =>
-    {
-      if (value != null && value != "" && value != null)
-        {
-          setState(() {
-            _currentScore = value;
-          })
-        }
-    });
+            (message == "RADIO") ? "PROGRAMA" : "SERIE")
+        .then((value) => {
+              if (value != null && value != "" && value != null)
+                {
+                  setState(() {
+                    _currentScore = value;
+                  })
+                }
+            });
   }
 }
 
@@ -593,7 +816,6 @@ class _RedrawableListViewState extends State<RedrawableListView> {
   }
 }
 
-
 class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   dynamic element;
   var w;
@@ -608,30 +830,33 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   double _currentScore;
   RadioCalificaBloc blocRadioCalifica;
 
-
-
-  _CustomHeaderDelegate(this.element, this.w, this.h, this.uid, this._deviceId,
-      this.message, this._isSeguido, this.pushNotification, this.firebaseLogic,
-      this.favoritoBtn, this._currentScore, this.blocRadioCalifica);
-
+  _CustomHeaderDelegate(
+      this.element,
+      this.w,
+      this.h,
+      this.uid,
+      this._deviceId,
+      this.message,
+      this._isSeguido,
+      this.pushNotification,
+      this.firebaseLogic,
+      this.favoritoBtn,
+      this._currentScore,
+      this.blocRadioCalifica);
 
   @override
-  Widget build(BuildContext context, double shrinkOffset,
-      bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return drawContentDescription(
         element,
-        MediaQuery
-            .of(context)
-            .size
-            .width,
+        MediaQuery.of(context).size.width,
         uid!,
         _deviceId!,
         message!,
         _isSeguido!,
         pushNotification!,
         firebaseLogic!,
-        favoritoBtn!
-    );
+        favoritoBtn!);
   }
 
   @override
@@ -645,7 +870,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 
-  Widget drawContentDescription(dynamic element,
+  Widget drawContentDescription(
+      dynamic element,
       var w,
       int uid,
       var deviceId,
@@ -691,16 +917,14 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   imageUrl: element.imagen,
-                  placeholder: (context, url) =>
-                  const Center(
+                  placeholder: (context, url) => const Center(
                       child: SpinKitFadingCircle(
-                        color: Color(0xffb6b3c5),
-                        size: 50.0,
-                      )),
-                  errorWidget: (context, url, error) =>
-                      Container(
-                          width: w * 0.40,
-                          child: Image.asset("assets/images/default.png")),
+                    color: Color(0xffb6b3c5),
+                    size: 50.0,
+                  )),
+                  errorWidget: (context, url, error) => Container(
+                      width: w * 0.40,
+                      child: Image.asset("assets/images/default.png")),
                 ),
               )),
           Container(
@@ -710,9 +934,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
@@ -740,9 +962,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
               (message == "RADIO") ? "Radio" : "Podcast",
               style: TextStyle(
                 fontSize: 15,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color: Theme.of(context).primaryColor,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
               ),
@@ -781,22 +1001,21 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                   //Agrega Estadistica a firebase
                   firebaseLogic
                       .agregarEstadistica(
-                      uid,
-                      message,
-                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                      deviceId,
-                      rating.toInt(),
-                      today.microsecondsSinceEpoch)
-                      .then((value) =>
-                  {
-                    if (value == true)
-                      {print(">>> Estadistica agregada a firebase")}
-                    else
-                      {
-                        print(
-                            ">>> No se puede  agregar la Estadistica a firebase")
-                      }
-                  });
+                          uid,
+                          message,
+                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                          deviceId,
+                          rating.toInt(),
+                          today.microsecondsSinceEpoch)
+                      .then((value) => {
+                            if (value == true)
+                              {print(">>> Estadistica agregada a firebase")}
+                            else
+                              {
+                                print(
+                                    ">>> No se puede  agregar la Estadistica a firebase")
+                              }
+                          });
 
                   showConfirmDialog(context, "STATISTIC");
                 },
@@ -809,41 +1028,39 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                     if (isSeguido == true) {
                       firebaseLogic
                           .eliminarSeguido(uid, deviceId)
-                          .then((value) =>
-                      {
-                        pushNotification.removeNotificationItem(
-                            "${message.toUpperCase()}-$uid"),
-                        setState(() {
-                          isSeguido = false;
-                        })
-                      });
+                          .then((value) => {
+                                pushNotification.removeNotificationItem(
+                                    "${message.toUpperCase()}-$uid"),
+                                setState(() {
+                                  isSeguido = false;
+                                })
+                              });
                     } else {
                       firebaseLogic
                           .agregarSeguido(
-                          uid,
-                          message,
-                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                          deviceId)
-                          .then((value) =>
-                      {
-                        if (value == true)
-                          {
-                            //print('DocumentSnapshot added with ID: ${doc.id}');
-                            pushNotification.addNotificationItem(
-                                "${message.toUpperCase()}-$uid"),
-                            showConfirmDialog(context, "FOLLOWED"),
-                            setState(() {
-                              isSeguido = true;
-                            })
-                          }
-                        else
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        "Se ha presentado un problema, intentelo más tarde")))
-                          }
-                      });
+                              uid,
+                              message,
+                              (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                              deviceId)
+                          .then((value) => {
+                                if (value == true)
+                                  {
+                                    //print('DocumentSnapshot added with ID: ${doc.id}');
+                                    pushNotification.addNotificationItem(
+                                        "${message.toUpperCase()}-$uid"),
+                                    showConfirmDialog(context, "FOLLOWED"),
+                                    setState(() {
+                                      isSeguido = true;
+                                    })
+                                  }
+                                else
+                                  {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                "Se ha presentado un problema, intentelo más tarde")))
+                                  }
+                              });
                     }
                   },
                   child: Container(
@@ -851,10 +1068,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                           left: 20, right: 20, top: 5, bottom: 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Theme
-                            .of(context)
-                            .appBarTheme
-                            .foregroundColor,
+                        color: Theme.of(context).appBarTheme.foregroundColor,
                         gradient: const RadialGradient(
                             radius: 3,
                             colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
@@ -889,5 +1103,4 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
           return ConfirmDialog(strTipo);
         });
   }
-
 }

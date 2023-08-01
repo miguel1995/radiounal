@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class PoliticsPage extends StatelessWidget {
+class PoliticsPage extends StatefulWidget {
   const PoliticsPage({Key? key}) : super(key: key);
 
+  @override
+  State<PoliticsPage> createState() => _PoliticsPageState();
+}
+
+class _PoliticsPageState extends State<PoliticsPage> {
+bool isDarkMode=false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -42,7 +57,7 @@ class PoliticsPage extends StatelessWidget {
                           decorationThickness: 2,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          decorationColor: Color(0xFFFCDC4D),
+                          decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                           decoration: TextDecoration.underline,
                         ),
                       ),

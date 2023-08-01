@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
@@ -20,9 +21,11 @@ class ConfirmDialog extends StatefulWidget {
 
 class _ConfirmDialogState extends State<ConfirmDialog> {
   late String tipo;
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     tipo = widget.tipo;
   }
 

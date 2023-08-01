@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/business_logic/firebase/firebaseLogic.dart';
@@ -32,9 +33,11 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
   late bool isPrimaryColor;
 
   FavoritoBloc blocFavorito = FavoritoBloc();
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
     uid = widget.uid;
     message = widget.message;
     isPrimaryColor = widget.isPrimaryColor;

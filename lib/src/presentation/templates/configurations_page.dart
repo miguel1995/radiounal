@@ -1,5 +1,6 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
@@ -15,6 +16,17 @@ class ConfigurationsPage extends StatefulWidget {
 }
 
 class _ConfigurationsPageState extends State<ConfigurationsPage> {
+
+
+ bool isDarkMode =false;
+
+@override
+  void initState() {
+    // TODO: implement initState
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +62,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
               decorationThickness: 2,
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              decorationColor: Color(0xFFFCDC4D),
+              decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
               decoration: TextDecoration.underline,
             ),
           ),
@@ -77,7 +89,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xff121C4A).withOpacity(0.3),
+                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -101,14 +113,14 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                         padding: const EdgeInsets.only(
                             top: 5, bottom: 5, left: 10, right: 10),
                         decoration: BoxDecoration(
-                          gradient: const RadialGradient(
+                          gradient:  RadialGradient(
                               radius: 1,
-                              colors: [Color(0xff1b4564), Color(0xff121C4A)]),
+                              colors: [Color(0xff1b4564), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xff121C4A).withOpacity(0.3),
+                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -157,7 +169,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
               decorationThickness: 2,
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              decorationColor: Color(0xFFFCDC4D),
+              decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
               decoration: TextDecoration.underline,
             ),
           ),
@@ -243,10 +255,10 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
         Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 20, top: 20),
-          child: const Text(
+          child:  Text(
             "Versión 1.0.0 (2023)",
             style: TextStyle(
-                color: Color(0xff121C4A),
+                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),

@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_sedes_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
@@ -42,9 +43,11 @@ class FilterDialogState extends State<FilterDialog> {
   final blocSedes = RadioSedesBloc();
   int? dropdownValueSedes = 0;
 
+ bool isDarkMode =false;
 
   @override
-  void initState() {
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
 
     blocSedes.fetchSedes();
     blocSedes.subject.stream.listen((value) {
@@ -99,16 +102,16 @@ class FilterDialogState extends State<FilterDialog> {
                                 left: 10, right: 10, top: 10, bottom: 10),
                             decoration: BoxDecoration(
                               gradient:
-                                  const RadialGradient(radius: 1.5, colors: [
-                                    Color( 0xff216278),
-                                    Color(0xff121C4A)
+                                   RadialGradient(radius: 1.5, colors: [
+                                    Color(0xff216278),
+                                    Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
                               ]),
                               borderRadius: BorderRadius.circular(5),
                               color: Theme.of(context).primaryColor,
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                      const Color(0xff121C4A).withOpacity(0.3),
+                                       Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                                   spreadRadius: 3,
                                   blurRadius: 10,
                                   offset: const Offset(5, 5),
@@ -147,7 +150,7 @@ class FilterDialogState extends State<FilterDialog> {
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                      const Color(0xff121C4A).withOpacity(0.3),
+                                       Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                                   spreadRadius: 3,
                                   blurRadius: 10,
                                   offset: const Offset(5, 5),
