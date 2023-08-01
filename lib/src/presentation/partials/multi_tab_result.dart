@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_search_bloc.dart';
@@ -75,7 +76,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
 
   @override
   void initState() {
- var brightness = MediaQuery.of(context).platformBrightness;
+ var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
     tabIndex = widget.tabIndex;
     query = widget.query;
@@ -144,7 +145,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                   decorationThickness: 2,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  decorationColor: const Color(0xFFFCDC4D),
+                  decorationColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -153,11 +154,11 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 query,
-                style: const TextStyle(
-                  color: Color(0xff121C4A),
+                style:  TextStyle(
+                  color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xFFFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                 ),
               ),
             ),
@@ -165,11 +166,11 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
               padding: const EdgeInsets.only(left: 20, bottom: 20),
               child: Text(
                 getFilterString(),
-                style: const TextStyle(
-                  color: Color(0xff121C4A),
+                style:  TextStyle(
+                  color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xFFFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                 ),
               ),
             ),
@@ -421,11 +422,11 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style: const TextStyle(
-                color: Color(0xff121C4A),
+              style:  TextStyle(
+                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
               ),
             ),
           ),
@@ -530,7 +531,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -598,7 +599,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
             color: Theme.of(context).appBarTheme.foregroundColor,
             boxShadow: [
               BoxShadow(
-                color: const Color(0xff121C4A).withOpacity(0.3),
+                color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                 spreadRadius: 3,
                 blurRadius: 10,
                 offset: const Offset(5, 5), // changes position of shadow
@@ -617,7 +618,7 @@ class _MultiTabResultState extends State<MultiTabResult> with TickerProviderStat
         color: Theme.of(context).appBarTheme.foregroundColor,
         // boxShadow: [
         //   BoxShadow(
-        //     color: const Color(0xff121C4A).withOpacity(0.3),
+        //     color: const Color(isDarkMode?:0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
         //     spreadRadius: 3,
         //     blurRadius: 10,
         //     offset: const Offset(5, 5), // changes position of shadow

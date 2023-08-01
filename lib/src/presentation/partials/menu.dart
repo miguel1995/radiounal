@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
@@ -15,7 +16,7 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   bool isHidden = true;
-
+bool isDarkMode=false;
   final List<MenuItem> _menuTitles = [
     MenuItem('Programas Radio UNAL', "/content", "",
         ScreenArguments('SITE', 'RADIO', 1)),
@@ -67,8 +68,9 @@ class _MenuState extends State<Menu> {
     return Container(
       padding: const EdgeInsets.only( left: 35, top: 60, bottom: 10),
         child: Row(children: [
-          Image.asset('assets/images/logo.png',
-              width: MediaQuery.of(context).size.width * 0.35),
+          Image.asset(isDarkMode?'assets/images/logo_dark.png':'assets/images/logo.png',
+              width: MediaQuery.of(context).size.width * 0.35,
+              color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D ) ),
       Container(
           margin: EdgeInsets.only(left:60),
           child:IconButton(
@@ -77,7 +79,7 @@ class _MenuState extends State<Menu> {
             Navigator.pop(context);
 
           },
-          icon: const Icon(Icons.close, color: Color(0xffFCDC4D)))),
+          icon:  Icon(Icons.close, color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D)))),
 
     ]));
   }
@@ -87,8 +89,8 @@ class _MenuState extends State<Menu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ..._buildListItems(),
-        const Divider(
-          color: Color(0xffFCDC4D),
+         Divider(
+          color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
           indent: 30,
           endIndent: 30,
         ),
@@ -155,6 +157,8 @@ class _MenuState extends State<Menu> {
           IconButton(
               onPressed: () {
                 setState(() {
+                  var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
                   isHidden = !isHidden;
                 });
               },

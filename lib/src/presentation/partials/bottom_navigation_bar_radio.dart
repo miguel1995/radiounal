@@ -1,9 +1,11 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -57,7 +59,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   String currentSpeedText = "1.0";
   List<String> listSpeedText = ['0.5', '1.0', '1.5', '2.0'];
 
-
   var speedListItems = const [
     DropdownMenuItem<double>(value: 0.5, child: Text("0.5x")),
     DropdownMenuItem<double>(value: 1.0, child: Text("1.0x")),
@@ -74,8 +75,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+  void initState() { 
+    
     super.initState();
 
     _controller = AnimationController(
@@ -95,12 +96,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     durationContent = "";
     canExpand = false;
     hasDuration = false;
-    speedListItemsBuilder = const [
-      Text("0.5x", style: TextStyle(color: Colors.white)),
-      Text("1.0x", style: TextStyle(color: Colors.white)),
-      Text("1.5x", style: TextStyle(color: Colors.white)),
-      Text("2.0x", style: TextStyle(color: Colors.white))
-    ];
+    // speedListItemsBuilder = const [
+    //   Text("0.5x", style: TextStyle(color: Colors.white)),
+    //   Text("1.0x", style: TextStyle(color: Colors.white)),
+    //   Text("1.5x", style: TextStyle(color: Colors.white)),
+    //   Text("2.0x", style: TextStyle(color: Colors.white))
+    // ];
 
     audioPlayer = AudioPlayer();
     audioPlayer.setVolume(currentVolumen);
@@ -181,8 +182,23 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     return formatted;
   }
 
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+
+}
   @override
   Widget build(BuildContext context) {
+
+       themeMethod().then((value) {
+        print("------------------->>>>value:"+value.toString());
+     setState(() {
+     isDarkMode=(value==AdaptiveThemeMode.dark);
+  
+});
+    });
+
+
     final size = MediaQuery.of(context).size;
     _maxHeight = size.height * 0.88;
     _minHeight = 110;
@@ -227,9 +243,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 Column(
                   children: [
                     IconButton(
-                      color: Colors.white,
+                      color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                       iconSize: 40,
-                      icon: const Icon(Icons.volume_down),
+                      icon: const Icon(Icons.volume_down
+                      
+                      ),
                       onPressed: () async {
                         setState(() {
                           showVolumenSlider = !showVolumenSlider;
@@ -239,7 +257,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   ],
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color: Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                   iconSize: 50,
                   icon: const Icon(Icons.arrow_left),
                   onPressed: () async {
@@ -249,7 +267,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                  color: Colors.white,
+                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                   iconSize: 80,
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () async {
@@ -261,7 +279,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                    color: Colors.white,
+                    color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                     iconSize: 50,
                     icon: const Icon(Icons.arrow_right),
                     onPressed: () async {
@@ -278,8 +296,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         });
                       },
                       child: Text("${currentSpeedText}x",
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style:  TextStyle(
+                             color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                               fontSize: 18
                           )
                       ),
@@ -292,7 +310,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
             Row(children: [
               Expanded(
                   child: Slider(
-                      activeColor: const Color(0xffFCDC4D),
+                      activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                       min: 0,
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
@@ -301,8 +319,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       })),
               Text(
                   "${formatTimeString(position)}/${formatTimeString(duration)}",
-                  style: const TextStyle(
-                      color: Color(0xffFCDC4D), fontStyle: FontStyle.italic))
+                  style:  TextStyle(
+                      color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), fontStyle: FontStyle.italic))
             ]),
           ],
         ));
@@ -311,14 +329,15 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Widget audioPlayerExpanded() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"),
+        decoration:  BoxDecoration(
+            image:isDarkMode?null: DecorationImage(
+              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"
+               ),
               fit: BoxFit.cover,
             ),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            color: Color(0xff121C4A)),
+            color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A)),
         child: Stack(
           children: [
             Column(children: [
@@ -335,6 +354,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                             right: 20, top: 20, bottom: 10),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flechita_down.svg',
+                            color: Color(isDarkMode?
+                            0xff121C4A:
+                            0xFFFCDC4D
+                            ),
                             width: MediaQuery.of(context).size.width * 0.05)))
               ]),
               Row(
@@ -342,7 +365,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 children: [
                   myFavoritoBtn!,
                   IconButton(
-                    color: const Color(0xffFCDC4D),
+                    color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     icon: const Icon(Icons.share),
                     onPressed: () {
                       Share.share("Escucha Radio UNAL -  ${url}",
@@ -366,11 +389,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         margin: const EdgeInsets.only(left: 30, right: 30),
                         child: Container(
                             padding: const EdgeInsets.only(left: 10, right: 10),
-                            color: const Color(0xffFCDC4D),
+                            color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                             child: Text(
                               textParent,
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                                   TextStyle(fontWeight: FontWeight.bold,
+                                  color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
+                                  
+                                  ),
                             )),
                       ),
                     if (title != "")
@@ -379,8 +405,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           margin: const EdgeInsets.only(
                               top: 10, left: 30, right: 30),
                           child: Text(title,
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style:  TextStyle(
+                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold))),
                     if (date != null)
@@ -390,8 +416,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                               top: 10, left: 30, right: 30),
                           child: Text(
                               "${formatDateString(date)} ${formatDurationString(durationContent)}",
-                              style: const TextStyle(
-                                  fontSize: 12, color: Colors.white))),
+                              style:  TextStyle(
+                                  fontSize: 12, color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),))),
                     if (type != "")
                       Container(
                           alignment: Alignment.centerLeft,
@@ -400,8 +426,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           child: Text(
                               type[0].toUpperCase() +
                                   type.substring(1, type.length).toLowerCase(),
-                              style: const TextStyle(
-                                  color: Colors.white,
+                              style:  TextStyle(
+                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
                                   fontStyle: FontStyle.italic)))
                   ])),
               drawAudioPlayer(),
@@ -411,6 +437,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       child: Container(
                           padding: const EdgeInsets.only(bottom: 5),
                           child: SvgPicture.asset('assets/images/firma.svg',
+                          color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                               width: 180))))
             ]),
             if (showVolumenSlider)
@@ -421,7 +448,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     quarterTurns: 3,
                     child: Slider(
                         inactiveColor: Colors.white70,
-                        activeColor: const Color(0xffFCDC4D),
+                        activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                         min: 0,
                         max: 1.0,
                         value: currentVolumen,
@@ -448,10 +475,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     return Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(top: 1),
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-            color: Color(0xff121C4A)),
+            color: isDarkMode?
+            
+            Color(0xFFFCDC4D):
+            Color(0xff121C4A)
+            ),
         child: Column(children: [
           Row(children: [
             getImageMini(),
@@ -473,8 +504,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                     (title.length > 35)
                                         ? "${title.substring(0, 35)}..."
                                         : title,
-                                    style: const TextStyle(
-                                        color: Colors.white,
+                                    style:  TextStyle(
+                                        color: isDarkMode? 
+                                        Color(0xff121C4A):
+                                        Color(0xFFFFFFFF),
                                         fontWeight: FontWeight.bold))),
                           Container(
                               //padding: EdgeInsets.only(left: 40),
@@ -490,12 +523,20 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                                           },
                                           child: SvgPicture.asset(
                                               'assets/icons/icono_flechita_up.svg',
+                                            color: isDarkMode? 
+                                            Color(0xff121C4A):
+                                            Color(0xFFFCDC4D),
+                                              
                                               width: 20)))
                                   : null)
                         ])),
                 Row(children: [
                   IconButton(
-                    color: const Color(0xffFCDC4D),
+                    color:  Color(isDarkMode?
+                    0xff121C4A:
+                    0xFFFCDC4D
+                    ),
+                    // color:  Colors.red,
                     iconSize: 40,
                     icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                     onPressed: () async {
@@ -507,7 +548,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     },
                   ),
                   Slider(
-                      activeColor: const Color(0xffFCDC4D),
+                      activeColor:  isDarkMode?
+                      Color(0xff121C4A)
+                      :
+                      Color(0xFFFCDC4D)
+                      ,
                       min: 0,
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
@@ -515,15 +560,18 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         audioPlayer.seek(Duration(seconds: value.toInt()));
                       }),
                   Text(formatTimeString(position),
-                      style: const TextStyle(
-                          color: Color(0xffFCDC4D),
+                      style:  TextStyle(
+                          color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                           fontStyle: FontStyle.italic))
                 ])
               ],
             )
           ]),
           Container(
-            child: SvgPicture.asset('assets/images/firma.svg', width: 180),
+            child: SvgPicture.asset('assets/images/firma.svg', width: 180,
+            
+            color:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
+            ),
           )
         ]));
   }
@@ -670,9 +718,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         Container(
           padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
               border: Border.all(
-                color: Colors.white, // Color del borde
+                color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF), // Color del borde
                 width: 0, // Ancho del borde
               ),
             ),

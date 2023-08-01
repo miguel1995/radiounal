@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,7 +29,7 @@ class _SwitchButtonState extends State<SwitchButton> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
 
 

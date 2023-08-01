@@ -1,5 +1,7 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
@@ -54,9 +56,28 @@ class _HomeState extends State<Home> {
 
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
- isDarkMode = brightness == Brightness.dark;
+  void initState() { 
+    
     super.initState();
+// AdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
+
+
+// Future.delayed(Duration(milliseconds: 5000),(){
+
+// isDarkMode=AdaptiveTheme.of(context)==AdaptiveThemeMode.dark;
+// }
+
+// );
+
+
+// });
+
+
+    themeMethod().then((value) {
+     isDarkMode=value==AdaptiveThemeMode.dark;
+    });
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+ isDarkMode = brightness == Brightness.dark;
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -85,16 +106,33 @@ class _HomeState extends State<Home> {
 
   }
 
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+print('=====================savedThemeMode:'+savedThemeMode.toString());
+return savedThemeMode;
+}
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    themeMethod().then((value) {
+     isDarkMode=value==AdaptiveThemeMode.dark;
+    });
+
+
+
+
     return Scaffold(
         extendBodyBehindAppBar: true,
         endDrawer:  const Menu(),
         appBar:  AppBarRadio(enableBack:false),
         body: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -154,7 +192,7 @@ class _HomeState extends State<Home> {
   Widget drawFrecuencias() {
     return Container(
       padding: const EdgeInsets.only(left: 0),
-      color: const Color(0xffEEEEEE),
+      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
       child: Column(
         children: [
           Align(
@@ -173,7 +211,7 @@ class _HomeState extends State<Home> {
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xffFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -195,20 +233,21 @@ class _HomeState extends State<Home> {
   Widget drawFavouriteBtn() {
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
-      color: const Color(0xffEEEEEE),
+      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
 
-              gradient:  const RadialGradient(radius: 3, colors: [
-                Color(0xffFEE781),
-                Color(0xffFFCC17)
+              gradient:   RadialGradient(radius: 3, colors: [
+                isDarkMode?Color.fromARGB(255, 18, 54, 74):Color(0xffFEE781),
+                isDarkMode? Color(0xff121C4A):Color(0xffFFCC17)
+                
               ]),
 
               boxShadow: [
             BoxShadow(
-              color: const Color(0xff121C4A).withOpacity(0.3),
+              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
               spreadRadius: 3,
               blurRadius: 10,
               offset: const Offset(10, 10), // changes position of shadow
@@ -264,7 +303,7 @@ class _HomeState extends State<Home> {
                         decorationThickness: 2,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        decorationColor: Color(0xffFCDC4D),
+                        decorationColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
                         decoration: TextDecoration.underline,
 
                       ),
@@ -288,7 +327,7 @@ class _HomeState extends State<Home> {
 
   Widget drawMasEscuchado() {
     return Container(
-      color: const Color(0xffEEEEEE),
+      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
       margin: const EdgeInsets.only(bottom: 20, top: 20),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: Column(
@@ -309,7 +348,7 @@ class _HomeState extends State<Home> {
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xffFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -361,7 +400,7 @@ class _HomeState extends State<Home> {
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xffFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -447,7 +486,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(10, 10), // changes position of shadow
@@ -465,7 +504,7 @@ class _HomeState extends State<Home> {
                   width: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                   ),
                 ),
                 Positioned(
@@ -485,7 +524,7 @@ class _HomeState extends State<Home> {
                             )),
                         Container(
                           padding: EdgeInsets.only(left: 2, right: 2),
-                          color: const Color(0xffFCDC4D),
+                          color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                           child: Text(
                             element.categoryTitle,
                             style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
@@ -528,13 +567,13 @@ class _HomeState extends State<Home> {
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              gradient: const RadialGradient(
+              gradient:  RadialGradient(
                   radius: 1, colors: [
-                    Color( 0xff216278), Color(0xff121C4A)
+                    Color( 0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xff121C4A).withOpacity(0.3),
+                  color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                   spreadRadius: 3,
                   blurRadius: 10,
                   offset: const Offset(10, 10), // changes position of shadow
@@ -563,8 +602,8 @@ class _HomeState extends State<Home> {
     rowList.add(Container(
       padding: const EdgeInsets.only(top:5, bottom: 5),
         width: widthBox * 4,
-        decoration: const BoxDecoration(
-          color: Color(0xffCFCFCF),
+        decoration:  BoxDecoration(
+          color: Color(isDarkMode?0x00000000:0xFFFFFFFF),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         ),
@@ -683,7 +722,7 @@ class _HomeState extends State<Home> {
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -757,7 +796,7 @@ class _HomeState extends State<Home> {
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -773,7 +812,7 @@ class _HomeState extends State<Home> {
                   Container(
                     padding: EdgeInsets.only(left: 2, right: 2),
                     margin: const EdgeInsets.only(top: 15),
-                    color: const Color(0xffFCDC4D),
+                    color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     child: Text(
                       element.categoryTitle,
                       style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),

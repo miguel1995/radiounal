@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -81,7 +82,7 @@ List elementList=[];
  bool isDarkMode =false;
 
   @override
-  initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
 
@@ -265,9 +266,9 @@ List elementList=[];
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -341,11 +342,11 @@ List elementList=[];
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style: const TextStyle(
-                color: Color(0xff121C4A),
+              style:  TextStyle(
+                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
               ),
             ),
           ),
@@ -354,10 +355,10 @@ List elementList=[];
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
                     style: const TextStyle(
-                      color: Color(0xff121C4A),
+                      color: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(0xFFFCDC4D),
+                      decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     ),
                   ),
                 ),*/
@@ -419,7 +420,7 @@ List elementList=[];
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -451,7 +452,7 @@ List elementList=[];
                         color: Theme.of(context).appBarTheme.foregroundColor,
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -557,7 +558,7 @@ List elementList=[];
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xff121C4A).withOpacity(0.3),
+                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(5, 5),
@@ -593,7 +594,7 @@ List elementList=[];
                 decorationThickness: 2,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -603,7 +604,7 @@ List elementList=[];
             child: Text(
               element.description,
               maxLines: 4,
-              style: const TextStyle(color: Color(0xff121C4A), fontSize: 12),
+              style:  TextStyle(color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A), fontSize: 12),
             ),
           ),
           Container(
@@ -725,7 +726,7 @@ List elementList=[];
                             colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(5, 5),

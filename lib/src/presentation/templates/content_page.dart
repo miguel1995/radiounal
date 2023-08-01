@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_series_bloc.dart';
@@ -51,7 +52,7 @@ class _ContentPageState extends State<ContentPage> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
 
@@ -101,9 +102,9 @@ class _ContentPageState extends State<ContentPage> {
       endDrawer: const Menu(),
       appBar: AppBarRadio(enableBack: true),
       body: DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -164,7 +165,7 @@ class _ContentPageState extends State<ContentPage> {
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -173,11 +174,11 @@ class _ContentPageState extends State<ContentPage> {
             padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
             child: Text(
               "${infoModel.count} resultados",
-              style: const TextStyle(
-                color: Color(0xff121C4A),
+              style:  TextStyle(
+                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
               ),
             ),
           ),
@@ -186,10 +187,10 @@ class _ContentPageState extends State<ContentPage> {
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
                     style: const TextStyle(
-                      color: Color(0xff121C4A),
+                      color: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(0xFFFCDC4D),
+                      decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     ),
                   ),
                 ),*/
@@ -253,7 +254,7 @@ class _ContentPageState extends State<ContentPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -280,7 +281,7 @@ class _ContentPageState extends State<ContentPage> {
                     color: Theme.of(context).appBarTheme.foregroundColor,
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xff121C4A).withOpacity(0.3),
+                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:

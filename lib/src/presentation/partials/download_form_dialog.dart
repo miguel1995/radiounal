@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../business_logic/bloc/ciudad_bloc.dart';
@@ -55,7 +56,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
     initializePreference();
 
@@ -100,7 +101,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                             color:
                                 Theme.of(context).appBarTheme.foregroundColor),
                       )),
-                  const Text(
+                   Text(
                     "Formulario de descarga",
                     style: TextStyle(
                       shadows: [
@@ -110,7 +111,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       decorationThickness: 2,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(0xFFFCDC4D),
+                      decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                       decoration: TextDecoration.underline,
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -17,13 +18,20 @@ class BrowserPage extends StatefulWidget {
 class _BrowserPageState extends State<BrowserPage> {
   final TextEditingController _controllerQuery = TextEditingController();
   bool isFiltro = false;
+ bool isDarkMode =false;
 
   @override
   void dispose() {
     _controllerQuery.dispose();
     super.dispose();
   }
-
+@override
+  void initState() {
+    // TODO: implement initState
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +41,9 @@ class _BrowserPageState extends State<BrowserPage> {
       body:
 
       DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -58,7 +66,7 @@ class _BrowserPageState extends State<BrowserPage> {
                     decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    decorationColor: Color(0xFFFCDC4D),
+                    decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -281,12 +289,12 @@ class _BrowserPageState extends State<BrowserPage> {
                     left: 20, right: 20, top: 10, bottom: 10),
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  gradient: const RadialGradient(
+                  gradient:  RadialGradient(
                       radius: 1,
-                      colors: [Color(0xff216278), Color(0xff121C4A)]),
+                      colors: [Color(0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xff121C4A).withOpacity(0.3),
+                      color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
                       spreadRadius: 3,
                       blurRadius: 10,
                       offset:

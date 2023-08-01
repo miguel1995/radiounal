@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   GlobalKey<BottomNavigationBarRadioState> keyPlayer = GlobalKey();
  bool isDarkMode =false;
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -80,7 +81,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark,
           primarySwatch: Colors.red,
           primaryColor: Color(0xFFFCDC4D),
-          primaryColorDark: Color(0xFFFCDC4D),
+          primaryColorDark: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
             fontFamily: 'AncizarSans',
           textTheme: const TextTheme(
               // bodyText2: TextStyle(
@@ -93,20 +94,20 @@ class _MyAppState extends State<MyApp> {
                   color: Colors.white),
                   ),
             appBarTheme:  AppBarTheme(
-                color: Color.fromARGB(255, 100, 100, 100), foregroundColor: Color(0xFFFCDC4D)
-                //color: Color(0xFFFCDC4D), 
-                // backgroundColor: Color(0xff121C4A),
-                // foregroundColor:Color(0xFFFCDC4D)
+                color: Color(0xFFFCDC4D), foregroundColor: Color(0xff121C4A)
+                //color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), 
+                // backgroundColor: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
+                // foregroundColor:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
                 ),
         ),
         light: ThemeData(
             // Define the default brightness and colors.
             brightness: Brightness.light,
-            primaryColor: const Color(0xff121C4A),
+            primaryColor:  Color(0xff121C4A),
 
             // Define the default font family.
             fontFamily: 'AncizarSans',
-            textTheme: const TextTheme(
+            textTheme:  TextTheme(
                 headline1: TextStyle(
                     // fontSize: 72.0,
                     fontWeight: FontWeight.bold,
@@ -122,11 +123,11 @@ class _MyAppState extends State<MyApp> {
                 bodyText1: TextStyle(color: Colors.red),
                 bodyText2: TextStyle(
                     // fontSize: 14.0,
-                    color: Color(0xff121C4A))),
-            appBarTheme: const AppBarTheme(
-                color: Color(0xff121C4A), foregroundColor: Color(0xFFFCDC4D)),
+                    color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
+            appBarTheme:  AppBarTheme(
+                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A), foregroundColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D)),
             drawerTheme:
-                const DrawerThemeData(backgroundColor: Color(0xff121C4A))),
+                 DrawerThemeData(backgroundColor: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
           return MaterialApp(

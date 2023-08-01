@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
@@ -33,6 +34,16 @@ class _ContactPageState extends State<ContactsPage> {
   String telefono =  "";
   String tipo =  "";
   String mensaje =  "";
+bool isDarkMode=false;
+
+@override
+  void initState() {
+    // TODO: implement initState
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +76,7 @@ class _ContactPageState extends State<ContactsPage> {
                     decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    decorationColor: Color(0xFFFCDC4D),
+                    decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                     decoration: TextDecoration.underline,
                   ),
                 ),

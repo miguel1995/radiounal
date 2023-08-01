@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
@@ -23,7 +24,7 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = MediaQuery.of(context).platformBrightness;
+  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     _tabController = TabController(length: 2, vsync: this);
     tabIndex = widget.tabIndex;
@@ -39,9 +40,9 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
       appBar:  AppBarRadio(enableBack:true),
       body:
       DecoratedBox(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),

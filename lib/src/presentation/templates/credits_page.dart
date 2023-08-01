@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 
-class CreditsPage extends StatelessWidget {
+class CreditsPage extends StatefulWidget {
   const CreditsPage({Key? key}) : super(key: key);
 
+  @override
+  State<CreditsPage> createState() => _CreditsPageState();
+}
+
+class _CreditsPageState extends State<CreditsPage> {
+bool isDarkMode=false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+  isDarkMode = brightness == Brightness.dark;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +48,7 @@ class CreditsPage extends StatelessWidget {
                   decorationThickness: 2,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xFFFCDC4D),
+                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
