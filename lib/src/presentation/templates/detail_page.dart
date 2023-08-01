@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,10 +36,10 @@ class DetailPage extends StatefulWidget {
 
   const DetailPage(
       {Key? key,
-      required this.title,
-      required this.message,
-      required this.uid,
-      this.elementContent})
+        required this.title,
+        required this.message,
+        required this.uid,
+        this.elementContent})
       : super(key: key);
 
   @override
@@ -48,15 +47,15 @@ class DetailPage extends StatefulWidget {
 }
 
 Function? reloadlist;
-
 class _DetailPageState extends State<DetailPage> {
+
   late String title;
   late String message;
   late int uid;
   late int page;
   late dynamic elementContent; // almacena un objeto SerieModel o ProgramaModel
   bool isLoading = false;
-  List elementList = [];
+  List elementList=[];
 
   final blocRadioEmisiones = RadioEmisionesBloc();
   final blocPodcastEpisodios = PodcastEpisodiosBloc();
@@ -80,12 +79,9 @@ class _DetailPageState extends State<DetailPage> {
   List<Widget> cardList = [];
   late FavoritoBtn favoritoBtn;
   bool isListLoading = false;
-  bool isDarkMode = false;
 
   @override
   initState() {
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-    isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     initPlatformState();
@@ -232,7 +228,7 @@ class _DetailPageState extends State<DetailPage> {
     _sliverList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
       SliverList sliverList = SliverList(
         delegate: SliverChildBuilderDelegate(
-          (context, index) {
+              (context, index) {
             return Column(
               children: [
                 drawContentList(snapshot),
@@ -246,15 +242,13 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Scaffold(
-        //extendBodyBehindAppBar: true,
+      //extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(isDarkMode
-                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
-                    : "assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -285,7 +279,8 @@ class _DetailPageState extends State<DetailPage> {
                               firebaseLogic!,
                               favoritoBtn!,
                               _currentScore.toDouble(),
-                              blocRadioCalifica),
+                              blocRadioCalifica
+                          ),
                         ),
                         _sliverList(snapshot)
                       ],
@@ -295,9 +290,9 @@ class _DetailPageState extends State<DetailPage> {
                   } else {
                     child = const Center(
                         child: SpinKitFadingCircle(
-                      color: Color(0xffb6b3c5),
-                      size: 50.0,
-                    ));
+                          color: Color(0xffb6b3c5),
+                          size: 50.0,
+                        ));
                   }
                   return child;
                 })));
@@ -336,65 +331,65 @@ class _DetailPageState extends State<DetailPage> {
     totalPages = infoModel.pages;
 
     return Container(
-        //color: Colors.green,
+      //color: Colors.green,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          Container(
-            //color: Colors.cyan,
-            //height: MediaQuery.of(context).size.height * 0.1,
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              "${infoModel.count} resultados",
-              style: TextStyle(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+              Container(
+                //color: Colors.cyan,
+                //height: MediaQuery.of(context).size.height * 0.1,
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "${infoModel.count} resultados",
+                  style: const TextStyle(
+                    color: Color(0xff121C4A),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    decorationColor: Color(0xFFFCDC4D),
+                  ),
+                ),
               ),
-            ),
-          ),
-          /*Container(
+              /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
                     "Página ${page} de ${infoModel.pages}",
                     style: const TextStyle(
-                      color: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
+                      color: Color(0xff121C4A),
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                      decorationColor: Color(0xFFFCDC4D),
                     ),
                   ),
                 ),*/
-          //Container(
-          // height: isLoading
-          //    ? MediaQuery.of(context).size.height * 0.8
-          //     : MediaQuery.of(context).size.height,
-          // child:
-          buildList(snapshot)
-          // )
-          ,
-          if (isLoading)
-            Container(
-              //color: Colors.white,
-              height: MediaQuery.of(context).size.height * 0.1,
-              child: const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
-              )),
-            )
-        ]));
+              //Container(
+              // height: isLoading
+              //    ? MediaQuery.of(context).size.height * 0.8
+              //     : MediaQuery.of(context).size.height,
+              // child:
+              buildList(snapshot)
+              // )
+              ,
+              if (isLoading)
+                Container(
+                  //color: Colors.white,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: const Center(
+                      child: SpinKitFadingCircle(
+                        color: Color(0xffb6b3c5),
+                        size: 50.0,
+                      )),
+                )
+            ]));
   }
 
   Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
     return (AsyncSnapshot<Map<String, dynamic>> snapshot) {
       var list = snapshot.data!["result"];
       list?.forEach((element) => {
-            if (!elementList.contains(element))
-              {cardList.add(buildCard(element)), elementList.add(element)}
-          });
+        if (!elementList.contains(element))
+          {cardList.add(buildCard(element)), elementList.add(element)}
+      });
       return RedrawableListView(
           scrollController: _scrollController, cardList: cardList);
     }(snapshot);
@@ -404,7 +399,7 @@ class _DetailPageState extends State<DetailPage> {
     var w = MediaQuery.of(context).size.width;
 
     final DateTime now =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
+    DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
     String formatted = formatter.format(now);
 
@@ -416,7 +411,7 @@ class _DetailPageState extends State<DetailPage> {
         },
         child: Container(
             padding:
-                const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                   width: w * 0.25,
@@ -425,8 +420,7 @@ class _DetailPageState extends State<DetailPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                            .withOpacity(0.3),
+                        color: const Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -440,9 +434,9 @@ class _DetailPageState extends State<DetailPage> {
                       imageUrl: element.imagen,
                       placeholder: (context, url) => const Center(
                           child: SpinKitFadingCircle(
-                        color: Color(0xffb6b3c5),
-                        size: 50.0,
-                      )),
+                            color: Color(0xffb6b3c5),
+                            size: 50.0,
+                          )),
                       errorWidget: (context, url, error) =>
                           Image.asset("assets/images/default.png"),
                     ),
@@ -451,48 +445,47 @@ class _DetailPageState extends State<DetailPage> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      margin: const EdgeInsets.only(left: 20, bottom: 10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                                .withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(
-                                5, 5), // changes position of shadow
+                        Container(
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          margin: const EdgeInsets.only(left: 20, bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).appBarTheme.foregroundColor,
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xff121C4A).withOpacity(0.3),
+                                spreadRadius: 3,
+                                blurRadius: 10,
+                                offset: const Offset(
+                                    5, 5), // changes position of shadow
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Text(
-                        element.categoryTitle,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        element.title,
-                        maxLines: 5,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
+                          child: Text(
+                            element.categoryTitle,
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: Text(
-                        "$formatted ${(element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
-                        style: const TextStyle(
-                            fontSize: 10, color: Color(0xff666666)),
-                      ),
-                    )
-                  ]))
+                        Container(
+                          margin: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            element.title,
+                            maxLines: 5,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            "$formatted ${(element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
+                            style: const TextStyle(
+                                fontSize: 10, color: Color(0xff666666)),
+                          ),
+                        )
+                      ]))
             ])));
   }
 
@@ -532,248 +525,32 @@ class _DetailPageState extends State<DetailPage> {
     return formatted;
   }
 
-  Widget drawContentDescription(
-      dynamic element,
-      var w,
-      int uid,
-      var _deviceId,
-      String message,
-      bool _isSeguido,
-      PushNotification pushNotification,
-      FirebaseLogic firebaseLogic,
-      FavoritoBtn favoritoBtn) {
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return Column(children: [
-          Container(
-            padding: const EdgeInsets.only(top: 20, right: 20),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              favoritoBtn,
-              InkWell(
-                  onTap: () {
-                    Share.share("Escucha Radio UNAL -  ${element.url}",
-                        subject: "Radio UNAL - ${element.title}");
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.only(left: 3, right: 3),
-                      child: SvgPicture.asset(
-                          'assets/icons/icono_compartir_redes.svg')))
-            ]),
-          ),
-          Container(
-              width: w * 0.40,
-              height: w * 0.40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                        .withOpacity(0.3),
-                    spreadRadius: 3,
-                    blurRadius: 10,
-                    offset: const Offset(5, 5),
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
-                  fit: BoxFit.cover,
-                  imageUrl: element.imagen,
-                  placeholder: (context, url) => const Center(
-                      child: SpinKitFadingCircle(
-                    color: Color(0xffb6b3c5),
-                    size: 50.0,
-                  )),
-                  errorWidget: (context, url, error) => Container(
-                      width: w * 0.40,
-                      child: Image.asset("assets/images/default.png")),
-                ),
-              )),
-          Container(
-            padding: const EdgeInsets.only(top: 20),
-            child: Text(
-              element.title,
-              style: TextStyle(
-                shadows: [
-                  Shadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: const Offset(0, -5))
-                ],
-                color: Colors.transparent,
-                decorationThickness: 2,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-            child: Text(
-              element.description,
-              maxLines: 4,
-              style: TextStyle(
-                  color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
-                  fontSize: 12),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              (message == "RADIO") ? "Radio" : "Podcast",
-              style: TextStyle(
-                fontSize: 15,
-                color: Theme.of(context).primaryColor,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Container(
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              alignment: Alignment.centerLeft,
-              child: RatingBar(
-                initialRating: _currentScore.toDouble(),
-                direction: Axis.horizontal,
-                allowHalfRating: true,
-                itemCount: 5,
-                itemSize: 20.0,
-                ratingWidget: RatingWidget(
-                  full: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_completa.svg'),
-                  half: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_completa.svg'),
-                  empty: SvgPicture.asset(
-                      'assets/icons/icono_estrellita_borde.svg'),
-                ),
-                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                onRatingUpdate: (rating) {
-                  print(rating);
-                  DateTime today = DateTime.now();
-                  String dateStr = "${today.day}-${today.month}-${today.year}";
-                  //Agrega Estadistica a Backend Typo3
-                  blocRadioCalifica.addEstadistica(
-                      element.uid,
-                      element.title,
-                      message.toUpperCase(),
-                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                      rating.toInt(),
-                      dateStr);
-                  //Agrega Estadistica a firebase
-                  firebaseLogic
-                      .agregarEstadistica(
-                          uid,
-                          message,
-                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                          _deviceId,
-                          rating.toInt(),
-                          today.microsecondsSinceEpoch)
-                      .then((value) => {
-                            if (value == true)
-                              {print(">>> Estadistica agregada a firebase")}
-                            else
-                              {
-                                print(
-                                    ">>> No se puede  agregar la Estadistica a firebase")
-                              }
-                          });
 
-                  showConfirmDialog(context, "STATISTIC");
-                },
-              )),
-          Container(
-              alignment: Alignment.centerLeft,
-              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-              child: InkWell(
-                  onTap: () {
-                    if (_isSeguido == true) {
-                      firebaseLogic
-                          .eliminarSeguido(uid, _deviceId)
-                          .then((value) => {
-                                pushNotification.removeNotificationItem(
-                                    "${message.toUpperCase()}-$uid"),
-                                setState(() {
-                                  _isSeguido = false;
-                                })
-                              });
-                    } else {
-                      firebaseLogic
-                          .agregarSeguido(
-                              uid,
-                              message,
-                              (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                              _deviceId)
-                          .then((value) => {
-                                if (value == true)
-                                  {
-                                    //print('DocumentSnapshot added with ID: ${doc.id}');
-                                    pushNotification.addNotificationItem(
-                                        "${message.toUpperCase()}-$uid"),
-                                    showConfirmDialog(context, "FOLLOWED"),
-                                    setState(() {
-                                      _isSeguido = true;
-                                    })
-                                  }
-                                else
-                                  {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "Se ha presentado un problema, intentelo más tarde")))
-                                  }
-                              });
-                    }
-                  },
-                  child: Container(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, top: 5, bottom: 5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).appBarTheme.foregroundColor,
-                        gradient: const RadialGradient(
-                            radius: 3,
-                            colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                                .withOpacity(0.3),
-                            spreadRadius: 3,
-                            blurRadius: 10,
-                            offset: const Offset(5, 5),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        (_isSeguido) ? "Dejar de Seguir" : "Seguir",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      )))),
-        ]);
-      },
-    );
-  }
 
-  loadFirebaseData() {
-    firebaseLogic.validateSeguido(uid, _deviceId).then((value) => {
-          setState(() {
-            _isSeguido = value;
-          })
-        });
+
+
+
+  loadFirebaseData(){
+    firebaseLogic.validateSeguido(uid, _deviceId).then((value) =>
+    {
+      setState(() {
+        _isSeguido = value;
+      })
+    });
+
 
     firebaseLogic
         .validateEstadistica(uid, _deviceId, message.toUpperCase(),
-            (message == "RADIO") ? "PROGRAMA" : "SERIE")
-        .then((value) => {
-              if (value != null && value != "" && value != null)
-                {
-                  setState(() {
-                    _currentScore = value;
-                  })
-                }
-            });
+        (message == "RADIO") ? "PROGRAMA" : "SERIE")
+        .then((value) =>
+    {
+      if (value != null && value != "" && value != null)
+        {
+          setState(() {
+            _currentScore = value;
+          })
+        }
+    });
   }
 }
 
@@ -816,6 +593,7 @@ class _RedrawableListViewState extends State<RedrawableListView> {
   }
 }
 
+
 class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   dynamic element;
   var w;
@@ -830,33 +608,30 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   double _currentScore;
   RadioCalificaBloc blocRadioCalifica;
 
-  _CustomHeaderDelegate(
-      this.element,
-      this.w,
-      this.h,
-      this.uid,
-      this._deviceId,
-      this.message,
-      this._isSeguido,
-      this.pushNotification,
-      this.firebaseLogic,
-      this.favoritoBtn,
-      this._currentScore,
-      this.blocRadioCalifica);
+
+
+  _CustomHeaderDelegate(this.element, this.w, this.h, this.uid, this._deviceId,
+      this.message, this._isSeguido, this.pushNotification, this.firebaseLogic,
+      this.favoritoBtn, this._currentScore, this.blocRadioCalifica);
+
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(BuildContext context, double shrinkOffset,
+      bool overlapsContent) {
     return drawContentDescription(
         element,
-        MediaQuery.of(context).size.width,
+        MediaQuery
+            .of(context)
+            .size
+            .width,
         uid!,
         _deviceId!,
         message!,
         _isSeguido!,
         pushNotification!,
         firebaseLogic!,
-        favoritoBtn!);
+        favoritoBtn!
+    );
   }
 
   @override
@@ -870,8 +645,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
     return false;
   }
 
-  Widget drawContentDescription(
-      dynamic element,
+  Widget drawContentDescription(dynamic element,
       var w,
       int uid,
       var deviceId,
@@ -917,14 +691,16 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                 child: CachedNetworkImage(
                   fit: BoxFit.cover,
                   imageUrl: element.imagen,
-                  placeholder: (context, url) => const Center(
+                  placeholder: (context, url) =>
+                  const Center(
                       child: SpinKitFadingCircle(
-                    color: Color(0xffb6b3c5),
-                    size: 50.0,
-                  )),
-                  errorWidget: (context, url, error) => Container(
-                      width: w * 0.40,
-                      child: Image.asset("assets/images/default.png")),
+                        color: Color(0xffb6b3c5),
+                        size: 50.0,
+                      )),
+                  errorWidget: (context, url, error) =>
+                      Container(
+                          width: w * 0.40,
+                          child: Image.asset("assets/images/default.png")),
                 ),
               )),
           Container(
@@ -934,7 +710,9 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
@@ -962,7 +740,9 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
               (message == "RADIO") ? "Radio" : "Podcast",
               style: TextStyle(
                 fontSize: 15,
-                color: Theme.of(context).primaryColor,
+                color: Theme
+                    .of(context)
+                    .primaryColor,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
               ),
@@ -1001,21 +781,22 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                   //Agrega Estadistica a firebase
                   firebaseLogic
                       .agregarEstadistica(
-                          uid,
-                          message,
-                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                          deviceId,
-                          rating.toInt(),
-                          today.microsecondsSinceEpoch)
-                      .then((value) => {
-                            if (value == true)
-                              {print(">>> Estadistica agregada a firebase")}
-                            else
-                              {
-                                print(
-                                    ">>> No se puede  agregar la Estadistica a firebase")
-                              }
-                          });
+                      uid,
+                      message,
+                      (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                      deviceId,
+                      rating.toInt(),
+                      today.microsecondsSinceEpoch)
+                      .then((value) =>
+                  {
+                    if (value == true)
+                      {print(">>> Estadistica agregada a firebase")}
+                    else
+                      {
+                        print(
+                            ">>> No se puede  agregar la Estadistica a firebase")
+                      }
+                  });
 
                   showConfirmDialog(context, "STATISTIC");
                 },
@@ -1028,39 +809,41 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                     if (isSeguido == true) {
                       firebaseLogic
                           .eliminarSeguido(uid, deviceId)
-                          .then((value) => {
-                                pushNotification.removeNotificationItem(
-                                    "${message.toUpperCase()}-$uid"),
-                                setState(() {
-                                  isSeguido = false;
-                                })
-                              });
+                          .then((value) =>
+                      {
+                        pushNotification.removeNotificationItem(
+                            "${message.toUpperCase()}-$uid"),
+                        setState(() {
+                          isSeguido = false;
+                        })
+                      });
                     } else {
                       firebaseLogic
                           .agregarSeguido(
-                              uid,
-                              message,
-                              (message == "RADIO") ? "PROGRAMA" : "SERIE",
-                              deviceId)
-                          .then((value) => {
-                                if (value == true)
-                                  {
-                                    //print('DocumentSnapshot added with ID: ${doc.id}');
-                                    pushNotification.addNotificationItem(
-                                        "${message.toUpperCase()}-$uid"),
-                                    showConfirmDialog(context, "FOLLOWED"),
-                                    setState(() {
-                                      isSeguido = true;
-                                    })
-                                  }
-                                else
-                                  {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                "Se ha presentado un problema, intentelo más tarde")))
-                                  }
-                              });
+                          uid,
+                          message,
+                          (message == "RADIO") ? "PROGRAMA" : "SERIE",
+                          deviceId)
+                          .then((value) =>
+                      {
+                        if (value == true)
+                          {
+                            //print('DocumentSnapshot added with ID: ${doc.id}');
+                            pushNotification.addNotificationItem(
+                                "${message.toUpperCase()}-$uid"),
+                            showConfirmDialog(context, "FOLLOWED"),
+                            setState(() {
+                              isSeguido = true;
+                            })
+                          }
+                        else
+                          {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        "Se ha presentado un problema, intentelo más tarde")))
+                          }
+                      });
                     }
                   },
                   child: Container(
@@ -1068,7 +851,10 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                           left: 20, right: 20, top: 5, bottom: 5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        color: Theme.of(context).appBarTheme.foregroundColor,
+                        color: Theme
+                            .of(context)
+                            .appBarTheme
+                            .foregroundColor,
                         gradient: const RadialGradient(
                             radius: 3,
                             colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
@@ -1103,4 +889,5 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
           return ConfirmDialog(strTipo);
         });
   }
+
 }
