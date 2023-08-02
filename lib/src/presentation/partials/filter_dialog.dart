@@ -10,7 +10,7 @@ import '../../business_logic/bloc/pais_bloc.dart';
 import '../../business_logic/bloc/radio_descarga_bloc.dart';
 
 class FilterDialog extends StatefulWidget {
-  final Function(int sede, String canal, String area) callBackDialog;
+  final Function(int sede, String canal, String area, String filterString) callBackDialog;
 
   const FilterDialog(this.callBackDialog, {super.key});
 
@@ -132,7 +132,7 @@ class FilterDialogState extends State<FilterDialog> {
                     InkWell(
                         onTap: () {
                           Navigator.pop(context);
-                          widget.callBackDialog(dropdownValueSedes!, dropdownValueCanales!, dropdownValueAreas!);
+                          widget.callBackDialog(dropdownValueSedes!, dropdownValueCanales!, dropdownValueAreas!, getFilterString());
                         },
                         child: Container(
                             padding: const EdgeInsets.only(
@@ -357,5 +357,43 @@ class FilterDialogState extends State<FilterDialog> {
       return Colors.green;
     }
     return Colors.white;
+  }
+
+  String getFilterString(){
+
+    String sedeStr = "";
+    String canalStr = "";
+    String areaStr = "";
+    if(dropdownValueSedes == 0 ){
+      sedeStr = "Todas las sedes";
+    }else {
+    if(listSedes[dropdownValueSedes!] != null){
+
+        sedeStr = listSedes[dropdownValueSedes!]!;
+      }
+    }
+
+    if(dropdownValueCanales.toString().compareTo("TODOS") == 0 ){
+      canalStr = " | Todos los canales";
+    }else {
+
+      if(listCanales[dropdownValueCanales.toString()] != null){
+          canalStr = " | ${listCanales[dropdownValueCanales.toString()!]!}";
+        }
+    }
+
+    if(dropdownValueAreas.toString().compareTo("TODOS") == 0 ){
+      areaStr = " | Todas las áreas";
+    }else {
+      if(listAreas[dropdownValueAreas.toString()!]!=null){
+
+          areaStr = " | ${dropdownValueAreas.toString()[0]
+              .toUpperCase()}${dropdownValueAreas.toString()
+              .substring(1)
+              .toLowerCase()}";
+        }
+    }
+
+    return sedeStr + canalStr + areaStr;
   }
 }

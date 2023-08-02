@@ -250,6 +250,9 @@ bool isDarkMode=false;
                            SnackBar(content: Text(event.toString())),
                         );
                       });
+
+                      Navigator.pop(context);
+
                     }
                   },
                   child: Text(

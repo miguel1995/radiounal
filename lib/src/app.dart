@@ -24,6 +24,9 @@ import '../firebase_options.dart';
 import 'business_logic/firebase/push_notifications.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
+
+
+
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -40,7 +43,10 @@ class _MyAppState extends State<MyApp> {
     Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     ).then((value) => {initPushNotifications()});
+
   }
+
+
 
   void initPushNotifications() {
     final pushNotification = new PushNotification();
@@ -252,15 +258,5 @@ class _MyAppState extends State<MyApp> {
         });
   }
 
-  /*Widget addPlayerDecorator(Widget childElement){
-    return Stack(children: [
-    Container(
-    padding: const EdgeInsets.only(bottom: 96),
-    child:childElement
-    ),
-      Positioned(
-          bottom: 0, child: BottomNavigationBarRadio(key: keyPlayer))
-    ]);
 
-  }*/
 }

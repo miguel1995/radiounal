@@ -370,7 +370,7 @@ return savedThemeMode;
                   child = drawError(snapshot.error);
                 } else {
                   child = Container(
-                      child: Text("en progreso..."),
+                      //child: Text("en progreso..."),
                       );
                 }
                 return child;
@@ -381,8 +381,10 @@ return savedThemeMode;
   }
 
   Widget drawSiguenos() {
+    var marginBottom = MediaQuery.of(context).size.height.toDouble() * 0.10;
+
     return Container(
-        margin: const EdgeInsets.only(bottom: 10, top: 10),
+        margin:  EdgeInsets.only(bottom: marginBottom, top: 10),
         padding: const EdgeInsets.only(bottom: 10, top: 10),
         child: Column(children: [
           Align(
@@ -598,7 +600,7 @@ return savedThemeMode;
     final String formatted = formatter.format(now);
 
     List<Widget> rowList = [];
-    var widthBox = MediaQuery.of(context).size.width * 0.35;
+    var widthBox = 144.0;
 
     rowList.add(Container(
       padding: const EdgeInsets.only(top:5, bottom: 5),
@@ -841,6 +843,7 @@ return savedThemeMode;
                           fontStyle: FontStyle.italic),
                     ),
                   ),
+
                   Container(
                     child: Text(
                       "$formatted ${formatDurationString(element.duration)}",
@@ -862,10 +865,8 @@ return savedThemeMode;
   }
 
   String formatDurationString(String duration) {
-
     String formatted = "";
-    if(duration != null || duration != ""){
-
+    if(duration != null && duration.trim() != ""){
       if(duration.substring(0,2) == "00"){
         formatted = "| " + duration.substring(3);
       }else{

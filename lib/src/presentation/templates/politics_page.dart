@@ -196,7 +196,7 @@ bool isDarkMode=false;
                         'Propiedad intelectual',
                         style: TextStyle(
                             color: Theme.of(context).primaryColor,
-                            fontSize: 25.0,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -205,7 +205,6 @@ bool isDarkMode=false;
       
                     text: TextSpan(
                       style:   TextStyle(
-                          fontSize: 16.0,
                           fontFamily: 'AncizarSans',
                           color: Theme.of(context).primaryColor
                       ),
@@ -241,18 +240,20 @@ bool isDarkMode=false;
                                 text:  TextSpan(
       
                                   style:  TextStyle(
-                                      fontSize: 16.0,
                                       fontFamily: 'AncizarSans',
                                       color: Theme.of(context).primaryColor
       
                                   ),
       
-                                  children: const <TextSpan>[
+                                  children:  <TextSpan>[
       
                                      TextSpan(
                                         text: 'Director Nacional de Unimedios: ',
                                         style:
-                                         TextStyle(fontWeight: FontWeight.bold)),
+                                         TextStyle(
+                                             fontWeight: FontWeight.bold,
+                                             color: Theme.of(context).primaryColor
+                                         )),
       
                                      TextSpan(
                                         text: 'Fredy Fernando Chaparro Sanabria'),
@@ -269,9 +270,11 @@ bool isDarkMode=false;
                           Expanded(
                               child: RichText(
                                 text:  TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-      
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+
+                                  ),
                                   children: <TextSpan>[
                                     TextSpan(
                                         text:
@@ -297,8 +300,11 @@ bool isDarkMode=false;
                           Expanded(
                               child: RichText(
                                 text:  TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+
+                                  ),
       
                                   children: <TextSpan>[
                                     TextSpan(
@@ -323,8 +329,11 @@ bool isDarkMode=false;
                           Expanded(
                               child:  RichText(
                                 text:  TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+
+                                  ),
       
                                   children: <TextSpan>[
                                     TextSpan(
@@ -348,9 +357,10 @@ bool isDarkMode=false;
                           Expanded(
                               child:  RichText(
                                 text:  TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-      
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+                                  ),
                                   children: <TextSpan>[
                                      TextSpan(
                                         text: 'Apoyo en desarrollo: ',
@@ -372,9 +382,11 @@ bool isDarkMode=false;
                           Expanded(
                               child:  RichText(
                                 text:  TextSpan(
-                                  // Note: Styles for TextSpans must be explicitly defined.
-                                  // Child text spans will inherit styles from parent
-      
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+
+                                  ),
                                   children: <TextSpan>[
                                      TextSpan(
                                         text: 'Diseño gráfico: ',
@@ -397,6 +409,10 @@ bool isDarkMode=false;
                           Expanded(
                               child:  RichText(
                                 text:  TextSpan(
+                                  style:  TextStyle(
+                                      fontFamily: 'AncizarSans',
+                                      color: Theme.of(context).primaryColor
+                                  ),
                                   children: <TextSpan>[
                                      TextSpan(
                                         text: 'Webmaster: ',

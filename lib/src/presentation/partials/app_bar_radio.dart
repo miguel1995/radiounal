@@ -22,26 +22,24 @@ class _AppBarRadioState extends State<AppBarRadio> {
     isDarkMode = brightness == Brightness.dark;
   }
 
-
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
-
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   Widget build(BuildContext context) {
-
-        themeMethod().then((value) {
-     isDarkMode=value==AdaptiveThemeMode.dark;
+    themeMethod().then((value) {
+      isDarkMode = value == AdaptiveThemeMode.dark;
     });
-    return AppBar(backgroundColor:Color(isDarkMode ?   0x00000000:0xff121C4A),
+    return AppBar(
+        backgroundColor: Color(isDarkMode ? 0x00000000 : 0xff121C4A),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
         leading: (widget.enableBack)
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_outlined, color: Color( 0xFFFCDC4D)),
+                icon: const Icon(Icons.arrow_back_ios_new_outlined,
+                    color: Color(0xFFFCDC4D)),
                 onPressed: () => Navigator.pop(context))
             : null,
         title: Container(
@@ -53,8 +51,7 @@ return savedThemeMode;
               },
               child: SvgPicture.asset(
                   "assets/icons/identificador_radioUNAL.svg",
-                  color: Color( 0xFFFCDC4D),
-                  width: MediaQuery.of(context).size.width * 0.40)),
+                  color: Color(0xFFFCDC4D))),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -77,8 +74,7 @@ return savedThemeMode;
               },
               child: Container(
                   margin: EdgeInsets.only(right: 10),
-                  child: Icon(Icons.more_vert,
-                      color: Color( 0xFFFCDC4D))))
+                  child: Icon(Icons.more_vert, color: Color(0xFFFCDC4D))))
         ]);
   }
 

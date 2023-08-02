@@ -78,11 +78,12 @@ class _ItemPageState extends State<ItemPage> {
   String? _deviceId;
 
   late FavoritoBtn favoritoBtn;
- bool isDarkMode =false;
+  bool isDarkMode = false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+  void initState() {
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
 
@@ -159,9 +160,11 @@ class _ItemPageState extends State<ItemPage> {
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -205,33 +208,39 @@ class _ItemPageState extends State<ItemPage> {
         ]),
       ),
       Container(
-          width: w * 0.40,
-          height: w * 0.40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
-                spreadRadius: 3,
-                blurRadius: 10,
-                offset: const Offset(5, 5),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: CachedNetworkImage(
-              imageUrl: (element != null) ? element.imagen : "",
-              placeholder: (context, url) => const Center(
-                  child: SpinKitFadingCircle(
-                color: Color(0xffb6b3c5),
-                size: 50.0,
+        child: CachedNetworkImage(
+          imageUrl: (element != null) ? element.imagen : "",
+          imageBuilder: (context, imageProvider) => SizedBox(
+              width: w * 0.4,
+              height: w * 0.4,
+              child: Container(
+                //width: w * 0.40,
+                //height: w * 0.40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff121C4A).withOpacity(0.3),
+                      spreadRadius: 3,
+                      blurRadius: 10,
+                      offset: const Offset(5, 5),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: BoxFit.fitWidth,
+                  ),
+                ),
               )),
-              errorWidget: (context, url, error) => Container(
-                  width: w * 0.40,
-                  child: Image.asset("assets/images/default.png")),
-            ),
+          placeholder: (context, url) => const Center(
+              child: SpinKitFadingCircle(
+            color: Color(0xffb6b3c5),
+            size: 50.0,
           )),
+          errorWidget: (context, url, error) => Container(
+              width: w * 0.40, child: Image.asset("assets/images/default.png")),
+        ),
+      ),
       if (element != null &&
           element.categoryTitle != null &&
           element.categoryTitle != "")
@@ -244,7 +253,8 @@ class _ItemPageState extends State<ItemPage> {
                 color: Theme.of(context).appBarTheme.foregroundColor,
                 boxShadow: [
                   BoxShadow(
-                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                        .withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(5, 5), // changes position of shadow
@@ -262,8 +272,8 @@ class _ItemPageState extends State<ItemPage> {
         padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
         child: Text(
           (element != null) ? element.title : "",
-          style:  TextStyle(
-              color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
+          style: TextStyle(
+              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
               fontSize: 16,
               fontWeight: FontWeight.bold),
         ),
@@ -347,20 +357,23 @@ class _ItemPageState extends State<ItemPage> {
     var w = MediaQuery.of(context).size.width;
 
     return Column(children: [
+      Row(children: [
         Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
             child: InkWell(
                 onTap: () {
-                  if(element != null){
-                    if(element.audio != null){
+                  if (element != null) {
+                    if (element.audio != null) {
                       widget.callBackPlayMusic!(
                         element.uid,
                         element.audio,
                         element.imagen,
                         element.categoryTitle,
                         element.title,
-                        (message == "RADIO") ? element.bodytext : element.teaser,
+                        (message == "RADIO")
+                            ? element.bodytext
+                            : element.teaser,
                         element.date,
                         element.duration,
                         message,
@@ -368,24 +381,23 @@ class _ItemPageState extends State<ItemPage> {
                         false,
                         favoritoBtn,
                       );
-
                     }
                   }
-
                 },
                 child: Container(
-                    width: w * 0.35,
                     padding: const EdgeInsets.only(
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
-                      gradient:  RadialGradient(
-                          radius: 2,
-                          colors: [Color(0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
+                      gradient: RadialGradient(radius: 2, colors: [
+                        Color(0xff216278),
+                        Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                      ]),
                       borderRadius: BorderRadius.circular(5),
                       color: Theme.of(context).primaryColor,
                       boxShadow: [
                         BoxShadow(
-                          color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                          color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                              .withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset: const Offset(5, 5),
@@ -393,7 +405,7 @@ class _ItemPageState extends State<ItemPage> {
                       ],
                     ),
                     child: Row(
-                      children: [
+                      children: const [
                         Icon(
                           Icons.play_arrow,
                           color: Colors.white,
@@ -407,7 +419,8 @@ class _ItemPageState extends State<ItemPage> {
                               fontSize: 16),
                         )
                       ],
-                    )))),
+                    ))))
+      ]),
       Container(
         margin: const EdgeInsets.only(top: 20),
         child: Row(
@@ -430,7 +443,8 @@ class _ItemPageState extends State<ItemPage> {
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                  .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -455,17 +469,20 @@ class _ItemPageState extends State<ItemPage> {
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 0.8, colors: [
                             (message == "PODCAST")
-                                ?  Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
+                                ? Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
-                                : isDarkMode?0x68000000:0x68FFFFFF)
+                                : isDarkMode
+                                    ? 0x68000000
+                                    : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                  .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -489,17 +506,20 @@ class _ItemPageState extends State<ItemPage> {
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1.5, colors: [
                             (message == "PODCAST")
-                                ?  Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
+                                ? Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
-                                :  isDarkMode?0x68000000:0x68FFFFFF)
+                                : isDarkMode
+                                    ? 0x68000000
+                                    : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                  .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -524,59 +544,62 @@ class _ItemPageState extends State<ItemPage> {
       if (element != null &&
           element.categoryTitle != null &&
           element.categoryTitle != "")
-        Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-            child: InkWell(
-                onTap: () {
-                  if (from == "HOME_PAGE" ||
-                      from == "FAVOURITES_PAGE" ||
-                      from == "BROWSER_RESULT_PAGE") {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, "/detail",
-                        arguments: ScreenArguments(
-                            title, message, element.categoryUid));
-                  } else if (from == "DETAIL_PAGE") {
-                    Navigator.pop(context);
-                  }
-                },
-                child: Container(
-                    width: w * 0.40,
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 5, bottom: 5),
-                    decoration: BoxDecoration(
-                      gradient:  RadialGradient(
-                          radius: 2,
-                          colors: [Color(0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
-                      borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).primaryColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
-                          spreadRadius: 3,
-                          blurRadius: 10,
-                          offset: const Offset(5, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        Container(
-                            margin: EdgeInsets.only(left: 5),
-                            child: const Text(
-                              "Más episodios",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 16),
-                            ))
-                      ],
-                    ))))
+        Row(children: [
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+              child: InkWell(
+                  onTap: () {
+                    if (from == "HOME_PAGE" ||
+                        from == "FAVOURITES_PAGE" ||
+                        from == "BROWSER_RESULT_PAGE") {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, "/detail",
+                          arguments: ScreenArguments(
+                              title, message, element.categoryUid));
+                    } else if (from == "DETAIL_PAGE") {
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(radius: 2, colors: [
+                          Color(0xff216278),
+                          Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                        ]),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme.of(context).primaryColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                                .withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(5, 5),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          Container(
+                              margin: EdgeInsets.only(left: 5),
+                              child: const Text(
+                                "Más episodios",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 16),
+                              ))
+                        ],
+                      ))))
+        ])
     ]);
   }
 
@@ -621,7 +644,6 @@ class _ItemPageState extends State<ItemPage> {
       }
     }
   }
-
 
   Future<bool> _checkPermission() async {
     if (platform == TargetPlatform.android) {

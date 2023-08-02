@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
-
 import '../partials/filter_dialog.dart';
 
 class BrowserPage extends StatefulWidget {
@@ -119,14 +117,14 @@ class _BrowserPageState extends State<BrowserPage> {
           crossAxisCount: 2,
           children: [
             drawFrecuenciaBtn(
-                "Series Podcast", {"query": "", "numColumn":1, "contentType": "SERIES"}),
+                "Series Podcast", {"query": "", "numColumn":2, "contentType": "SERIES"}),
             drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
               "query": "",
               "sede": 0,
               "canal": "BOG",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Programas Medellín 100.4 fm", {
               "query": "",
@@ -134,7 +132,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "MED",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Programas Radio Web", {
               "query": "",
@@ -142,7 +140,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "WEB",
               "area": "TODOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Programas Temáticos", {
               "query": "",
@@ -150,7 +148,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "TEMATICOS",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Programas de Actualidad", {
               "query": "",
@@ -158,7 +156,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "ACTUALIDAD",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Programas Musicales", {
               "query": "",
@@ -166,7 +164,7 @@ class _BrowserPageState extends State<BrowserPage> {
               "canal": "TODOS",
               "area": "MUSICALES",
               "contentType": "PROGRAMAS",
-              "numColumn": 1
+              "numColumn": 2
             }),
             drawFrecuenciaBtn("Centro de Producción Amazonia", {
               "query": "",
@@ -256,7 +254,7 @@ class _BrowserPageState extends State<BrowserPage> {
         });
   }
 
-  callBackDialog(int sede, String canal, String area) {
+  callBackDialog(int sede, String canal, String area, String filterString) {
 
     Navigator.pushNamed(context, "/browser-result",
         arguments: ScreenArguments('NONE', 'Resultados', 1, element: {
@@ -265,7 +263,8 @@ class _BrowserPageState extends State<BrowserPage> {
           "canal": canal,
           "area": area,
           "contentType": "ELASTIC",
-          "numColumn": 1
+          "numColumn": 1,
+          "filterString": filterString
         }
 
         ));
