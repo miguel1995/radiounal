@@ -204,7 +204,8 @@ return savedThemeMode;
                 style: TextStyle(
                   shadows: [
                     Shadow(
-                        color: Theme.of(context).primaryColor,
+                        // color:Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
+                        color:Color(isDarkMode?0xFFFFFFFF:0xff121C4A),
                         offset: const Offset(0, -5))
                   ],
                   color: Colors.transparent,
@@ -240,14 +241,14 @@ return savedThemeMode;
           decoration: BoxDecoration(
 
               gradient:   RadialGradient(radius: 3, colors: [
-                isDarkMode?Color.fromARGB(255, 18, 54, 74):Color(0xffFEE781),
-                isDarkMode? Color(0xff121C4A):Color(0xffFFCC17)
+                isDarkMode?Color(0xffa6aabb):Color(0xffFEE781),
+                isDarkMode? Color(0xffa6aabb):Color(0xffFFCC17)
                 
               ]),
 
               boxShadow: [
             BoxShadow(
-              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+              color:  Color(0xff121C4A).withOpacity(0.3),
               spreadRadius: 3,
               blurRadius: 10,
               offset: const Offset(10, 10), // changes position of shadow
@@ -258,7 +259,7 @@ return savedThemeMode;
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 foregroundColor: Theme.of(context).primaryColor),
-            icon: const Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite,color: Color(0xff121C4A),),
             onPressed: () async {
               Navigator.pushNamed(context, '/favourites',
                   arguments: ScreenArguments('NONE', 'NONE', 0));
@@ -266,7 +267,7 @@ return savedThemeMode;
             label: Text("Favoritos",
                 style: TextStyle(
                     fontSize: 16,
-                    color: Theme.of(context).primaryColor,
+                    color: Color(0xff121C4A),
                     fontWeight: FontWeight.bold)),
           ),
         ),
@@ -296,7 +297,7 @@ return savedThemeMode;
                       style: TextStyle(
                         shadows: [
                           Shadow(
-                              color: Theme.of(context).primaryColor,
+                              color: isDarkMode?Colors.white:Color(0xff121C4A),
                               offset: Offset(0, -5))
                         ],
                         color: Colors.transparent,
@@ -569,11 +570,11 @@ return savedThemeMode;
               shape: BoxShape.rectangle,
               gradient:  RadialGradient(
                   radius: 1, colors: [
-                    Color( 0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
+                   isDarkMode? Color(0xFFFCDC4D):Color( 0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
-                  color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                  color:  Color(0xff121C4A).withOpacity(0.3),
                   spreadRadius: 3,
                   blurRadius: 10,
                   offset: const Offset(10, 10), // changes position of shadow
@@ -583,7 +584,7 @@ return savedThemeMode;
             ),
             child: Text(
               texto,
-              style: const TextStyle(color: Colors.white, fontSize: 15),
+              style:  TextStyle(color: isDarkMode?Colors.black:Colors.white, fontSize: 15),
             )
         ));
   }
@@ -603,21 +604,23 @@ return savedThemeMode;
       padding: const EdgeInsets.only(top:5, bottom: 5),
         width: widthBox * 4,
         decoration:  BoxDecoration(
-          color: Color(isDarkMode?0x00000000:0xFFFFFFFF),
+          color: Color(0xFFA6AABB),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         ),
         child: Center(
             child: Text(
               formatted[0].toUpperCase() + formatted.substring(1),
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
+          color: Color(0xff121C4A)
+          ),
         ))));
 
     rowList.add(Row(children: [
       Container(
         padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Theme.of(context).appBarTheme.foregroundColor,
+        color: Color(0xfffcdc4d),
         width: widthBox,
         child: const Text(
           "",
@@ -627,7 +630,7 @@ return savedThemeMode;
       Container(
         padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Theme.of(context).primaryColor,
+        color: Color(0xff121C4A),
         width: widthBox,
         child: const Text(
           "Ahora",
@@ -637,15 +640,17 @@ return savedThemeMode;
       Container(
         padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Theme.of(context).appBarTheme.foregroundColor,
+        color: Color(0xfffcdc4d),
         width: widthBox,
         child: const Text("Siguiente",
-            style: TextStyle(fontWeight: FontWeight.bold)),
+            style: TextStyle(fontWeight: FontWeight.bold,
+            color: Color(0xff121C4A)
+            )),
       ),
       Container(
           padding: EdgeInsets.only(top: 3, bottom: 3),
           alignment: Alignment.center,
-          color: Theme.of(context).primaryColor,
+          color: Color(0xff121C4A),
           width: widthBox,
           child: const Text(
             "Más Tarde",
