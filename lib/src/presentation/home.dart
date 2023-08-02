@@ -212,7 +212,7 @@ return savedThemeMode;
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                  decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -258,7 +258,7 @@ return savedThemeMode;
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
-                foregroundColor: Theme.of(context).primaryColor),
+                foregroundColor: Color(0xff121C4A)),
             icon: const Icon(Icons.favorite,color: Color(0xff121C4A),),
             onPressed: () async {
               Navigator.pushNamed(context, '/favourites',
@@ -304,7 +304,7 @@ return savedThemeMode;
                         decorationThickness: 2,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        decorationColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
+                        decorationColor: isDarkMode?Color(0x00121C4A):Color(0xFFFCDC4D),
                         decoration: TextDecoration.underline,
 
                       ),
@@ -342,14 +342,14 @@ return savedThemeMode;
                 style: TextStyle(
                   shadows: [
                     Shadow(
-                        color: Theme.of(context).primaryColor,
+                        color: isDarkMode?Colors.white:Color(0xFF121C4A),
                         offset: Offset(0, -5))
                   ],
                   color: Colors.transparent,
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                  decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -396,7 +396,7 @@ return savedThemeMode;
                 style: TextStyle(
                   shadows: [
                     Shadow(
-                        color: Theme.of(context).primaryColor,
+                        color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                         offset: Offset(0, -5))
                   ],
                   color: Colors.transparent,
@@ -489,7 +489,7 @@ return savedThemeMode;
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                    color:  Color(0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(10, 10), // changes position of shadow
@@ -572,7 +572,10 @@ return savedThemeMode;
               shape: BoxShape.rectangle,
               gradient:  RadialGradient(
                   radius: 1, colors: [
-                   isDarkMode? Color(0xFFFCDC4D):Color( 0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
+
+
+                   isDarkMode? Color(0xffFEE781):Color( 0xff216278), 
+                   isDarkMode?Color(0xffFFCC17):Color(0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
@@ -606,7 +609,7 @@ return savedThemeMode;
       padding: const EdgeInsets.only(top:5, bottom: 5),
         width: widthBox * 4,
         decoration:  BoxDecoration(
-          color: Color(0xFFA6AABB),
+          color: isDarkMode? Color(0xFFA6AABB):Color(0xFFCFCFCF),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         ),
@@ -669,7 +672,7 @@ return savedThemeMode;
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
-              color: Theme.of(context).appBarTheme.foregroundColor,
+              color: Color(0xfffcdc4d),
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular((i == 2) ? 30 : 0)),
             ),
@@ -677,7 +680,7 @@ return savedThemeMode;
               "${list![i].emisora}\n${list[i].frecuencia}",
               style: TextStyle(
                 fontSize: 16,
-                  color: Theme.of(context).primaryColor,
+                  color: Color(0xff121C4A),
                   fontWeight: FontWeight.bold),
             )),
         Container(
@@ -687,7 +690,7 @@ return savedThemeMode;
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Color(0xff121C4A),
             ),
             child: Text(
               "${list[i].ahorPrograma}\n${list[i].ahorHorario}",
@@ -699,10 +702,10 @@ return savedThemeMode;
             alignment: Alignment.centerLeft,
             width: widthBox,
             height: widthBox * 0.80,
-            color: Theme.of(context).appBarTheme.foregroundColor,
+            color: Color(0xffFCDC4D),
             child: Text(
                 "${list[i].siguientePrograma}\n${list[i].siguienteHorario}",
-                style: TextStyle(color: Theme.of(context).primaryColor))),
+                style: TextStyle(color: Color(0xff121C4A)))),
         Container(
             margin: const EdgeInsets.only(bottom: 1),
             padding: const EdgeInsets.only(left: 10, right: 10),
@@ -710,7 +713,7 @@ return savedThemeMode;
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Color(0xff121C4A),
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular((i == 2) ? 30 : 0)),
             ),
@@ -729,7 +732,7 @@ return savedThemeMode;
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                        color:  Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -803,7 +806,7 @@ return savedThemeMode;
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                            color:  Color(0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -819,10 +822,12 @@ return savedThemeMode;
                   Container(
                     padding: EdgeInsets.only(left: 2, right: 2),
                     margin: const EdgeInsets.only(top: 15),
-                    color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                    color: Color(0xFFFCDC4D),
                     child: Text(
                       element.categoryTitle,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold,
+                      color: Color(0xFF121C4A)
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -832,14 +837,14 @@ return savedThemeMode;
                           maxLines: 5,
                           style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context).primaryColor,
+                              color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                               fontWeight: FontWeight.bold))),
                   Container(
                     child: Text(
                       site,
                       style: TextStyle(
                           fontSize: 11,
-                          color: Theme.of(context).primaryColor,
+                          color: isDarkMode?Color(0xFF989FBA):Color(0xFF121C4A),
                           fontStyle: FontStyle.italic),
                     ),
                   ),
@@ -847,8 +852,8 @@ return savedThemeMode;
                   Container(
                     child: Text(
                       "$formatted ${formatDurationString(element.duration)}",
-                      style: const TextStyle(
-                          fontSize: 9, color: Color(0xff666666)),
+                      style:  TextStyle(
+                          fontSize: 9, color:isDarkMode? Color(0xFF989FBA):Color(0xFF121C4A)),
                     ),
                   ),
                 ],

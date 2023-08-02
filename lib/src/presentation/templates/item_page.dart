@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -80,10 +81,18 @@ class _ItemPageState extends State<ItemPage> {
   late FavoritoBtn favoritoBtn;
   bool isDarkMode = false;
 
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
   @override
   void initState() {
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-    isDarkMode = brightness == Brightness.dark;
+    
+
+   
     super.initState();
     initPlatformState();
 
@@ -156,6 +165,9 @@ class _ItemPageState extends State<ItemPage> {
 
   @override
   Widget build(BuildContext context) {
+        themeMethod().then((value) {
+     isDarkMode=value==AdaptiveThemeMode.dark;
+    });
     return Scaffold(
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
@@ -204,7 +216,9 @@ class _ItemPageState extends State<ItemPage> {
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
                   child: SvgPicture.asset(
-                      'assets/icons/icono_compartir_redes.svg')))
+                      'assets/icons/icono_compartir_redes.svg',
+                      color: isDarkMode?Color(0xFFfcdf4d):Color(0xFF121C4A),
+                      )))
         ]),
       ),
       Container(
@@ -250,10 +264,10 @@ class _ItemPageState extends State<ItemPage> {
               padding: const EdgeInsets.only(left: 10, right: 10),
               margin: const EdgeInsets.only(left: 20, top: 30),
               decoration: BoxDecoration(
-                color: Theme.of(context).appBarTheme.foregroundColor,
+                color: Color(0xFFFCDC4D),
                 boxShadow: [
                   BoxShadow(
-                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                    color: Color( 0xff121C4A)
                         .withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
@@ -264,7 +278,9 @@ class _ItemPageState extends State<ItemPage> {
               child: Text(
                 (element != null) ? element.categoryTitle : "",
                 style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                     TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
+                    color:  Color(0xFF121C4A)
+                    ),
               ),
             )),
       Container(
@@ -273,7 +289,7 @@ class _ItemPageState extends State<ItemPage> {
         child: Text(
           (element != null) ? element.title : "",
           style: TextStyle(
-              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+              color: Color(isDarkMode ? 0xFFFFFFFF : 0xff121C4A),
               fontSize: 16,
               fontWeight: FontWeight.bold),
         ),
@@ -283,7 +299,7 @@ class _ItemPageState extends State<ItemPage> {
         margin: const EdgeInsets.only(left: 20),
         child: Text(
           "$formatted ${(element != null && element.duration != null) ? formatDurationString(element.duration) : ''}",
-          style: const TextStyle(fontSize: 11, color: Color(0xff666666)),
+          style:  TextStyle(fontSize: 11, color: isDarkMode? Color(0xFF989FBA) :Color(0xff666666)),
         ),
       ),
       Container(
@@ -293,7 +309,7 @@ class _ItemPageState extends State<ItemPage> {
           (message == "RADIO") ? "Radio" : "Podcast",
           style: TextStyle(
             fontSize: 15,
-            color: Theme.of(context).primaryColor,
+            color: isDarkMode?Color.fromARGB(255, 34, 33, 33):Color(0xFF121C4A),
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
           ),
@@ -389,14 +405,14 @@ class _ItemPageState extends State<ItemPage> {
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
                       gradient: RadialGradient(radius: 2, colors: [
-                        Color(0xff216278),
-                        Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                       isDarkMode?Color(0xFFFCDC4D): Color(0xff216278),
+                        isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A)
                       ]),
                       borderRadius: BorderRadius.circular(5),
                       color: Theme.of(context).primaryColor,
                       boxShadow: [
                         BoxShadow(
-                          color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                          color: Color( 0xff121C4A)
                               .withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
@@ -405,17 +421,17 @@ class _ItemPageState extends State<ItemPage> {
                       ],
                     ),
                     child: Row(
-                      children: const [
+                      children:  [
                         Icon(
                           Icons.play_arrow,
-                          color: Colors.white,
+                          color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                           size: 30,
                         ),
                         Text(
                           "Reproducir",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                               fontSize: 16),
                         )
                       ],
@@ -440,10 +456,10 @@ class _ItemPageState extends State<ItemPage> {
                               radius: 0.8,
                               colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).appBarTheme.foregroundColor,
+                          color:Color(0xFF121C4A),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                              color: Color( 0xff121C4A)
                                   .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
@@ -469,19 +485,17 @@ class _ItemPageState extends State<ItemPage> {
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 0.8, colors: [
                             (message == "PODCAST")
-                                ? Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)
+                                ? Color( 0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
-                                : isDarkMode
-                                    ? 0x68000000
-                                    : 0x68FFFFFF)
+                                :  0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).appBarTheme.foregroundColor,
+                          color: Color(0xFF121C4A),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                              color: Color(0xff121C4A)
                                   .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
@@ -506,19 +520,17 @@ class _ItemPageState extends State<ItemPage> {
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1.5, colors: [
                             (message == "PODCAST")
-                                ? Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)
+                                ? Color( 0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
-                            Color((message == "PODCAST")
-                                ? 0xffFFCC17
-                                : isDarkMode
-                                    ? 0x68000000
-                                    : 0x68FFFFFF)
+                            (message == "PODCAST")
+                                ?Color( 0xffFFCC17)
+                                : Color( 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                              color: Color(0xff121C4A)
                                   .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
@@ -534,7 +546,9 @@ class _ItemPageState extends State<ItemPage> {
                             const Text(
                               "  Transcripción",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17),
+                                  fontWeight: FontWeight.bold, fontSize: 17,
+                                  color: Color(0xFF121C4A)
+                                  ),
                             )
                           ],
                         )))),
@@ -566,14 +580,14 @@ class _ItemPageState extends State<ItemPage> {
                           left: 10, right: 10, top: 5, bottom: 5),
                       decoration: BoxDecoration(
                         gradient: RadialGradient(radius: 2, colors: [
-                          Color(0xff216278),
-                          Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                         isDarkMode ? Color(0xFFFCDC4D) : Color(0xff216278),
+                          isDarkMode ? Color(0xFFFCDC4D) :Color( 0xff121C4A)
                         ]),
                         borderRadius: BorderRadius.circular(5),
                         color: Theme.of(context).primaryColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                            color: Color( 0xff121C4A)
                                 .withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
@@ -583,18 +597,18 @@ class _ItemPageState extends State<ItemPage> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                           Icon(
                             Icons.arrow_back_ios_new,
-                            color: Colors.white,
+                            color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                             size: 20,
                           ),
                           Container(
                               margin: EdgeInsets.only(left: 5),
-                              child: const Text(
+                              child:  Text(
                                 "Más episodios",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                     fontSize: 16),
                               ))
                         ],

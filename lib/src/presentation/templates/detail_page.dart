@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,7 +49,7 @@ class DetailPage extends StatefulWidget {
 
 Function? reloadlist;
 class _DetailPageState extends State<DetailPage> {
-
+bool isDarkMode=false;
   late String title;
   late String message;
   late int uid;
@@ -79,6 +80,14 @@ class _DetailPageState extends State<DetailPage> {
   List<Widget> cardList = [];
   late FavoritoBtn favoritoBtn;
   bool isListLoading = false;
+
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
 
   @override
   initState() {
@@ -199,9 +208,16 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
+    
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
-
+        themeMethod().then((value) {
+     isDarkMode=value==AdaptiveThemeMode.dark;
+    });
     /*SliverAppBar sliverAppBar = SliverAppBar(
         automaticallyImplyLeading: false,
         actions: <Widget>[
@@ -246,9 +262,11 @@ class _DetailPageState extends State<DetailPage> {
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -667,9 +685,11 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                         subject: "Radio UNAL - ${element.title}");
                   },
                   child: Container(
-                      padding: const EdgeInsets.only(left: 3, right: 3),
+                      padding:  EdgeInsets.only(left: 3, right: 3),
                       child: SvgPicture.asset(
-                          'assets/icons/icono_compartir_redes.svg')))
+                          'assets/icons/icono_compartir_redes.svg',
+                          color: Color(0xFF121C4A)
+                          )))
             ]),
           ),
           Container(
