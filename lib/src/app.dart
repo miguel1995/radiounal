@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
           brightness: Brightness.dark,
           primarySwatch: Colors.red,
           primaryColor: Color(0xFFFCDC4D),
-          primaryColorDark: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+          primaryColorDark: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
             fontFamily: 'AncizarSans',
           textTheme: const TextTheme(
               // bodyText2: TextStyle(
@@ -104,8 +104,10 @@ class _MyAppState extends State<MyApp> {
                 //color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), 
                 // backgroundColor: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
                 // foregroundColor:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
-                ),
-        ),
+                ), 
+                 drawerTheme:
+                 DrawerThemeData(backgroundColor: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A))),
+        
         light: ThemeData(
             // Define the default brightness and colors.
             brightness: Brightness.light,
@@ -131,9 +133,9 @@ class _MyAppState extends State<MyApp> {
                     // fontSize: 14.0,
                     color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
             appBarTheme:  AppBarTheme(
-                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A), foregroundColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D)),
+                color: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A), foregroundColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D)),
             drawerTheme:
-                 DrawerThemeData(backgroundColor: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
+                 DrawerThemeData(backgroundColor: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
           return MaterialApp(

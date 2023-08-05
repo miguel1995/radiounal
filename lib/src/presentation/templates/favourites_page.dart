@@ -41,7 +41,9 @@ class _FavouritesPageState extends State<FavouritesPage> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() { 
+    print('=====================favourites_page');
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();

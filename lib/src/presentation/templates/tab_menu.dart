@@ -24,7 +24,11 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() {
+    
+    print('=====================tab_menu');
+    
+     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     _tabController = TabController(length: 2, vsync: this);
     tabIndex = widget.tabIndex;

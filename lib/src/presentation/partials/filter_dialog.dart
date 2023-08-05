@@ -46,7 +46,10 @@ class FilterDialogState extends State<FilterDialog> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() {
+    
+    print('=====================filter_dialog');
+     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
 
     blocSedes.fetchSedes();

@@ -41,7 +41,9 @@ class _FollowedPageState extends State<FollowedPage> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() { 
+    print('=====================followed_page');
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();

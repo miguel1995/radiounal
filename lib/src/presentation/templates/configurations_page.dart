@@ -21,7 +21,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
  bool isDarkMode =false;
 
 @override
-  void initState() {
+  void initState() {print('=====================configurations_page');
     // TODO: implement initState
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;

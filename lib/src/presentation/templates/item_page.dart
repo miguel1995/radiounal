@@ -91,7 +91,7 @@ return savedThemeMode;
   @override
   void initState() {
     
-
+print('=====================item_page');
    
     super.initState();
     initPlatformState();

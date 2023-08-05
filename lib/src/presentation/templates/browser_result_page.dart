@@ -64,7 +64,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() { print('=====================browser_result_page');var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     title = widget.title;
     message = widget.message;

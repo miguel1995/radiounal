@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() { 
-    
+    print('=====================home');
     super.initState();
 // AdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
 

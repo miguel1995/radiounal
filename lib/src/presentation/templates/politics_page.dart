@@ -15,7 +15,7 @@ class _PoliticsPageState extends State<PoliticsPage> {
 bool isDarkMode=false;
 
   @override
-  void initState() {
+  void initState() {print('=====================politics_page');
     // TODO: implement initState
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;

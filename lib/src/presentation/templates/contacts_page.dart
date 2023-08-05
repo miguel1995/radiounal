@@ -37,7 +37,7 @@ class _ContactPageState extends State<ContactsPage> {
 bool isDarkMode=false;
 
 @override
-  void initState() {
+  void initState() {print('=====================contacts_page');
     // TODO: implement initState
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;

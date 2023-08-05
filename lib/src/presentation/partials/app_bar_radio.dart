@@ -1,6 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AppBarRadio extends StatefulWidget implements PreferredSizeWidget {
@@ -17,9 +16,13 @@ class _AppBarRadioState extends State<AppBarRadio> {
   get vgPicture => null;
   bool isDarkMode = false;
   @override
-  void initState() {
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-    isDarkMode = brightness == Brightness.dark;
+  void initState() {print('=====================app_bar_radio');
+     themeMethod().then((value) {
+      setState(() {
+        
+      isDarkMode = value == AdaptiveThemeMode.dark;
+      });
+    });
   }
 
   Future<AdaptiveThemeMode?> themeMethod() async {
@@ -29,11 +32,18 @@ class _AppBarRadioState extends State<AppBarRadio> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
+    
     themeMethod().then((value) {
+      setState(() {
+        
       isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     return AppBar(
-        backgroundColor: Color(isDarkMode ? 0x00000000 : 0xff121C4A),
+        backgroundColor: isDarkMode ? Color(0x00000000) : Color(0xff121C4A),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
         leading: (widget.enableBack)

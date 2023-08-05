@@ -84,13 +84,14 @@ bool isDarkMode=false;
 
 
 Future<AdaptiveThemeMode?> themeMethod() async {
+  
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
 return savedThemeMode;
 }
 
 
   @override
-  initState() {
+  initState() {print('=====================detail_page');
     super.initState();
 
     initPlatformState();
@@ -216,7 +217,10 @@ return savedThemeMode;
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
         themeMethod().then((value) {
+          setState(() {
+            
      isDarkMode=value==AdaptiveThemeMode.dark;
+          });
     });
     /*SliverAppBar sliverAppBar = SliverAppBar(
         automaticallyImplyLeading: false,
@@ -247,7 +251,7 @@ return savedThemeMode;
               (context, index) {
             return Column(
               children: [
-                drawContentList(snapshot),
+                drawContentList(snapshot,isDarkMode),
               ],
             );
           },
@@ -266,7 +270,8 @@ return savedThemeMode;
               image: DecorationImage(
                 image: AssetImage(isDarkMode
                     ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
-                    : "assets/images/fondo_blanco_amarillo.png"),
+                    : "assets/images/fondo_blanco_amarillo.png"
+                    ),
                 fit: BoxFit.cover,
               ),
             ),
@@ -297,7 +302,7 @@ return savedThemeMode;
                               firebaseLogic!,
                               favoritoBtn!,
                               _currentScore.toDouble(),
-                              blocRadioCalifica
+                              blocRadioCalifica,  isDarkMode
                           ),
                         ),
                         _sliverList(snapshot)
@@ -343,7 +348,7 @@ return savedThemeMode;
     );
   }
 
-  Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
+  Widget drawContentList(AsyncSnapshot<Map<String, dynamic>> snapshot, bool isDarkMode) {
     InfoModel infoModel;
     infoModel = snapshot.data!["info"];
     totalPages = infoModel.pages;
@@ -385,7 +390,7 @@ return savedThemeMode;
               //    ? MediaQuery.of(context).size.height * 0.8
               //     : MediaQuery.of(context).size.height,
               // child:
-              buildList(snapshot)
+              buildList(snapshot,isDarkMode)
               // )
               ,
               if (isLoading)
@@ -401,7 +406,7 @@ return savedThemeMode;
             ]));
   }
 
-  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
+  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot,bool isDarkMode) {
     return (AsyncSnapshot<Map<String, dynamic>> snapshot) {
       var list = snapshot.data!["result"];
       list?.forEach((element) => {
@@ -467,7 +472,7 @@ return savedThemeMode;
                           padding: const EdgeInsets.only(left: 10, right: 10),
                           margin: const EdgeInsets.only(left: 20, bottom: 10),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).appBarTheme.foregroundColor,
+                            color: Color(0xFFfCDC4D),
                             boxShadow: [
                               BoxShadow(
                                 color: const Color(0xff121C4A).withOpacity(0.3),
@@ -481,7 +486,8 @@ return savedThemeMode;
                           child: Text(
                             element.categoryTitle,
                             style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                                fontSize: 12, fontWeight: FontWeight.bold,
+                                color:Color(0xFF121C4A),),
                           ),
                         ),
                         Container(
@@ -489,9 +495,10 @@ return savedThemeMode;
                           child: Text(
                             element.title,
                             maxLines: 5,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
+                              color:isDarkMode? Color(0xFFFFFFFF):Color(0xFF121C4A)
                             ),
                           ),
                         ),
@@ -625,12 +632,12 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
   FavoritoBtn favoritoBtn;
   double _currentScore;
   RadioCalificaBloc blocRadioCalifica;
-
+ bool isDarkMode;
 
 
   _CustomHeaderDelegate(this.element, this.w, this.h, this.uid, this._deviceId,
       this.message, this._isSeguido, this.pushNotification, this.firebaseLogic,
-      this.favoritoBtn, this._currentScore, this.blocRadioCalifica);
+      this.favoritoBtn, this._currentScore, this.blocRadioCalifica, this.isDarkMode);
 
 
   @override
@@ -648,7 +655,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
         _isSeguido!,
         pushNotification!,
         firebaseLogic!,
-        favoritoBtn!
+        favoritoBtn!,
+        isDarkMode
     );
   }
 
@@ -671,7 +679,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
       bool isSeguido,
       PushNotification pushNotification,
       FirebaseLogic firebaseLogic,
-      FavoritoBtn favoritoBtn) {
+      FavoritoBtn favoritoBtn,
+      bool isDarkMode) {
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
         return Column(children: [
@@ -688,7 +697,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                       padding:  EdgeInsets.only(left: 3, right: 3),
                       child: SvgPicture.asset(
                           'assets/icons/icono_compartir_redes.svg',
-                          color: Color(0xFF121C4A)
+                          color: isDarkMode? Color(0xFFFCDC4D): Color(0xFF121C4A)
                           )))
             ]),
           ),
@@ -739,7 +748,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                 decorationThickness: 2,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+                decorationColor:   
+                isDarkMode?Color(0x00FFFFFF):Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -750,7 +760,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
             child: Text(
               element.description,
               maxLines: 4,
-              style: const TextStyle(color: Color(0xff121C4A), fontSize: 12),
+              style:  TextStyle(  color:
+                isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 12),
             ),
           ),
           Container(
@@ -760,9 +771,9 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
               (message == "RADIO") ? "Radio" : "Podcast",
               style: TextStyle(
                 fontSize: 15,
-                color: Theme
-                    .of(context)
-                    .primaryColor,
+                color:
+                isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A)
+                ,
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.bold,
               ),
@@ -890,7 +901,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                       child: Text(
                         (isSeguido) ? "Dejar de Seguir" : "Seguir",
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                            fontWeight: FontWeight.bold, fontSize: 16,color: Color(0xFF121C4A)),
                       )))),
         ]);
       },

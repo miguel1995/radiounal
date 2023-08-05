@@ -77,7 +77,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
 
   @override
-  void initState() {
+  void initState() {print('=====================bottom_navigation_bar_radio');
     super.initState();
 
     _controller = AnimationController(

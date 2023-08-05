@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -51,8 +52,15 @@ class _ContentPageState extends State<ContentPage> {
   late FavoritoBtn favoritoBtn;
  bool isDarkMode =false;
 
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() { print('=====================content_page');
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
 
@@ -94,6 +102,12 @@ class _ContentPageState extends State<ContentPage> {
 
   @override
   Widget build(BuildContext context) {
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
@@ -158,14 +172,14 @@ class _ContentPageState extends State<ContentPage> {
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color: Theme.of(context).primaryColor,
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                decorationColor: isDarkMode?Color(0x00121C4A):Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -175,10 +189,10 @@ class _ContentPageState extends State<ContentPage> {
             child: Text(
               "${infoModel.count} resultados",
               style:  TextStyle(
-                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
+                color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                decorationColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
               ),
             ),
           ),
@@ -194,7 +208,7 @@ class _ContentPageState extends State<ContentPage> {
                     ),
                   ),
                 ),*/
-          Expanded(child: buildList(snapshot)),
+          Expanded(child: buildList(snapshot,isDarkMode)),
           if (isLoading)
             const Center(
                 child: SpinKitFadingCircle(
@@ -222,7 +236,7 @@ class _ContentPageState extends State<ContentPage> {
     );
   }
 
-  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot) {
+  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot,bool isDarkMode) {
     var list = snapshot.data!["result"];
 
     list?.forEach((element) => {
@@ -254,7 +268,7 @@ class _ContentPageState extends State<ContentPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                        color: Color( 0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -278,10 +292,10 @@ class _ContentPageState extends State<ContentPage> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.foregroundColor,
+                    color: Color(0xFFFCDC4D),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                       color: Color( 0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -294,7 +308,10 @@ class _ContentPageState extends State<ContentPage> {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.bold,
+                        
+                        color: Color( 0xff121C4A)
+                        ),
                   ),
                 )
               ],

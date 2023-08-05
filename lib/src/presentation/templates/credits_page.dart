@@ -15,7 +15,7 @@ class _CreditsPageState extends State<CreditsPage> {
 bool isDarkMode=false;
 
   @override
-  void initState() {
+  void initState() {print('=====================credits_page');
     // TODO: implement initState
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;

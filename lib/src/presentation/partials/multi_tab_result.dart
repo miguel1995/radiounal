@@ -84,6 +84,7 @@ class _MultiTabResultState extends State<MultiTabResult>
 
   @override
   void initState() {
+    print('=====================multi_tab_result');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
     tabIndex = widget.tabIndex;

@@ -36,7 +36,9 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
  bool isDarkMode =false;
 
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
+  void initState() { 
+    print('=====================favorito_btn');
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
     uid = widget.uid;
     message = widget.message;
