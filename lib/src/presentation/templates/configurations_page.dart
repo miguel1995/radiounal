@@ -8,6 +8,8 @@ import 'package:radiounal/src/presentation/partials/switch_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../app.dart';
+
 class ConfigurationsPage extends StatefulWidget {
   const ConfigurationsPage({Key? key}) : super(key: key);
 
@@ -19,7 +21,10 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
 
 
  bool isDarkMode =false;
-
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
 @override
   void initState() {print('=====================configurations_page');
     // TODO: implement initState
@@ -29,11 +34,18 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+    return Scaffold(backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xff121C4A),
       //extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body: Container(
+        color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
         padding: EdgeInsets.only(top: 20,bottom: 20),
         child: SingleChildScrollView(
           child: Column(
@@ -55,14 +67,14 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
             style: TextStyle(
               shadows: [
                 Shadow(
-                    color: Theme.of(context).primaryColor,
+                    color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                     offset: const Offset(0, -5))
               ],
               color: Colors.transparent,
               decorationThickness: 2,
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+              decorationColor: isDarkMode?Color(0x00121C4A):Color(0xFFFCDC4D),
               decoration: TextDecoration.underline,
             ),
           ),
@@ -77,19 +89,23 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                     onTap: () {
                       // sets theme mode to light
                       AdaptiveTheme.of(context).setLight();
+                      
                     },
                     child: Container(
                         padding: const EdgeInsets.only(
                             top: 5, bottom: 5, left: 10, right: 10),
                         decoration: BoxDecoration(
-                          gradient: const RadialGradient(
+                          gradient: RadialGradient(
                               radius: 1,
-                              colors: [Color(0xfffbdd5a), Color(0xffffcc17)]),
+                              colors: [
+                                isDarkMode?Color(0xFFFFFFFF):Color(0xfffbdd5a), 
+                               isDarkMode?Color(0xFFFFFFFF): Color(0xffffcc17)
+                                ]),
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).appBarTheme.foregroundColor,
+                          //color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                              color:  Color(0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -99,7 +115,9 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                         child: const Text(
                           "Modo Claro",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 17),
+                              fontWeight: FontWeight.bold, fontSize: 17
+                              , color:Color(0xFF121C4A),
+                              ),
                         )))),
             Container(
                 alignment: Alignment.centerLeft,
@@ -108,6 +126,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                     onTap: () {
                       // sets theme mode to dark
                       AdaptiveTheme.of(context).setDark();
+                          
                     },
                     child: Container(
                         padding: const EdgeInsets.only(
@@ -115,23 +134,30 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                         decoration: BoxDecoration(
                           gradient:  RadialGradient(
                               radius: 1,
-                              colors: [Color(0xff1b4564), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
+                              colors: [
+                                isDarkMode?Color(0xFFFCDC4D):Color(0xff1b4564), 
+                                isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A)]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                              color: Color(0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
                             ),
                           ],
                         ),
-                        child: const Text("Modo Oscuro",
+                        child:  Text("Modo Oscuro",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 17,
-                                color: Colors.white))))),
+                                color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF)
+                                
+                                
+                                
+                                
+                                ))))),
           ],
         ),
         Container(
@@ -143,7 +169,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                 "Notificaciones",
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontSize: 18),
+                    color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
               ),
               const SwitchButton()
             ]))
@@ -162,7 +188,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
             style: TextStyle(
               shadows: [
                 Shadow(
-                    color: Theme.of(context).primaryColor,
+                    color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                     offset: const Offset(0, -5))
               ],
               color: Colors.transparent,
@@ -186,7 +212,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                   "Calificar esta aplicación",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
                 )
               ])),
         ),
@@ -203,7 +229,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                   "Compartir esta aplicación",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
                 )
               ])),
         ),
@@ -218,7 +244,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                   "Política de privacidad",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
                 )
               ])),
         ),
@@ -233,7 +259,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                   "Contáctenos",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
                 )
               ])),
         ),
@@ -248,7 +274,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
                   "Créditos",
                   textAlign: TextAlign.left,
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor, fontSize: 18),
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A), fontSize: 18),
                 )
               ])),
         ),
@@ -258,7 +284,7 @@ class _ConfigurationsPageState extends State<ConfigurationsPage> {
           child:  Text(
             "Versión 1.0.0 (2023)",
             style: TextStyle(
-                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
+                 color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),

@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,6 +37,13 @@ class _ContactPageState extends State<ContactsPage> {
   String mensaje =  "";
 bool isDarkMode=false;
 
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
 @override
   void initState() {print('=====================contacts_page');
     // TODO: implement initState
@@ -48,12 +56,18 @@ bool isDarkMode=false;
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+    return Scaffold(backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
       extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body:
-      Container(
+      Container(color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
         padding:
             const EdgeInsets.only(left: 20, right: 20, top: 10 + 80, bottom: 10),
         child: SingleChildScrollView(
@@ -231,7 +245,7 @@ bool isDarkMode=false;
                 padding: const EdgeInsets.only(right: 10),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).appBarTheme.foregroundColor),
+                      primary: Color(0xFFFCDC4D)),
                   onPressed: () {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (isChecked == false) {
@@ -258,7 +272,7 @@ bool isDarkMode=false;
                   child: Text(
                     'Enviar',
                     style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Color(0xFF121C4A),
                         fontWeight: FontWeight.bold),
                   ),
                 ),

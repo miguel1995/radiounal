@@ -15,6 +15,17 @@ class AppBarRadio extends StatefulWidget implements PreferredSizeWidget {
 class _AppBarRadioState extends State<AppBarRadio> {
   get vgPicture => null;
   bool isDarkMode = false;
+
+
+
+
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
+
+
+
   @override
   void initState() {print('=====================app_bar_radio');
      themeMethod().then((value) {
@@ -23,11 +34,6 @@ class _AppBarRadioState extends State<AppBarRadio> {
       isDarkMode = value == AdaptiveThemeMode.dark;
       });
     });
-  }
-
-  Future<AdaptiveThemeMode?> themeMethod() async {
-    final savedThemeMode = await AdaptiveTheme.getThemeMode();
-    return savedThemeMode;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -27,7 +28,10 @@ class _SwitchButtonState extends State<SwitchButton> {
 
   late SharedPreferences prefs;
  bool isDarkMode =false;
-
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
   @override
   void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
@@ -79,11 +83,17 @@ print('=====================switch_button');
 
   @override
   Widget build(BuildContext context) {
+                themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Switch(
-          activeColor: Theme.of(context).appBarTheme.foregroundColor,
+          activeColor: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
           inactiveThumbColor: Colors.black,
           value: light0,
           onChanged: (bool value) {

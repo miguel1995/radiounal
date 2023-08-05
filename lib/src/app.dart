@@ -25,7 +25,7 @@ import 'business_logic/firebase/push_notifications.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 
 
-
+Function? resetH;
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);

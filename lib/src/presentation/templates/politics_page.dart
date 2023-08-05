@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
@@ -14,6 +15,11 @@ class PoliticsPage extends StatefulWidget {
 class _PoliticsPageState extends State<PoliticsPage> {
 bool isDarkMode=false;
 
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
   @override
   void initState() {print('=====================politics_page');
     // TODO: implement initState
@@ -23,8 +29,19 @@ bool isDarkMode=false;
   }
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
 
+
+
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+
+
+    return  Scaffold(
+backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
         extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
       appBar:  AppBarRadio(enableBack:true),

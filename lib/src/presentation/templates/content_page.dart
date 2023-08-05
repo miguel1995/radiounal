@@ -111,7 +111,7 @@ return savedThemeMode;
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
-    return Scaffold(
+    return Scaffold(backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xff121C4A),
       //extendBodyBehindAppBar: true,
       endDrawer: const Menu(),
       appBar: AppBarRadio(enableBack: true),

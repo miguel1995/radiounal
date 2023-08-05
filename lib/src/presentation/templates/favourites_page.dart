@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -40,6 +41,15 @@ class _FavouritesPageState extends State<FavouritesPage> {
   List<int> listEmisionesIds = [];
  bool isDarkMode =false;
 
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
+
+
   @override
   void initState() { 
     print('=====================favourites_page');
@@ -55,6 +65,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   @override
   Widget build(BuildContext context) {
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     return StreamBuilder(
         stream: CombineLatestStream.list([
           blocRadio.subject.stream,
@@ -62,7 +78,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
         ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           Widget child;
-
+    
           if (snapshot.hasData) {
             child = drawContentList(snapshot);
           } else if (snapshot.hasError) {
@@ -235,7 +251,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                          color:  Color(0xff121C4A).withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset: const Offset(5, 5),
@@ -255,7 +271,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
                             child: Image.asset(isDarkMode?'assets/images/logo_dark.png':"assets/images/logo.png",
-              color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D))),
+              color:isDarkMode? Color(0xff121C4A): Color(0xFFFCDC4D))),
                       ),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -264,10 +280,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       padding: const EdgeInsets.only(left: 10, right: 10),
                       margin: const EdgeInsets.only(left: 20, bottom: 10),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).appBarTheme.foregroundColor,
+                        color: Color(0xFFFCDC4D),
                         boxShadow: [
                           BoxShadow(
-                            color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                            color:  Color(0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -277,8 +293,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       ),
                       child: Text(
                         element.categoryTitle,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                        style:  const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold,
+                            color: Color(0xFF121C4A)
+                            ),
                       ),
                     ),
                   Container(
@@ -301,7 +319,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                       site,
                       style: TextStyle(
                           fontSize: 11,
-                          color: Theme.of(context).primaryColor,
+                          color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                           fontStyle: FontStyle.italic),
                     ),
                   ),
@@ -309,8 +327,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     margin: const EdgeInsets.only(left: 20),
                     child: Text(
                       "$formatted ${(element != null && (element is EmisionModel || element is EpisodioModel) && element.duration != null) ? formatDurationString(element.duration) : ''}",
-                      style: const TextStyle(
-                          fontSize: 10, color: Color(0xff666666)),
+                      style:  TextStyle(
+                          fontSize: 10, color: isDarkMode?Color(0xFFFFFFFF): Color(0xff666666)),
                     ),
                   ),
                 ])

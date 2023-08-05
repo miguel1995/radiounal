@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
@@ -14,6 +15,15 @@ class CreditsPage extends StatefulWidget {
 class _CreditsPageState extends State<CreditsPage> {
 bool isDarkMode=false;
 
+
+
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
   @override
   void initState() {print('=====================credits_page');
     // TODO: implement initState
@@ -23,12 +33,19 @@ bool isDarkMode=false;
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+    return Scaffold(backgroundColor:  isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
         //extendBodyBehindAppBar: true,
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
         body:
-        Container(
+        Container(color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
           padding: EdgeInsets.only(bottom: 20),
           height: MediaQuery.of(context).size.height*0.8,
           margin: const EdgeInsets.only(top: 30, left: 30),

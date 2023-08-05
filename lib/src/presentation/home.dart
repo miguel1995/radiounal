@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:radiounal/src/app.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
@@ -55,22 +56,11 @@ class _HomeState extends State<Home> {
  bool isDarkMode =false;
 
 
+
   @override
   void initState() { 
     print('=====================home');
     super.initState();
-// AdaptiveTheme.of(context).modeChangeNotifier.addListener(() {
-
-
-// Future.delayed(Duration(milliseconds: 5000),(){
-
-// isDarkMode=AdaptiveTheme.of(context)==AdaptiveThemeMode.dark;
-// }
-
-// );
-
-
-// });
 
 
     themeMethod().then((value) {
@@ -119,7 +109,10 @@ return savedThemeMode;
   Widget build(BuildContext context) {
 
     themeMethod().then((value) {
+      setState(() {
      isDarkMode=value==AdaptiveThemeMode.dark;
+      });
+        
     });
 
 

@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
@@ -23,6 +24,15 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
   int tabIndex = 0;
  bool isDarkMode =false;
 
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
+
+
   @override
   void initState() {
     
@@ -38,6 +48,16 @@ class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+
+
+
     return   Scaffold(
         extendBodyBehindAppBar: true,
         endDrawer: const Menu(),

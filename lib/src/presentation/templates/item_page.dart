@@ -166,7 +166,10 @@ print('=====================item_page');
   @override
   Widget build(BuildContext context) {
         themeMethod().then((value) {
+          setState(() {
+            
      isDarkMode=value==AdaptiveThemeMode.dark;
+          });
     });
     return Scaffold(
         endDrawer: Menu(),
@@ -309,7 +312,7 @@ print('=====================item_page');
           (message == "RADIO") ? "Radio" : "Podcast",
           style: TextStyle(
             fontSize: 15,
-            color: isDarkMode?Color.fromARGB(255, 34, 33, 33):Color(0xFF121C4A),
+            color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
           ),
