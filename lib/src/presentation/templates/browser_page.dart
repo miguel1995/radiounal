@@ -48,7 +48,8 @@ return savedThemeMode;
      isDarkMode=value==AdaptiveThemeMode.dark;
           });
     });
-    return Scaffold(backgroundColor: Color(0x00000000),       
+    return Scaffold(
+      backgroundColor: Color(0x00000000),       
     
     
     extendBodyBehindAppBar: true,
@@ -104,13 +105,18 @@ return savedThemeMode;
       children: [
         Expanded(
             child: TextField(
+
                 controller: _controllerQuery,
                 onChanged: (String value) async {
                   setState(() {
                     isFiltro = value.isNotEmpty;
                   });
                 },
-                decoration: getFieldDecoration("Ingrese su busqueda"))),
+                decoration: getFieldDecoration("Ingrese su busqueda"),
+                style: TextStyle(
+                  color: Color(0xFF121C4A)
+                ),
+                )),
         if (isFiltro)
           Container(
               margin: EdgeInsets.only(left: 5),

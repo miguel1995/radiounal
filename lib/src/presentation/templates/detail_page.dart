@@ -262,10 +262,11 @@ return savedThemeMode;
     }
 
     return Scaffold(
-      //extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
-        body: DecoratedBox(
+        body: Container(
+          padding: EdgeInsets.only(top: 120),
             decoration:  BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
@@ -365,8 +366,8 @@ return savedThemeMode;
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   "${infoModel.count} resultados",
-                  style: const TextStyle(
-                    color: Color(0xff121C4A),
+                  style:  TextStyle(
+                    color: isDarkMode?Color(0xFFFFFFFF): Color(0xff121C4A),
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     decorationColor: Color(0xFFFCDC4D),
@@ -605,7 +606,7 @@ class _RedrawableListViewState extends State<RedrawableListView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return ListView(padding: EdgeInsets.zero,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         controller: widget._scrollController,

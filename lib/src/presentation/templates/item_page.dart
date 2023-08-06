@@ -171,10 +171,10 @@ print('=====================item_page');
      isDarkMode=value==AdaptiveThemeMode.dark;
           });
     });
-    return Scaffold(
+    return Scaffold(extendBodyBehindAppBar: true,
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
-        body: DecoratedBox(
+        body: Container(padding: EdgeInsets.only(top: 120),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
