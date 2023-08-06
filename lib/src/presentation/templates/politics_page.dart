@@ -21,8 +21,7 @@ Future<AdaptiveThemeMode?> themeMethod() async {
 return savedThemeMode;
 }
   @override
-  void initState() {print('=====================politics_page');
-    // TODO: implement initState
+  void initState() {
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
     super.initState();
@@ -212,9 +211,11 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                       child: Text(
                         'Propiedad intelectual',
                         style: TextStyle(
-                            color: Theme.of(context).primaryColor,
+                            color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                             fontSize: 18,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold
+
+                        ),
                       ),
                     ),
                   ),
@@ -223,7 +224,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                     text: TextSpan(
                       style:   TextStyle(
                           fontFamily: 'AncizarSans',
-                          color: Theme.of(context).primaryColor
+                        color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                       ),
       
       
@@ -243,7 +244,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                     ),
                   ),
                   Divider(
-                    color: Theme.of(context).primaryColor,
+                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 20.0),
@@ -258,7 +259,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
       
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
       
                                   ),
       
@@ -269,9 +270,8 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                         style:
                                          TextStyle(
                                              fontWeight: FontWeight.bold,
-                                             color: Theme.of(context).primaryColor
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                          )),
-      
                                      TextSpan(
                                         text: 'Fredy Fernando Chaparro Sanabria'),
                                   ],
@@ -289,7 +289,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
 
                                   ),
                                   children: <TextSpan>[
@@ -298,12 +298,14 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                         'Diseño, desarrollo, implementación y normativa para web: ',
                                         style:
                                          TextStyle(fontWeight: FontWeight.bold,
-                                             color: Theme.of(context).primaryColor
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                          )),
                                      TextSpan(
                                         text: 'Oficina de Medios Digitales - Unimedios',
                                          style:
-                                         TextStyle( color: Theme.of(context).primaryColor)
+                                         TextStyle(
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor
+                                         )
                                      ),
                                   ],
                                 ),
@@ -319,7 +321,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
 
                                   ),
       
@@ -327,11 +329,11 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                     TextSpan(
                                         text: 'Dirección de la Oficina de Medios Digitales: ',
                                         style: TextStyle(fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).primaryColor
+                                          color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                         )),
                                      TextSpan(text: 'Martha Lucía Chaves Muñoz',
                                          style: TextStyle(
-                                             color: Theme.of(context).primaryColor
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                          )
                                      ),
                                   ],
@@ -348,7 +350,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
 
                                   ),
       
@@ -356,10 +358,11 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                     TextSpan(
                                         text: 'Ingeniero de desarrollo: ',
                                         style:
-                                         TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                                         TextStyle(fontWeight: FontWeight.bold,
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,                                         )),
                                      TextSpan(text: 'Miguel Andrés Torres Chavarro',
                                          style: TextStyle(
-                                             color: Theme.of(context).primaryColor
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                          )
                                      ),
                                   ],
@@ -376,16 +379,19 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                   ),
                                   children: <TextSpan>[
                                      TextSpan(
                                         text: 'Apoyo en desarrollo: ',
                                         style:
-                                         TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                                         TextStyle(fontWeight: FontWeight.bold,
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
+                                         )),
                                      TextSpan(
                                         text: 'Giovanni Romero Pérez',
-                                         style: TextStyle( color: Theme.of(context).primaryColor)
+                                         style: TextStyle( color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
+                                     )
                                      ),
                                   ],
                                 ),
@@ -401,19 +407,22 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
 
                                   ),
                                   children: <TextSpan>[
                                      TextSpan(
                                         text: 'Diseño gráfico: ',
                                         style:
-                                         TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor)),
+                                         TextStyle(fontWeight: FontWeight.bold, color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
+                                         )),
                                      TextSpan(
                                         text:
                                         'María Teresa Naranjo Castillo',
                                          style:
-                                         TextStyle(color: Theme.of(context).primaryColor)),
+                                         TextStyle(
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
+                                         )),
                                   ],
                                 ),
                               )),
@@ -428,7 +437,7 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                 text:  TextSpan(
                                   style:  TextStyle(
                                       fontFamily: 'AncizarSans',
-                                      color: Theme.of(context).primaryColor
+                                    color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                   ),
                                   children: <TextSpan>[
                                      TextSpan(
@@ -436,12 +445,14 @@ backgroundColor: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                         style:
                                          TextStyle(
                                              fontWeight: FontWeight.bold,
-                                             color: Theme.of(context).primaryColor
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
                                          )),
                                      TextSpan(
                                         text: 'Francisco Javier Morales  Ducuara, Aldemar Hernandez Torres',
                                          style:
-                                         TextStyle(color: Theme.of(context).primaryColor)
+                                         TextStyle(
+                                           color: isDarkMode?Colors.white:Theme.of(context).primaryColor,
+                                         )
                                      ),
                                   ],
                                 ),
