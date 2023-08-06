@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,9 +14,6 @@ import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/data/models/programa_model.dart';
 import 'package:radiounal/src/data/models/serie_model.dart';
-import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
@@ -39,12 +37,13 @@ class _FollowedPageState extends State<FollowedPage> {
   List<int> listSeriesIds = [];
   List<int> listProgramasIds = [];
  bool isDarkMode =false;
-
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
   @override
   void initState() { 
-    print('=====================followed_page');
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();
@@ -56,6 +55,11 @@ class _FollowedPageState extends State<FollowedPage> {
 
   @override
   Widget build(BuildContext context) {
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
+    });
     return StreamBuilder(
         stream: CombineLatestStream.list([
           blocRadio.subject.stream,
@@ -238,7 +242,7 @@ class _FollowedPageState extends State<FollowedPage> {
                     padding: const EdgeInsets.only(left: 10, right: 10),
                     margin: const EdgeInsets.only(left: 20, bottom: 10),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).appBarTheme.foregroundColor,
+                        color: Color(0xFFFCDC4D),
                       boxShadow: [
                         BoxShadow(
                           color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
@@ -252,7 +256,9 @@ class _FollowedPageState extends State<FollowedPage> {
                     child: Text(
                       element.title,
                       style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
+                          fontSize: 12, fontWeight: FontWeight.bold,
+                      color: Color(0xFF121C4A),
+                      ),
                     ),
                   ),
                   Container(
@@ -262,7 +268,7 @@ class _FollowedPageState extends State<FollowedPage> {
                       site,
                       style: TextStyle(
                           fontSize: 11,
-                          color: Theme.of(context).primaryColor,
+                          color: isDarkMode?Colors.white:Color(0xFF121C4A),
                           fontStyle: FontStyle.italic),
                     ),
                   )

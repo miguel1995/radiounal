@@ -99,7 +99,6 @@ class _HomeState extends State<Home> {
 
 Future<AdaptiveThemeMode?> themeMethod() async {
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
-print('=====================savedThemeMode:'+savedThemeMode.toString());
 return savedThemeMode;
 }
 

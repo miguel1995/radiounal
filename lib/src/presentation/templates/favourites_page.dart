@@ -14,9 +14,6 @@ import 'package:radiounal/src/data/models/emision_model.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
 import 'package:radiounal/src/data/models/programa_model.dart';
 import 'package:radiounal/src/data/models/serie_model.dart';
-import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../business_logic/ScreenArguments.dart';
@@ -39,22 +36,17 @@ class _FavouritesPageState extends State<FavouritesPage> {
   List<int> listEpisodiosIds = [];
   List<int> listProgramasIds = [];
   List<int> listEmisionesIds = [];
- bool isDarkMode =false;
+  bool isDarkMode = false;
 
-
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
-
-
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
-  void initState() { 
-    print('=====================favourites_page');
+  void initState() {
     var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+    isDarkMode = brightness == Brightness.dark;
     super.initState();
     initPlatformState();
     firebaseLogic = FirebaseLogic();
@@ -65,11 +57,10 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-            themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     return StreamBuilder(
         stream: CombineLatestStream.list([
@@ -78,7 +69,7 @@ return savedThemeMode;
         ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           Widget child;
-    
+
           if (snapshot.hasData) {
             child = drawContentList(snapshot);
           } else if (snapshot.hasError) {
@@ -251,7 +242,7 @@ return savedThemeMode;
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color:  Color(0xff121C4A).withOpacity(0.3),
+                          color: Color(0xff121C4A).withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
                           offset: const Offset(5, 5),
@@ -270,8 +261,13 @@ return savedThemeMode;
                         errorWidget: (context, url, error) => Container(
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
-                            child: Image.asset(isDarkMode?'assets/images/logo_dark.png':"assets/images/logo.png",
-              color:isDarkMode? Color(0xff121C4A): Color(0xFFFCDC4D))),
+                            child: Image.asset(
+                                isDarkMode
+                                    ? 'assets/images/logo_dark.png'
+                                    : "assets/images/logo.png",
+                                color: isDarkMode
+                                    ? Color(0xff121C4A)
+                                    : Color(0xFFFCDC4D))),
                       ),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -283,7 +279,7 @@ return savedThemeMode;
                         color: Color(0xFFFCDC4D),
                         boxShadow: [
                           BoxShadow(
-                            color:  Color(0xff121C4A).withOpacity(0.3),
+                            color: Color(0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -293,10 +289,10 @@ return savedThemeMode;
                       ),
                       child: Text(
                         element.categoryTitle,
-                        style:  const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold,
-                            color: Color(0xFF121C4A)
-                            ),
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF121C4A)),
                       ),
                     ),
                   Container(
@@ -319,7 +315,9 @@ return savedThemeMode;
                       site,
                       style: TextStyle(
                           fontSize: 11,
-                          color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                          color: isDarkMode
+                              ? Color(0xFFFFFFFF)
+                              : Color(0xFF121C4A),
                           fontStyle: FontStyle.italic),
                     ),
                   ),
@@ -327,8 +325,11 @@ return savedThemeMode;
                     margin: const EdgeInsets.only(left: 20),
                     child: Text(
                       "$formatted ${(element != null && (element is EmisionModel || element is EpisodioModel) && element.duration != null) ? formatDurationString(element.duration) : ''}",
-                      style:  TextStyle(
-                          fontSize: 10, color: isDarkMode?Color(0xFFFFFFFF): Color(0xff666666)),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: isDarkMode
+                              ? Color(0xFFFFFFFF)
+                              : Color(0xff666666)),
                     ),
                   ),
                 ])

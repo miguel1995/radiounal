@@ -550,11 +550,6 @@ return savedThemeMode;
     return formatted;
   }
 
-
-
-
-
-
   loadFirebaseData(){
     firebaseLogic.validateSeguido(uid, _deviceId).then((value) =>
     {
