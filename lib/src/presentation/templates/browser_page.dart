@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,6 +24,15 @@ class _BrowserPageState extends State<BrowserPage> {
     _controllerQuery.dispose();
     super.dispose();
   }
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
+
+
 @override
   void initState() {print('=====================browser_page');
     // TODO: implement initState
@@ -32,39 +42,53 @@ class _BrowserPageState extends State<BrowserPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      //extendBodyBehindAppBar: true,
+            themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
+    return Scaffold(backgroundColor: Color(0x00000000),       
+    
+    
+    extendBodyBehindAppBar: true,
+
+      // extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar: AppBarRadio(enableBack: true),
       body:
 
-      DecoratedBox(
+      Container(
+        // padding: EdgeInsets.only(top: 100),
           decoration:  BoxDecoration(
             image: DecorationImage(
               image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),
-          child: Container(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+          child: Container(//color: Colors.purple,
+        
+            padding: EdgeInsets.only(left: 20, right: 20, top: 120),
             child: Column(children: [
               drawSearchField(),
               Container(
+                //color: Colors.red,
+                height: MediaQuery.of(context).size.height*0.05,
                 alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(top: 30, bottom: 20),
+                margin: const EdgeInsets.only(top: 30, bottom:0),
                 child: Text(
                   "Explorando el contenido",
                   style: TextStyle(
                     shadows: [
                       Shadow(
-                          color: Theme.of(context).primaryColor,
+                          color:isDarkMode? Color(0xFFFFFFFF):Color(0xFF121C4A),
                           offset: const Offset(0, -5))
                     ],
                     color: Colors.transparent,
                     decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                    decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -112,7 +136,7 @@ class _BrowserPageState extends State<BrowserPage> {
 
   Widget drawMainFilters() {
     return Expanded(
-      child: GridView.count(
+      child: GridView.count(padding: EdgeInsets.zero,
           childAspectRatio: (1 / 0.5),
           crossAxisCount: 2,
           children: [
@@ -209,6 +233,7 @@ class _BrowserPageState extends State<BrowserPage> {
         fillColor: Colors.white,
         filled: true,
         hintText: hintText,
+        hintStyle: TextStyle(color: Color(0xFFA6AABB)),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -240,7 +265,7 @@ class _BrowserPageState extends State<BrowserPage> {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
           borderSide:
-              BorderSide(width: 3, color: Theme.of(context).primaryColor),
+              BorderSide(width: 3, color:isDarkMode? Color(0x00FF0000):Color(0xFF121C4A)),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10));
   }
@@ -290,10 +315,12 @@ class _BrowserPageState extends State<BrowserPage> {
                   shape: BoxShape.rectangle,
                   gradient:  RadialGradient(
                       radius: 1,
-                      colors: [Color(0xff216278), Color(isDarkMode?0xFFFCDC4D:0xff121C4A)]),
+                      colors: [
+                         isDarkMode?Color(0xFFFCDC4D):Color(0xff216278),
+                         isDarkMode?Color(0xFFFFCC17):Color(0xff121C4A)]),
                   boxShadow: [
                     BoxShadow(
-                      color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                      color:  Color(0xff121C4A).withOpacity(0.3),
                       spreadRadius: 3,
                       blurRadius: 10,
                       offset:
@@ -304,7 +331,7 @@ class _BrowserPageState extends State<BrowserPage> {
                 ),
                 child: Text(
                   texto,
-                  style: const TextStyle(color: Colors.white, fontSize: 15),
+                  style:  TextStyle(color:isDarkMode?Color(0xFF121C4A): Colors.white, fontSize: 15),
                   textAlign: TextAlign.center,
                 ))));
   }
