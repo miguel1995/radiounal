@@ -353,25 +353,64 @@ class _FavouritesPageState extends State<FavouritesPage> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: const Text(''),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('¿Desea remover su favorito?',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: Theme.of(context).appBarTheme.foregroundColor))
-              ],
+          backgroundColor: const Color(0xff35395f).withOpacity(0.8),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25.0))),
+          content: Container(
+            margin: EdgeInsets.only(left: 10, right: 10),
+            child: const Text(
+                '¿Desea remover su favorito?',
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                ),
+              textAlign: TextAlign.center
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text('Si',
+            InkWell(
+              child:
+              Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(
+                      top: 5, bottom: 5, left: 10, right: 10),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                  ),
+                  child:
+                  const Text(
+                'Cancelar',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Color(0xFF121C4A)),
+              )),
+              onTap: () {
+                //Navigator.of(context).pop();
+                Navigator.pop(context);
+              },
+            ),
+            InkWell(
+              child:
+              Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(
+                      top: 5, bottom: 5, left: 10, right: 10),
+                  decoration: BoxDecoration(
+                    gradient: const RadialGradient(
+                        radius: 1.5,
+                        colors: [Color(0xFFFCDC4D), Color(0xffFFCC17)]),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: const Text('Aceptar',
                   style: TextStyle(
-                      fontSize: 20,
-                      color: Theme.of(context).appBarTheme.foregroundColor)),
-              onPressed: () {
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Color(0xFF121C4A)
+                  )
+                  )
+              ),
+              onTap: () {
                 //Navigator.of(context).pop();
                 Navigator.pop(context);
 
@@ -391,19 +430,8 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         });
               },
             ),
-            TextButton(
-              child: Text(
-                'No',
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Theme.of(context).appBarTheme.foregroundColor),
-              ),
-              onPressed: () {
-                //Navigator.of(context).pop();
-                Navigator.pop(context);
-              },
-            ),
           ],
+            actionsAlignment: MainAxisAlignment.center
         );
       },
     );

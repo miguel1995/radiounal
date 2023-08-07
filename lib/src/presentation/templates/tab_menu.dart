@@ -7,9 +7,7 @@ import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:radiounal/src/presentation/templates/favourites_page.dart';
 import 'package:radiounal/src/presentation/templates/followed_page.dart';
 
-
 class TabMenuPage extends StatefulWidget {
-
   int tabIndex;
 
   TabMenuPage({Key? key, required this.tabIndex}) : super(key: key);
@@ -18,28 +16,24 @@ class TabMenuPage extends StatefulWidget {
   State<TabMenuPage> createState() => _TabMenuPageState();
 }
 
-class _TabMenuPageState extends State<TabMenuPage> with TickerProviderStateMixin{
-
+class _TabMenuPageState extends State<TabMenuPage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   int tabIndex = 0;
- bool isDarkMode =false;
+  bool isDarkMode = false;
+  GlobalKey _topKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
+  var topPadding = 0.0;
 
-
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
-
-
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   void initState() {
-    
-    print('=====================tab_menu');
-    
-     var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    isDarkMode = brightness == Brightness.dark;
     _tabController = TabController(length: 2, vsync: this);
     tabIndex = widget.tabIndex;
     _tabController.animateTo(tabIndex);
@@ -48,74 +42,78 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-
-            themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
 
+    final appBarRenderBox = _topKey.currentContext?.findRenderObject() as RenderBox?;
+    if (appBarRenderBox != null) {
+      topPadding = appBarRenderBox.size.height;
+    }
 
-
-    return   Scaffold(
+    return Scaffold(
         extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
-      appBar:  AppBarRadio(enableBack:true),
-      body:
-      DecoratedBox(
-          decoration:  BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child:
-      Container(
-        padding: EdgeInsets.only(top: 90, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TabBar(
-              unselectedLabelColor: Colors.black,
-              indicatorColor: Theme.of(context).appBarTheme.foregroundColor,
-
-              tabs: [
-                Tab(
-                  child: Text("Favoritos",
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16
-                    ),
-                  ),
-                ),
-                Tab(
-                  child: Text("Siguiendo",
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16
-                      )
-                  ),
-                )
-              ],
-              controller: _tabController,
-              indicatorSize: TabBarIndicatorSize.tab,
-            ),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: const [
-                  FavouritesPage(),
-                  FollowedPage(),
-                ],
+        appBar: AppBarRadio(
+          key: _topKey,
+            enableBack: true
+        ),
+        body: DecoratedBox(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
+                fit: BoxFit.cover,
               ),
             ),
-          ],
-        ),
-      ))
-    );
+            child: Container(
+              padding: EdgeInsets.only(
+                  top: topPadding,
+                  bottom: 10
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TabBar(
+                    unselectedLabelColor: Colors.black,
+                    indicatorColor:
+                        Theme.of(context).appBarTheme.foregroundColor,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          "Favoritos",
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
+                      Tab(
+                        child: Text("Siguiendo",
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16)),
+                      )
+                    ],
+                    controller: _tabController,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      controller: _tabController,
+                      children: const [
+                        FavouritesPage(),
+                        FollowedPage(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )));
   }
 
   @override
@@ -124,8 +122,6 @@ return savedThemeMode;
     super.dispose();
   }
 }
-
-
 
 class TabMenu extends StatefulWidget {
   const TabMenu({Key? key}) : super(key: key);
@@ -143,20 +139,18 @@ class _TabMenuState extends State<TabMenu> {
         backgroundColor: Colors.white,
         bottom: TabBar(
           tabs: [
-            Text("Favoritos",
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16
-            ),
-            ),
-            Text("Siguiendo",
+            Text(
+              "Favoritos",
               style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontWeight: FontWeight.bold,
-                  fontSize: 16
-              )
-            )
+                  fontSize: 16),
+            ),
+            Text("Siguiendo",
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16))
           ],
         ),
       ),
@@ -169,4 +163,3 @@ class _TabMenuState extends State<TabMenu> {
     );
   }
 }
-

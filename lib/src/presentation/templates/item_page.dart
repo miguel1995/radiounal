@@ -517,7 +517,9 @@ print('=====================item_page');
                         downloadFile(element.pdf, "transcripcion", "pdf");
                       }
                     },
-                    child: Container(
+                    child:
+
+                    Container(
                         padding: const EdgeInsets.only(
                             top: 5, bottom: 5, left: 10, right: 10),
                         decoration: BoxDecoration(
@@ -711,8 +713,6 @@ print('=====================item_page');
 
   Future<void> _prepareSaveDir() async {
     _localPath = (await _findLocalPath())!;
-
-    print('Ubicación: ' + _localPath);
     final savedDir = Directory(_localPath);
     bool hasExisted = await savedDir.exists();
     await savedDir.create(recursive: true);

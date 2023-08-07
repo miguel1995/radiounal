@@ -1,14 +1,7 @@
-import 'dart:collection';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../business_logic/bloc/ciudad_bloc.dart';
-import '../../business_logic/bloc/departamento_bloc.dart';
-import '../../business_logic/bloc/pais_bloc.dart';
-import '../../business_logic/bloc/radio_descarga_bloc.dart';
+
 
 class ConfirmDialog extends StatefulWidget {
   String tipo;
@@ -59,7 +52,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
     } else if (tipo == "FOLLOWED") {
       str = 'Ahora está siguiendo\neste contenido';
     } else if (tipo == "STATISTIC") {
-      str = 'Gracias por su\ncalificación';
+      str = 'Gracias por calificar\nnuestro contenido';
     }
 
     return str;

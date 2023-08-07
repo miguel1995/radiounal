@@ -16,18 +16,14 @@ class _AppBarRadioState extends State<AppBarRadio> {
   get vgPicture => null;
   bool isDarkMode = false;
 
-
-
-
   Future<AdaptiveThemeMode?> themeMethod() async {
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
     return savedThemeMode;
   }
 
-
-
   @override
-  void initState() {print('=====================app_bar_radio');
+  void initState() {
+
      themeMethod().then((value) {
       setState(() {
         
@@ -38,9 +34,6 @@ class _AppBarRadioState extends State<AppBarRadio> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     
     themeMethod().then((value) {
       setState(() {
