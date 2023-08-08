@@ -58,57 +58,56 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   var querySize = 0;
   var start = 0;
   List<Widget> cardList = [];
+  List elementList = [];
 
   int totalPages = 0;
   bool isLoading = false;
- bool isDarkMode =false;
+  bool isDarkMode = false;
 
   @override
-  void initState() { print('=====================browser_result_page');var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+  void initState() {
+    print('=====================browser_result_page');
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    isDarkMode = brightness == Brightness.dark;
     title = widget.title;
     message = widget.message;
     elementFilters = widget.element;
     page = widget.page;
 
-      if (elementFilters["contentType"] == "MASESCUCHADO") {
-        blocRadioMasEscuchados.fetchMasEscuchados();
-        blocPodcastMasEscuchados.fetchMasEscuchados();
-      } else if (elementFilters["contentType"] == "PROGRAMAS" ||
-          elementFilters["contentType"] == "EMISIONES") {
-        blocRadioSearch.fetchSearch(
-            elementFilters["query"],
-            page,
-            elementFilters["sede"],
-            elementFilters["canal"],
-            elementFilters["area"],
-            elementFilters["contentType"]
-        );
-      } else if (elementFilters["contentType"] == "SERIES") {
-        blocPodcastSeries.fetchSeries(page);
-      } else if (elementFilters["contentType"] == "EPISODIOS") {
-        blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
-      } else if (elementFilters["contentType"] == "ELASTIC") {
-        //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
-        /*querySize = 100;
+    if (elementFilters["contentType"] == "MASESCUCHADO") {
+      blocRadioMasEscuchados.fetchMasEscuchados();
+      blocPodcastMasEscuchados.fetchMasEscuchados();
+    } else if (elementFilters["contentType"] == "PROGRAMAS" ||
+        elementFilters["contentType"] == "EMISIONES") {
+      blocRadioSearch.fetchSearch(
+          elementFilters["query"],
+          page,
+          elementFilters["sede"],
+          elementFilters["canal"],
+          elementFilters["area"],
+          elementFilters["contentType"]);
+    } else if (elementFilters["contentType"] == "SERIES") {
+      blocPodcastSeries.fetchSeries(page);
+    } else if (elementFilters["contentType"] == "EPISODIOS") {
+      blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
+    } else if (elementFilters["contentType"] == "ELASTIC") {
+      //TODO: 11/05/2023 Descomentar cuando el servicio de ELASTIC sea reestablecido
+      /*querySize = 100;
         start = page * querySize;
         blocElasticSearch.fetchSearch(elementFilters["query"], page, start);*/
 
-        //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
-        /*blocRadioSearch.fetchSearch(
+      //TODO: 11/05/2023 Se deja la busqueda  generica para radio mientras regrasa el servicio ELASTIC
+      /*blocRadioSearch.fetchSearch(
             elementFilters["query"],
             page,
             0, //Buca en todas las sedes
             "TODOS",
             "TODOS",
             "EMISIONES");*/
+    }
 
-      }
-
-
-      initializeScrollListener();
-      initializeStopLoading();
-
+    initializeScrollListener();
+    initializeStopLoading();
   }
 
   void initializeScrollListener() {
@@ -120,11 +119,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
           setState(() {
             isLoading = true;
-          });
-          Future.delayed(Duration(milliseconds: 1000), () {
-            setState(() {
-              isLoading = false;
-            });
           });
 
           if (elementFilters["contentType"] == "PROGRAMAS" ||
@@ -152,7 +146,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
           } else if (elementFilters["contentType"] == "SERIES") {
             blocPodcastSeries.fetchSeries(page);
           } else if (elementFilters["contentType"] == "EPISODIOS") {
-            blocPodcastSearch.fetchSearch(elementFilters["query"], page, "EPISODIOS");
+            blocPodcastSearch.fetchSearch(
+                elementFilters["query"], page, "EPISODIOS");
           }
         }
       }
@@ -160,38 +155,41 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   }
 
   void initializeStopLoading() {
-
     blocPodcastSeries.subject.stream.listen((event) {
       if (event.values.isNotEmpty) {
-        setState(() {
+        /*setState(() {
           isLoading = false;
-        });
+        });*/
       }
     });
 
     blocRadioSearch.subject.stream.listen((event) {
       if (event.values.isNotEmpty) {
-        setState(() {
+        /*setState(() {
           isLoading = false;
-        });
+        });*/
       }
     });
 
     blocElasticSearch.subject.stream.listen((event) {
       if (event.values.isNotEmpty) {
-        setState(() {
+        /*setState(() {
           isLoading = false;
-        });
+        });*/
       }
     });
 
     blocPodcastSearch.subject.stream.listen((event) {
       if (event.values.isNotEmpty) {
-        setState(() {
+        /*setState(() {
           isLoading = false;
-        });
+        });*/
       }
     });
+  }
+
+  Future<bool> setFalseLoadig() async {
+    return false;
   }
 
   @override
@@ -204,9 +202,11 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: DecoratedBox(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -252,8 +252,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             return child;
           });
     } else if (elementFilters["contentType"] == "ELASTIC") {
-      widget = Container(
-          child:getMultiTabResult());
+      widget = Container(child: getMultiTabResult());
     } else {
       var blocStream = null;
       if (elementFilters["contentType"] == "SERIES") {
@@ -291,9 +290,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     infoModel = snapshot.data!["info"];
     totalPages = infoModel.pages;
 
-    return
-
-      Column(
+    return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -311,7 +308,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -320,11 +317,11 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style:  TextStyle(
-                color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
+              style: TextStyle(
+                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
               ),
             ),
           ),
@@ -374,9 +371,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   Widget buildGridList(AsyncSnapshot<dynamic> snapshot) {
     var list = snapshot.data!["result"];
 
-
     for (var i = 0; i < list.length; i++) {
-      cardList.add(buildCardForGridList(list[i]));
+      if (!elementList.contains(list[i])) {
+        setFalseLoadig().then((value) => {
+              setState(() {
+                isLoading = false;
+              })
+            });
+        cardList.add(buildCardForGridList(list[i]));
+        elementList.add(list[i]);
+      }
     }
 
     return GridView.count(
@@ -385,8 +389,18 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   Widget buildVerticalList(AsyncSnapshot<dynamic> snapshot) {
     var list = snapshot.data!["result"];
-    list?.forEach(
-        (element) => {cardList.add(buildCardForVerticalList(element))});
+    list?.forEach((element) => {
+          if (!elementList.contains(element))
+            {
+              setFalseLoadig().then((value) => {
+                    setState(() {
+                      isLoading = false;
+                    })
+                  }),
+              cardList.add(buildCardForVerticalList(element)),
+              elementList.add(element)
+            }
+        });
 
     return ListView(
         shrinkWrap: true, controller: _scrollController, children: cardList);
@@ -397,7 +411,6 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
     return InkWell(
         onTap: () {
-
           if (elementFilters["contentType"] == "SERIES") {
             Navigator.pushNamed(context, "/detail",
                 arguments: ScreenArguments("SITE", "PODCAST", element.uid,
@@ -434,14 +447,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                            .withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
                       ),
                     ],
                   ),
-                  child: AspectRatio(aspectRatio: 1,
+                  child: AspectRatio(
+                    aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: CachedNetworkImage(
@@ -465,7 +480,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     color: Theme.of(context).appBarTheme.foregroundColor,
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                            .withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -489,67 +505,62 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             )));
   }
 
-  Widget drawListEscuchados(AsyncSnapshot<List<dynamic>> snapshot){
+  Widget drawListEscuchados(AsyncSnapshot<List<dynamic>> snapshot) {
     var list1 = snapshot.data![0];
     var list2 = snapshot.data![1];
     var countEscuchados = list1.length + list2.length;
 
-    return
-      Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Text(
-                message,
-                style: TextStyle(
-                  shadows: [
-                    Shadow(
-                        color: Theme.of(context).primaryColor,
-                        offset: const Offset(0, -5))
-                  ],
-                  color: Colors.transparent,
-                  decorationThickness: 2,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  decorationColor: const Color(0xFFFCDC4D),
-                  decoration: TextDecoration.underline,
-                ),
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Text(
+              message,
+              style: TextStyle(
+                shadows: [
+                  Shadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: const Offset(0, -5))
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                decorationColor: const Color(0xFFFCDC4D),
+                decoration: TextDecoration.underline,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(
-                "${countEscuchados} resultados",
-                style: const TextStyle(
-                  color: Color(0xff121C4A),
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  decorationColor: Color(0xFFFCDC4D),
-                ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              "${countEscuchados} resultados",
+              style: const TextStyle(
+                color: Color(0xff121C4A),
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                decorationColor: Color(0xFFFCDC4D),
               ),
             ),
-            Expanded(
-                child: buildListEscuchados(list1, list2)),
-            if (isLoading)
-              const Center(
-                  child: SpinKitFadingCircle(
-                    color: Color(0xffb6b3c5),
-                    size: 50.0,
-                  ))
-          ]);
-
-
-
+          ),
+          Expanded(child: buildListEscuchados(list1, list2)),
+          if (isLoading)
+            const Center(
+                child: SpinKitFadingCircle(
+              color: Color(0xffb6b3c5),
+              size: 50.0,
+            ))
+        ]);
   }
 
   Widget buildListEscuchados(list1, list2) {
+    list1?.forEach(
+        (element) => {cardList.add(buildCardForVerticalList(element))});
 
-
-    list1?.forEach((element) => {cardList.add(buildCardForVerticalList(element))});
-
-    list2?.forEach((element) => {cardList.add(buildCardForVerticalList(element))});
+    list2?.forEach(
+        (element) => {cardList.add(buildCardForVerticalList(element))});
     return ListView(
         shrinkWrap: true, controller: _scrollController, children: cardList);
     // return GridView.count(
@@ -557,6 +568,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   }
 
   Widget buildCardForVerticalList(element) {
+    var site = "";
     var width = MediaQuery.of(context).size.width;
     DateTime now;
     try {
@@ -571,38 +583,39 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     var tipo = elementFilters["contentType"];
     var messageStr = "";
     var redirectTo = "";
-    if(tipo=="SERIES") {
+    if (tipo == "SERIES") {
       messageStr = "PODCAST";
       redirectTo = "/detail";
-    }else if(tipo=="EPISODIOS"){
+      site = "Podcast";
+    } else if (tipo == "EPISODIOS") {
       messageStr = "PODCAST";
       redirectTo = "/item";
-    }
-    else if(tipo=="PROGRAMAS"){
+      site = "Podcast";
+    } else if (tipo == "PROGRAMAS") {
       messageStr = "RADIO";
       redirectTo = "/detail";
-    }
-    else if(tipo=="EMISIONES"){
+      site = "Radio";
+    } else if (tipo == "EMISIONES") {
       messageStr = "RADIO";
       redirectTo = "/item";
-    }else if(tipo == "MASESCUCHADO"){
-      if(element is EpisodioModel){
+      site = "Radio";
+    } else if (tipo == "MASESCUCHADO") {
+      if (element is EpisodioModel) {
         messageStr = "PODCAST";
         redirectTo = "/item";
-      }else if(element is EmisionModel){
+        site = "Podcast";
+      } else if (element is EmisionModel) {
         messageStr = "RADIO";
         redirectTo = "/item";
+        site = "Radio";
       }
-
     }
 
     return InkWell(
         onTap: () {
-
           //TODO:14/05/23 ajustar esta redirección cuando el servicio elastic se reestablezca
           Navigator.pushNamed(context, redirectTo,
-              arguments: ScreenArguments("SITE",
-                  messageStr, element.uid,
+              arguments: ScreenArguments("SITE", messageStr, element.uid,
                   from: "BROWSER_RESULT_PAGE"));
         },
         child: Container(
@@ -616,7 +629,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                            .withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -625,7 +639,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: CachedNetworkImage(fit: BoxFit.cover,
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
                       imageUrl: element.imagen,
                       placeholder: (context, url) => const Center(
                           child: SpinKitFadingCircle(
@@ -641,6 +656,16 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                     drawCategoryTitle(element),
+                        Container(
+                          margin: const EdgeInsets.only(left: 20),
+                          child: Text(
+                            site,
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Theme.of(context).primaryColor,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
@@ -662,15 +687,11 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   Text drawDuration(String formatted, element) {
     try {
-    return Text(
-                      "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
-                      style: const TextStyle(
-                          fontSize: 10, color: Color(0xff666666)),
-                    );
-      
-    } catch (e) {
-      
-    }
+      return Text(
+        "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
+        style: const TextStyle(fontSize: 10, color: Color(0xff666666)),
+      );
+    } catch (e) {}
     return Text('');
   }
 
@@ -684,7 +705,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             color: Theme.of(context).appBarTheme.foregroundColor,
             boxShadow: [
               BoxShadow(
-                color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                    .withOpacity(0.3),
                 spreadRadius: 3,
                 blurRadius: 10,
                 offset: const Offset(5, 5), // changes position of shadow
@@ -699,23 +721,23 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
       }
     } catch (e) {}
     return Container(
-          margin: const EdgeInsets.only(left: 20, bottom: 10),
-          decoration: BoxDecoration(
-            color: Theme.of(context).appBarTheme.foregroundColor,
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: const Color(isDarkMode?:0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
-            //     spreadRadius: 3,
-            //     blurRadius: 10,
-            //     offset: const Offset(5, 5), // changes position of shadow
-            //   ),
-            // ],
-          ),
-          child: Text(
-            '',
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-          ),
-        );
+      margin: const EdgeInsets.only(left: 20, bottom: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).appBarTheme.foregroundColor,
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: const Color(isDarkMode?:0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+        //     spreadRadius: 3,
+        //     blurRadius: 10,
+        //     offset: const Offset(5, 5), // changes position of shadow
+        //   ),
+        // ],
+      ),
+      child: Text(
+        '',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+      ),
+    );
   }
 
   String formatDurationString(String duration) {
@@ -734,7 +756,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   /*
   * Realiza la busqueda en todos los sitios
   * */
-  Widget getMultiTabResult(){
+  Widget getMultiTabResult() {
     return MultiTabResult(
       tabIndex: 0,
       query: elementFilters["query"],
@@ -745,5 +767,4 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
       filterString: elementFilters["filterString"],
     );
   }
-
 }

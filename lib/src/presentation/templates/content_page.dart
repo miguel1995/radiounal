@@ -37,7 +37,7 @@ class _ContentPageState extends State<ContentPage> {
   late String title;
   late String message;
   late int page;
-  bool isLoading = false; //
+  bool isLoading = false;
   List elementList = [];
 
   final blocRadioProgramas = RadioProgramasBloc();
@@ -50,18 +50,18 @@ class _ContentPageState extends State<ContentPage> {
 
   int totalPages = 0;
   late FavoritoBtn favoritoBtn;
- bool isDarkMode =false;
+  bool isDarkMode = false;
 
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
-  void initState() { print('=====================content_page');
+  void initState() {
+    print('=====================content_page');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+    isDarkMode = brightness == Brightness.dark;
     super.initState();
 
     title = widget.title;
@@ -90,7 +90,7 @@ return savedThemeMode;
             isLoading = true;
           });
 
-          Future.delayed(Duration(milliseconds: 1000), () {
+          Future.delayed(Duration(milliseconds: 3000), () {
             setState(() {
               isLoading = false;
             });
@@ -102,23 +102,25 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-            themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
-    return Scaffold(backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xff121C4A),
+    return Scaffold(
+      backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xff121C4A),
       //extendBodyBehindAppBar: true,
       endDrawer: const Menu(),
       appBar: AppBarRadio(enableBack: true),
       body: DecoratedBox(
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
+              image: AssetImage(isDarkMode
+                  ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                  : "assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -172,14 +174,15 @@ return savedThemeMode;
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                      color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor: isDarkMode?Color(0x00121C4A):Color(0xFFFCDC4D),
+                decorationColor:
+                    isDarkMode ? Color(0x00121C4A) : Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -188,11 +191,12 @@ return savedThemeMode;
             padding: const EdgeInsets.only(left: 20, top: 3, bottom: 3),
             child: Text(
               "${infoModel.count} resultados",
-              style:  TextStyle(
-                color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+              style: TextStyle(
+                color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
-                decorationColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
+                decorationColor:
+                    isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D),
               ),
             ),
           ),
@@ -208,7 +212,7 @@ return savedThemeMode;
                     ),
                   ),
                 ),*/
-          Expanded(child: buildList(snapshot,isDarkMode)),
+          Expanded(child: buildList(snapshot, isDarkMode)),
           if (isLoading)
             const Center(
                 child: SpinKitFadingCircle(
@@ -236,7 +240,8 @@ return savedThemeMode;
     );
   }
 
-  Widget buildList(AsyncSnapshot<Map<String, dynamic>> snapshot,bool isDarkMode) {
+  Widget buildList(
+      AsyncSnapshot<Map<String, dynamic>> snapshot, bool isDarkMode) {
     var list = snapshot.data!["result"];
 
     list?.forEach((element) => {
@@ -268,7 +273,7 @@ return savedThemeMode;
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Color( 0xff121C4A).withOpacity(0.3),
+                        color: Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -295,7 +300,7 @@ return savedThemeMode;
                     color: Color(0xFFFCDC4D),
                     boxShadow: [
                       BoxShadow(
-                       color: Color( 0xff121C4A).withOpacity(0.3),
+                        color: Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -308,10 +313,9 @@ return savedThemeMode;
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold,
-                        
-                        color: Color( 0xff121C4A)
-                        ),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff121C4A)),
                   ),
                 )
               ],

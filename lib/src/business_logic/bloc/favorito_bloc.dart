@@ -4,6 +4,7 @@ import 'package:rxdart/rxdart.dart';
 class FavoritoBloc{
 
 
+
   final _subject = BehaviorSubject<bool>();
   FirebaseLogic firebaseLogic = FirebaseLogic();
 

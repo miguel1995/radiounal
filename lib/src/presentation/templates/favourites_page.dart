@@ -251,7 +251,12 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
+                      child:
+                      AspectRatio(
+                          aspectRatio: 1.0,
+                          child:
+                      CachedNetworkImage(
+                        fit: BoxFit.cover,
                         imageUrl: element.imagen,
                         placeholder: (context, url) => const Center(
                             child: SpinKitFadingCircle(
@@ -268,7 +273,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                                 color: isDarkMode
                                     ? Color(0xff121C4A)
                                     : Color(0xFFFCDC4D))),
-                      ),
+                      )),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   if (element is EpisodioModel || element is EmisionModel)
@@ -439,7 +444,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   String formatDurationString(String duration) {
     String formatted = "";
-    if (duration != null) {
+    if (duration != null && duration != "") {
       if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
       } else {

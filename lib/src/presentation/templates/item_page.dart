@@ -30,7 +30,7 @@ class ItemPage extends StatefulWidget {
   final String title;
   final String message;
   final int uid; //Indica el id del episodio de podcast o emisora de radio
-  final String from; //Indica la página desde lacual fue llamada (home, detail)
+  final String from; //Indica la página desde la cual fue llamada (home, detail)
   late Function(
       dynamic uidParam,
       dynamic audioUrlParam,
@@ -80,6 +80,7 @@ class _ItemPageState extends State<ItemPage> {
 
   late FavoritoBtn favoritoBtn;
   bool isDarkMode = false;
+  bool showReproducirBtn = false;
 
 
 
@@ -106,6 +107,11 @@ print('=====================item_page');
     uid = widget.uid;
     from = widget.from;
 
+    print(title);
+    print(message);
+    print(uid);
+    print(from);
+
     favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
 
     firebaseLogic
@@ -126,6 +132,16 @@ print('=====================item_page');
         setState(() {
           element = event[0];
         });
+
+        if(event[0] !=  null){
+          if(event[0].audio !=  null) {
+            if(event[0].audio !=  "") {
+              setState(() {
+                showReproducirBtn = true;
+              });
+            }
+          }
+        }
       });
     } else if (message == "PODCAST") {
       blocPodcastEpisodio.fetchEpisodio(uid);
@@ -133,8 +149,21 @@ print('=====================item_page');
         setState(() {
           element = event[0];
         });
+
+        if(event[0] !=  null){
+          if(event[0].audio !=  null) {
+            if(event[0].audio !=  "") {
+              setState(() {
+                showReproducirBtn = true;
+              });
+            }
+          }
+        }
+
       });
     }
+
+
 
     if (Platform.isAndroid) {
       platform = TargetPlatform.android;
@@ -226,6 +255,7 @@ print('=====================item_page');
       ),
       Container(
         child: CachedNetworkImage(
+          fit: BoxFit.cover,
           imageUrl: (element != null) ? element.imagen : "",
           imageBuilder: (context, imageProvider) => SizedBox(
               width: w * 0.4,
@@ -245,7 +275,7 @@ print('=====================item_page');
                   ],
                   image: DecorationImage(
                     image: imageProvider,
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.cover,
                   ),
                 ),
               )),
@@ -255,7 +285,8 @@ print('=====================item_page');
             size: 50.0,
           )),
           errorWidget: (context, url, error) => Container(
-              width: w * 0.40, child: Image.asset("assets/images/default.png")),
+              width: w * 0.40, child: Image.asset("assets/images/default.png")
+          ),
         ),
       ),
       if (element != null &&
@@ -373,15 +404,20 @@ print('=====================item_page');
   }
 
   Widget drawContentBtns(dynamic element) {
-    var w = MediaQuery.of(context).size.width;
+
+    //print("element.audio ${element.audio}");
 
     return Column(children: [
       Row(children: [
-        Container(
+    if (showReproducirBtn)
+      Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
             child: InkWell(
                 onTap: () {
+
+                  print(element.audio);
+
                   if (element != null) {
                     if (element.audio != null) {
                       widget.callBackPlayMusic!(

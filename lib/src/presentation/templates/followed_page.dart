@@ -224,7 +224,12 @@ class _FollowedPageState extends State<FollowedPage> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: CachedNetworkImage(
+                      child:
+                      AspectRatio(
+                        aspectRatio: 1.0,
+                      child:
+                      CachedNetworkImage(
+                        fit: BoxFit.cover,
                         imageUrl: element.imagen,
                         placeholder: (context, url) => const Center(
                             child: SpinKitFadingCircle(
@@ -240,7 +245,7 @@ class _FollowedPageState extends State<FollowedPage> {
                                     : "assets/images/logo.png",
                                 color: Color(
                                     isDarkMode ? 0xff121C4A : 0xFFFCDC4D))),
-                      ),
+                      )),
                     )),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
@@ -389,7 +394,7 @@ class _FollowedPageState extends State<FollowedPage> {
 
   String formatDurationString(String duration) {
     String formatted = "";
-    if (duration != null) {
+    if (duration != null && duration != "") {
       if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
       } else {

@@ -45,21 +45,25 @@ class _MultiTabResultState extends State<MultiTabResult>
   String? _area = "TODOS";
   String? filterString = "";
 
-  late int pageSeries = 0;
+  late int pageSeries = 1;
   int totalPagesSeries = 0;
   bool isLoadingSeries = false;
+  List elementListSeries = [];
 
-  late int pageEpisodios = 0;
+  late int pageEpisodios = 1;
   int totalPagesEpisodios = 0;
   bool isLoadingEpisodios = false;
+  List elementListEpisodios = [];
 
-  late int pageProgramas = 0;
+  late int pageProgramas = 1;
   int totalPagesProgramas = 0;
   bool isLoadingProgramas = false;
+  List elementListProgramas = [];
 
-  late int pageEmisiones = 0;
+  late int pageEmisiones = 1;
   int totalPagesEmisiones = 0;
   bool isLoadingEmisiones = false;
+  List elementListEmisiones = [];
 
   final ScrollController _scrollControllerSeries = ScrollController();
   final ScrollController _scrollControllerEpisodios = ScrollController();
@@ -84,7 +88,6 @@ class _MultiTabResultState extends State<MultiTabResult>
 
   @override
   void initState() {
-    print('=====================multi_tab_result');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
     tabIndex = widget.tabIndex;
@@ -197,7 +200,7 @@ class _MultiTabResultState extends State<MultiTabResult>
               ],
               color: Colors.transparent,
               decorationThickness: 2,
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
               decorationColor: const Color(0xFFFCDC4D),
               decoration: TextDecoration.underline,
@@ -284,14 +287,9 @@ class _MultiTabResultState extends State<MultiTabResult>
         if (_scrollControllerSeries.position.maxScrollExtent ==
             _scrollControllerSeries.offset) {
           if (pageSeries < totalPagesSeries) {
-            pageSeries++;
             setState(() {
+              pageSeries+=1;
               isLoadingSeries = true;
-            });
-            Future.delayed(Duration(milliseconds: 1000), () {
-              setState(() {
-                isLoadingSeries = false;
-              });
             });
 
             blocPodcastSeriesSearch.fetchSearch(query, pageSeries, "SERIES");
@@ -304,14 +302,9 @@ class _MultiTabResultState extends State<MultiTabResult>
         if (_scrollControllerEpisodios.position.maxScrollExtent ==
             _scrollControllerEpisodios.offset) {
           if (pageEpisodios < totalPagesEpisodios) {
-            pageEpisodios++;
             setState(() {
+              pageEpisodios+=1;
               isLoadingEpisodios = true;
-            });
-            Future.delayed(Duration(milliseconds: 1000), () {
-              setState(() {
-                isLoadingEpisodios = false;
-              });
             });
 
             blocPodcastSearch.fetchSearch(query, pageEpisodios, "EPISODIOS");
@@ -324,14 +317,9 @@ class _MultiTabResultState extends State<MultiTabResult>
         if (_scrollControllerProgramas.position.maxScrollExtent ==
             _scrollControllerProgramas.offset) {
           if (pageProgramas < totalPagesProgramas) {
-            pageProgramas++;
             setState(() {
+              pageProgramas+=1;
               isLoadingProgramas = true;
-            });
-            Future.delayed(Duration(milliseconds: 1000), () {
-              setState(() {
-                isLoadingProgramas = false;
-              });
             });
 
             blocRadioProgramasSearch.fetchSearch(
@@ -350,20 +338,15 @@ class _MultiTabResultState extends State<MultiTabResult>
         if (_scrollControllerEmisiones.position.maxScrollExtent ==
             _scrollControllerEmisiones.offset) {
           if (pageEmisiones < totalPagesEmisiones) {
-            pageEmisiones++;
             setState(() {
+              pageEmisiones += 1;
               isLoadingEmisiones = true;
-            });
-            Future.delayed(Duration(milliseconds: 1000), () {
-              setState(() {
-                isLoadingEmisiones = false;
-              });
             });
 
             blocRadioSearch.fetchSearch(
                 query,
                 pageEmisiones,
-                0, //Buca en todas las sedes
+                0, //Busca en todas las sedes
                 "TODOS",
                 "TODOS",
                 "EMISIONES");
@@ -505,7 +488,7 @@ class _MultiTabResultState extends State<MultiTabResult>
     } else if (tipo == "EPISODIOS") {
       messageStr = "PODCAST";
       redirectTo = "/item";
-      site = "Radio";
+      site = "Podcast";
     } else if (tipo == "PROGRAMAS") {
       messageStr = "RADIO";
       redirectTo = "/detail";
@@ -520,7 +503,9 @@ class _MultiTabResultState extends State<MultiTabResult>
         onTap: () {
           Navigator.pushNamed(context, redirectTo,
               arguments: ScreenArguments("SITE", messageStr, element.uid,
-                  element: element));
+                  element: element,
+                  from: "BROWSER_RESULT_PAGE"
+              ));
         },
         child: Container(
             padding:
@@ -646,7 +631,7 @@ class _MultiTabResultState extends State<MultiTabResult>
 
   String formatDurationString(String duration) {
     String formatted = "";
-    if (duration != null || duration != "") {
+    if (duration != null && duration != "") {
       if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
       } else {
@@ -660,14 +645,69 @@ class _MultiTabResultState extends State<MultiTabResult>
   updateListToDraw(List list, String tipo) {
     list?.forEach((element) => {
           if (tipo == "SERIES")
-            {cardListSeries.add(buildCardForVerticalList(element, tipo))}
+            {
+
+              if (!elementListSeries.contains(element))
+                {
+                  setFalseLoadig().then((value) => {
+                    setState(() {
+                      isLoadingSeries = false;
+                    })
+                  }),
+                  cardListSeries.add(buildCardForVerticalList(element, tipo)),
+                  elementListSeries.add(element)
+                }
+            }
           else if (tipo == "EPISODIOS")
-            {cardListEpisodios.add(buildCardForVerticalList(element, tipo))}
+            {
+
+              if (!elementListEpisodios.contains(element))
+                {
+                  setFalseLoadig().then((value) => {
+                    setState(() {
+                      isLoadingEpisodios = false;
+                    })
+                  }),
+                  cardListEpisodios
+                      .add(buildCardForVerticalList(element, tipo)),
+                  elementListEpisodios.add(element)
+                }
+            }
           else if (tipo == "PROGRAMAS")
-            {cardListProgramas.add(buildCardForVerticalList(element, tipo))}
+            {
+              if (!elementListProgramas.contains(element))
+                {
+
+                  setFalseLoadig().then((value) => {
+                    setState(() {
+                      isLoadingProgramas = false;
+                    })
+                  }),
+
+                  cardListProgramas
+                      .add(buildCardForVerticalList(element, tipo)),
+                  elementListProgramas.add(element)
+                }
+            }
           else if (tipo == "EMISIONES")
-            {cardListEmisiones.add(buildCardForVerticalList(element, tipo))}
+            {
+              if (!elementListEmisiones.contains(element.uid))
+                {
+                  setFalseLoadig().then((value) => {
+                        setState(() {
+                          isLoadingEmisiones = false;
+                        })
+                      }),
+                  cardListEmisiones
+                      .add(buildCardForVerticalList(element, tipo)),
+                  elementListEmisiones.add(element.uid)
+                }
+            }
         });
+  }
+
+  Future<bool> setFalseLoadig() async {
+    return false;
   }
 
   Widget getZeroResults() {

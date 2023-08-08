@@ -40,7 +40,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var textContent =
       "• Noticia 1: En China, durante el Congreso del Partido Comunista, el presidente Xi Jinping obtuvo un histórico tercer mandato consecutivo.\r\nEspecialista invitado: Javier Sánchez Segura, profesor de Ciencia Política en la Universidad de Antioquia y experto en temas de Asia.\r\n\r\n• Noticia 2: Reino Unido ya tiene sucesor de Liz Truss. Se trata de Rishi Sunak, el nuevo primer ministro quien fue aprobado por el Rey Carlos III.\r\nEspecialista invitada: Natalia Encalada, máster en Relaciones Internacionales y coordinadora académica de la Escuela de Relaciones Internacionales en la Universidad Internacional de Ecuador.\r\n\r\n• Noticia 3: Después de un año del golpe de estado en Sudán, la incertidumbre continúa en el país africano.\r\nEspecialista invitado: Beatriz Escobar, Licenciada en Relaciones Internacionales, doctora en Estudios de Asia y África y profesora de la Facultad de Ciencias Políticas y Sociales de la UNAM.\r\n\r\n• Noticia 4: El presidente de Rusia, Vladimir Putin, supervisó unos ejercicios militares de las fuerzas de disuasión nuclear en los que se ensayó un ataque “masivo” que, según el Gobierno, se produciría como respuesta a una hipotética agresión externa.\r\nEspecialista invitado: Javier Gil, licenciado en Ciencias Políticas y de la Administración. Doctor en Seguridad y Defensa Internacional. Profesor de la Universidad Pontificia Comillas.\r\n\r\n• Noticia 5: En un nuevo intento de integrar a los países de la región, se llevó a cabo en Bogotá la Cumbre de Integración Latinoamericana y Caribeña.\r\nEspecialista invitado: Giacomo Finzi, licenciado en Relaciones Internacionales, magister en Ciencias Internacionales y Diplomáticas y Doctorando en estudios políticos y relaciones internacionales.\r\n\r\nLocución: Ángela Sánchez.\r\nProducción sonora: Edgar Guasca y Alejandra Carvajal.\r\nInvestigación periodística: Eliana Escandón.\r\nWeb Máster: Carlos Fabián Rodríguez Navarrete.";
   var date =
-  DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
+      DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse("2022-10-29T07:00:00+00:00");
   var type = "";
   String durationContent = "";
   var canExpand = false;
@@ -71,13 +71,12 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   var _minHeight = 0.0;
 
   late FavoritoBtn? myFavoritoBtn;
-  bool isDarkMode =false;
+  bool isDarkMode = false;
 
   GlobalKey _buttonKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
 
-
   @override
-  void initState() {print('=====================bottom_navigation_bar_radio');
+  void initState() {
     super.initState();
 
     _controller = AnimationController(
@@ -185,17 +184,13 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Future<AdaptiveThemeMode?> themeMethod() async {
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
     return savedThemeMode;
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     themeMethod().then((value) {
-
       setState(() {
-        isDarkMode=(value==AdaptiveThemeMode.dark);
-
+        isDarkMode = (value == AdaptiveThemeMode.dark);
       });
     });
 
@@ -231,7 +226,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   Widget drawAudioPlayer() {
-
     return Container(
         margin: const EdgeInsets.only(top: 20, left: 20, right: 40),
         child: Column(
@@ -239,12 +233,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
                 Column(
                   children: [
                     IconButton(
                       key: _buttonKey,
-                      color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                      color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                       iconSize: 40,
                       icon: const Icon(Icons.volume_down),
                       onPressed: () async {
@@ -256,7 +249,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   ],
                 ),
                 IconButton(
-                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                  color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                   iconSize: 50,
                   icon: const Icon(Icons.arrow_left),
                   onPressed: () async {
@@ -266,7 +259,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                  color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                   iconSize: 80,
                   icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
                   onPressed: () async {
@@ -278,7 +271,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   },
                 ),
                 IconButton(
-                    color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                    color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                     iconSize: 50,
                     icon: const Icon(Icons.arrow_right),
                     onPressed: () async {
@@ -289,23 +282,22 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     }),
                 Container(
                     child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          showSpeedList = !showSpeedList;
-                        });
-                      },
-                      child: Text("${currentSpeedText}x",
-                          style:
-                           TextStyle(
-                              color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
-                              fontSize: 18)),
-                    ))
+                  onTap: () {
+                    setState(() {
+                      showSpeedList = !showSpeedList;
+                    });
+                  },
+                  child: Text("${currentSpeedText}x",
+                      style: TextStyle(
+                          color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
+                          fontSize: 18)),
+                ))
               ],
             ),
             Row(children: [
               Expanded(
                   child: Slider(
-                      activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                      activeColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                       min: 0,
                       max: duration.inSeconds.toDouble(),
                       value: position.inSeconds.toDouble(),
@@ -315,7 +307,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               Text(
                   "${formatTimeString(position)}/${formatTimeString(duration)}",
                   style: TextStyle(
-                      color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), fontStyle: FontStyle.italic))
+                      color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                      fontStyle: FontStyle.italic))
             ]),
           ],
         ));
@@ -324,15 +317,17 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   Widget audioPlayerExpanded() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        decoration:  BoxDecoration(
-            image:isDarkMode?null: const DecorationImage(
-              image: AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"
-              ),
-              fit: BoxFit.cover,
-            ),
+        decoration: BoxDecoration(
+            image: isDarkMode
+                ? null
+                : const DecorationImage(
+                    image:
+                        AssetImage("assets/images/FONDO_AZUL_REPRODUCTOR.png"),
+                    fit: BoxFit.cover,
+                  ),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
-            color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A)),
+            color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)),
         child: Stack(
           children: [
             Column(children: [
@@ -349,10 +344,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                             right: 30, top: 20, bottom: 10),
                         child: SvgPicture.asset(
                             'assets/icons/icono_flechita_down.svg',
-                            color: Color(isDarkMode?
-                            0xff121C4A:
-                            0xFFFCDC4D
-                            ),
+                            color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                             width: 20)))
               ]),
               Row(
@@ -360,7 +352,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                 children: [
                   myFavoritoBtn!,
                   IconButton(
-                    color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                    color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                     icon: const Icon(Icons.share),
                     onPressed: () {
                       Share.share("Escucha Radio UNAL -  ${url}",
@@ -384,14 +376,13 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                         margin: const EdgeInsets.only(left: 30, right: 30),
                         child: Container(
                             padding: const EdgeInsets.only(left: 10, right: 10),
-                            color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                            color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                             child: Text(
                               textParent,
-                              style:
-                               TextStyle(fontWeight: FontWeight.bold,
-                                  color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
-
-                              ),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(
+                                      isDarkMode ? 0xFFFCDC4D : 0xff121C4A)),
                             )),
                       ),
                     if (title != "")
@@ -400,8 +391,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           margin: const EdgeInsets.only(
                               top: 10, left: 30, right: 30),
                           child: Text(title,
-                              style:  TextStyle(
-                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                              style: TextStyle(
+                                  color: Color(
+                                      isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold))),
                     if (date != null)
@@ -411,8 +403,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                               top: 10, left: 30, right: 30),
                           child: Text(
                               "${formatDateString(date)} ${formatDurationString(durationContent)}",
-                              style:  TextStyle(
-                                fontSize: 12, color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),))),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color:
+                                    Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
+                              ))),
                     if (type != "")
                       Container(
                           alignment: Alignment.centerLeft,
@@ -421,8 +416,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                           child: Text(
                               type[0].toUpperCase() +
                                   type.substring(1, type.length).toLowerCase(),
-                              style:  TextStyle(
-                                  color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+                              style: TextStyle(
+                                  color: Color(
+                                      isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
                                   fontStyle: FontStyle.italic)))
                   ])),
               drawAudioPlayer(),
@@ -432,7 +428,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                       child: Container(
                           padding: const EdgeInsets.only(bottom: 5),
                           child: SvgPicture.asset('assets/images/firma.svg',
-                              color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                              color:
+                                  Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                               width: 180))))
             ]),
             if (showVolumenSlider)
@@ -443,7 +440,8 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                     quarterTurns: 3,
                     child: Slider(
                         inactiveColor: Colors.white70,
-                        activeColor:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                        activeColor:
+                            Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
                         min: 0,
                         max: 1.0,
                         value: currentVolumen,
@@ -467,109 +465,92 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.only(top: 1),
-      decoration:  BoxDecoration(
+      decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(20), topRight: Radius.circular(20)
-          ),
-          color: isDarkMode?
-          const Color(0xFFFCDC4D):
-          const Color(0xff121C4A)
-      ),
-      child:
-      Column(
-          children: [
-            Row(
-                children: [
-
-                  getImageMini(),
-                  Expanded(child: Column(
-
-                      children: [
-                        Container(
-                            padding: EdgeInsets.only(left: 20),
-                            width: MediaQuery.of(context).size.width * 0.75,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (title != "")
-                                    Container(
-
-                                        padding: EdgeInsets.only(top: 20),
-                                        child: Text(
-                                            (title.length > 35)
-                                                ? "${title.substring(0, 35)}..."
-                                                : title,
-                                            style:  TextStyle(
-                                                color: isDarkMode?
-                                                Color(0xff121C4A):
-                                                Color(0xFFFFFFFF),
-                                                fontWeight: FontWeight.bold))),
-                                  Container(
-                                    //padding: EdgeInsets.only(left: 40),
-                                      child: (canExpand)
-                                          ? Align(
-                                          alignment: Alignment.centerRight,
-                                          child: InkWell(
-                                              onTap: () {
-                                                setState(() {
-                                                  _expanded = !_expanded;
-                                                });
-                                                _controller.forward();
-                                              },
-                                              child: SvgPicture.asset(
-                                                  'assets/icons/icono_flechita_up.svg',
-                                                  color: isDarkMode?
-                                                  Color(0xff121C4A):
-                                                  Color(0xFFFCDC4D),
-                                                  width: 20)))
-                                          : null)
-                                ])),
-                        Row(
-                            children: [
-                              Container(
-                                  child: IconButton(
-                                    color:  Color(isDarkMode?
-                                    0xff121C4A:
-                                    0xFFFCDC4D
-                                    ),                                    iconSize: 40,
-                                    icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                                    onPressed: () async {
-                                      if (isPlaying) {
-                                        await audioPlayer.pause();
-                                      } else {
-                                        await audioPlayer.play(audioUrl);
-                                      }
-                                    },
-                                  )),
-                              Expanded(
-                                  child: Slider(
-                                      activeColor:  isDarkMode?
-                                      Color(0xff121C4A):
-                                      Color(0xFFFCDC4D)
-                                      ,                                      min: 0,
-                                      max: duration.inSeconds.toDouble(),
-                                      value: position.inSeconds.toDouble(),
-                                      onChanged: (value) async {
-                                        audioPlayer.seek(Duration(seconds: value.toInt()));
-                                      })),
-                              Container(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child:
-                                  Text(formatTimeString(position),
-                                      style: TextStyle(
-                                          color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
-                                          fontStyle: FontStyle.italic)))
-                            ])
-                      ]))
-
-                ]),
+              topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          color:
+              isDarkMode ? const Color(0xFFFCDC4D) : const Color(0xff121C4A)),
+      child: Column(children: [
+        Row(children: [
+          getImageMini(),
+          Expanded(
+              child: Column(children: [
             Container(
-              child: SvgPicture.asset('assets/images/firma.svg', width: 180,
-                  color:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
-              ),
-            )
-
-          ]),
+                padding: EdgeInsets.only(left: 20),
+                width: MediaQuery.of(context).size.width * 0.75,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (title != "")
+                        Container(
+                            padding: EdgeInsets.only(top: 20),
+                            child: Text(
+                                (title.length > 35)
+                                    ? "${title.substring(0, 35)}..."
+                                    : title,
+                                style: TextStyle(
+                                    color: isDarkMode
+                                        ? Color(0xff121C4A)
+                                        : Color(0xFFFFFFFF),
+                                    fontWeight: FontWeight.bold))),
+                      Container(
+                          //padding: EdgeInsets.only(left: 40),
+                          child: (canExpand)
+                              ? Align(
+                                  alignment: Alignment.centerRight,
+                                  child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          _expanded = !_expanded;
+                                        });
+                                        _controller.forward();
+                                      },
+                                      child: SvgPicture.asset(
+                                          'assets/icons/icono_flechita_up.svg',
+                                          color: isDarkMode
+                                              ? Color(0xff121C4A)
+                                              : Color(0xFFFCDC4D),
+                                          width: 20)))
+                              : null)
+                    ])),
+            Row(children: [
+              Container(
+                  child: IconButton(
+                color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                iconSize: 40,
+                icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
+                onPressed: () async {
+                  if (isPlaying) {
+                    await audioPlayer.pause();
+                  } else {
+                    await audioPlayer.play(audioUrl);
+                  }
+                },
+              )),
+              Expanded(
+                  child: Slider(
+                      activeColor:
+                          isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D),
+                      min: 0,
+                      max: duration.inSeconds.toDouble(),
+                      value: position.inSeconds.toDouble(),
+                      onChanged: (value) async {
+                        audioPlayer.seek(Duration(seconds: value.toInt()));
+                      })),
+              Container(
+                  padding: EdgeInsets.only(right: 20),
+                  child: Text(formatTimeString(position),
+                      style: TextStyle(
+                          color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                          fontStyle: FontStyle.italic)))
+            ])
+          ]))
+        ]),
+        Container(
+          child: SvgPicture.asset('assets/images/firma.svg',
+              width: 180, color: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D)),
+        )
+      ]),
     );
   }
 
@@ -645,16 +626,24 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     Widget widgetImg;
 
     if (imagenUrl != "") {
-      widgetImg = CachedNetworkImage(
-        imageUrl: imagenUrl,
-        placeholder: (context, url) => const Center(
-            child: SpinKitFadingCircle(
+      widgetImg = ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child:
+          AspectRatio(
+              aspectRatio: 1.0,
+          child:
+          CachedNetworkImage(
+            fit: BoxFit.cover,
+            imageUrl: imagenUrl,
+            placeholder: (context, url) => const Center(
+                child: SpinKitFadingCircle(
               color: Color(0xffb6b3c5),
               size: 10.0,
             )),
-        errorWidget: (context, url, error) => Container(
-            color: Theme.of(context).primaryColor,
-            child: Image.asset("assets/images/default.png")),
+            errorWidget: (context, url, error) => Container(
+                color: Theme.of(context).primaryColor,
+                child: Image.asset("assets/images/default.png")),
+          ))
       );
     } else {
       widgetImg = Image.asset('assets/images/default.png');
@@ -670,9 +659,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
               if (isLoading)
                 const Center(
                     child: SpinKitFadingCircle(
-                      color: Color(0xffb6b3c5),
-                      //size: 50.0,
-                    ))
+                  color: Color(0xffb6b3c5),
+                  //size: 50.0,
+                ))
             ])));
 
     return widget;
@@ -689,9 +678,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
             imageUrl: imagenUrl,
             placeholder: (context, url) => const Center(
                 child: SpinKitFadingCircle(
-                  color: Color(0xffb6b3c5),
-                  size: 50.0,
-                )),
+              color: Color(0xffb6b3c5),
+              size: 50.0,
+            )),
             errorWidget: (context, url, error) => Container(
                 color: Theme.of(context).primaryColor,
                 child: Image.asset("assets/images/default.png")),
@@ -711,9 +700,10 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
       list.add(Container(
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF),
+            color: Color(isDarkMode ? 0xff121C4A : 0xFFFFFFFF),
             border: Border.all(
-              color:  Color(isDarkMode?0xff121C4A:0xFFFFFFFF), // Color del borde
+              color: Color(
+                  isDarkMode ? 0xff121C4A : 0xFFFFFFFF), // Color del borde
               width: 0, // Ancho del borde
             ),
           ),
@@ -738,20 +728,25 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   double _getButtonTopPosition() {
-    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    final buttonRenderBox =
+        _buttonKey.currentContext?.findRenderObject() as RenderBox?;
     if (buttonRenderBox != null) {
       final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
-      var diferencia = MediaQuery.of(context).size.height - (buttonPosition.dy + buttonRenderBox.size.height);
-      diferencia = (0-(MediaQuery.of(context).size.height*(1-0.88))+buttonPosition.dy-200);
+      var diferencia = MediaQuery.of(context).size.height -
+          (buttonPosition.dy + buttonRenderBox.size.height);
+      diferencia = (0 -
+          (MediaQuery.of(context).size.height * (1 - 0.88)) +
+          buttonPosition.dy -
+          200);
 
-      return  diferencia;
-
+      return diferencia;
     }
     return 0;
   }
 
   double _getButtonLeftPosition() {
-    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    final buttonRenderBox =
+        _buttonKey.currentContext?.findRenderObject() as RenderBox?;
     if (buttonRenderBox != null) {
       final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
       return buttonPosition.dx;
@@ -760,12 +755,14 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   double _getButtonRightPosition() {
-    final buttonRenderBox = _buttonKey.currentContext?.findRenderObject() as RenderBox?;
+    final buttonRenderBox =
+        _buttonKey.currentContext?.findRenderObject() as RenderBox?;
     if (buttonRenderBox != null) {
       final buttonPosition = buttonRenderBox.localToGlobal(Offset.zero);
-      return (MediaQuery.of(context).size.width - buttonPosition.dx) - buttonRenderBox.size.width-12;
+      return (MediaQuery.of(context).size.width - buttonPosition.dx) -
+          buttonRenderBox.size.width -
+          12;
     }
     return 0;
   }
-
 }

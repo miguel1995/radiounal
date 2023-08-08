@@ -115,6 +115,9 @@ class PodcastProvider {
         },
         body: body);
 
+    //print(url);
+    //print(body);
+
     if (response.statusCode == 200) {
       List<EpisodioModel> result = parseEpisodios(utf8.decode(response.bodyBytes));
       InfoModel info = parseInfo(utf8.decode(response.bodyBytes));

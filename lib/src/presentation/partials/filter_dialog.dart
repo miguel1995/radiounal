@@ -97,6 +97,9 @@ class FilterDialogState extends State<FilterDialog> {
                             dropdownValueSedes=listSedes.keys.first;
                             dropdownValueCanales="TODOS";
                             dropdownValueAreas="TODOS";
+                            setState(() {
+                              isPodcast = false;
+                            });
 
                           });
                         },
