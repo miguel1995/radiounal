@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -54,7 +55,10 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
   final TextEditingController _controllerEdad = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
  bool isDarkMode =false;
-
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
   @override
   void initState() { 
     print('=====================download_form_dialog');
@@ -82,6 +86,14 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+
+                themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     return AlertDialog(
         insetPadding: EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20),
         backgroundColor: Theme.of(context).primaryColor,
@@ -107,7 +119,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                     "Formulario de descarga",
                     style: TextStyle(
                       shadows: [
-                        Shadow(color: Colors.white, offset: Offset(0, -5))
+                        Shadow(color:isDarkMode? Color(0xFF121C4A):Color(0xFFFFFFFF), offset: Offset(0, -5))
                       ],
                       color: Colors.transparent,
                       decorationThickness: 2,
@@ -121,14 +133,17 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
                         "Nombre*",
-                        style: getTextStyle(),
+                        style: getTextStyle(isDarkMode),
                       )),
                   TextFormField(
 
                       controller: _controllerNombre,
                       decoration:
                           getFieldDecoration("Ingrese sus Nombres y Apellidos"),
-                      style: const TextStyle(decoration: TextDecoration.none),
+                      style: const TextStyle(
+                        color: Color(0xFF121C4A),
+                        
+                        decoration: TextDecoration.none),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, ingrese un texto';
@@ -145,13 +160,13 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
                         "Edad*",
-                        style: getTextStyle(),
+                        style: getTextStyle(isDarkMode),
                       )),
                   TextFormField(
                       controller: _controllerEdad,
                       keyboardType: TextInputType.number,
                       decoration: getFieldDecoration("Edad"),
-                      style: const TextStyle(decoration: TextDecoration.none),
+                      style: const TextStyle( color: Color(0xFF121C4A),decoration: TextDecoration.none),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, ingrese un texto';
@@ -210,7 +225,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       margin: const EdgeInsets.only(top: 10),
                       child: Text(
                         "País*",
-                        style: getTextStyle(),
+                        style: getTextStyle(isDarkMode),
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -249,7 +264,13 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                   value: value,
                                   child: Container(
                                       padding: const EdgeInsets.only(top: 9),
-                                      child: Text(listPais[value]!)));
+                                      child: Text(listPais[value]!
+                                      ,style: TextStyle( color: Color(0xFF121C4A),),
+                                      
+                                      )
+                                      
+                                      
+                                      ));
                             }).toList()
                           : [],
                     ),
@@ -258,7 +279,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       margin: const EdgeInsets.only(top: 10),
                       child: Text(
                         "Departamento*",
-                        style: getTextStyle(),
+                        style: getTextStyle(isDarkMode),
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -298,7 +319,9 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                   child: Container(
                                       padding: const EdgeInsets.only(top: 9),
                                       child: Text(listDepartamentos[value]!
-                                          .replaceAll("Department", ""))));
+                                          .replaceAll("Department", "")
+                                          ,style: TextStyle( color: Color(0xFF121C4A),),
+                                          )));
                             }).toList()
                           : [],
                     ),
@@ -307,7 +330,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                       margin: const EdgeInsets.only(top: 10),
                       child: Text(
                         "Ciudad*",
-                        style: getTextStyle(),
+                        style: getTextStyle(isDarkMode),
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
@@ -345,7 +368,10 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                   value: value,
                                   child: Container(
                                       padding: const EdgeInsets.only(top: 9),
-                                      child: Text(listCiudades[value]!)));
+                                      child: Text(listCiudades[value]!,
+                                      style: TextStyle( color: Color(0xFF121C4A),),
+                                      
+                                      )));
                             }).toList()
                           : [],
                     ),
@@ -353,11 +379,12 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                   Container(
                       margin: EdgeInsets.only(top: 10),
                       child:
-                          Text("Correo Electrónico*", style: getTextStyle())),
+                          Text("Correo Electrónico*", style: getTextStyle(isDarkMode))),
                   TextFormField(
                       controller: _controllerEmail,
                       decoration:
                           getFieldDecoration("Ingrese su correo electrónico"),
+                          style: TextStyle( color: Color(0xFF121C4A),),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Por favor, ingrese un texto';
@@ -389,17 +416,17 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                                 _launchURL(
                                     "https://unal.edu.co/fileadmin/user_upload/docs/ProteccionDatos/Resolucion-207_2021-Rectoria.pdf");
                               },
-                              child: const Text(
+                              child:  Text(
                                   "Política de tratamiento de datos personales*",
                                   style: TextStyle(
                                     shadows: [
                                       Shadow(
-                                          color: Colors.white,
+                                          color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                           offset: const Offset(0, -5))
                                     ],
                                     color: Colors.transparent,
                                     decorationThickness: 1,
-                                    decorationColor: Colors.white,
+                                    decorationColor:  isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
                                     decoration: TextDecoration.underline,
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -407,7 +434,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                         ),
                       ),
                       Checkbox(
-                          checkColor: Theme.of(context).primaryColor,
+                          checkColor: Color(0xFF121C4A),
                           fillColor:
                               MaterialStateProperty.resolveWith(getColor),
                           value: isChecked,
@@ -425,18 +452,21 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                     ),
                   Text(
                     "DE ACUERDO CON LA LEY 1581 DE 2012 DE PROTECCIÓN DE DATOS PERSONALES, HE LEÍDO Y ACEPTO LOS TERMINOS DESCRITOS EN LA POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES",
-                    style: getTextStyle(),
+                    style: getTextStyle(isDarkMode),
                   ),
                   Align(
                       alignment: Alignment.centerRight,
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.2,
                         alignment: Alignment.center,
-                        decoration: const BoxDecoration(
+                        decoration:  BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           gradient: RadialGradient(
                               radius: 0.8,
-                              colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
+                              colors: [
+                               isDarkMode? Color(0xff216278):Color(0xffFEE781), 
+                               isDarkMode? Color(0xFF121C4A):Color(0xffFFCC17)
+                               ]),
                         ),
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -474,7 +504,7 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
                           child: Text(
                             'Enviar',
                             style: TextStyle(
-                                color: Theme.of(context).primaryColor,
+                                color: isDarkMode?Color(0xFFFFFFFF): Color(0xFF121C4A),
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
@@ -506,9 +536,9 @@ class _DownloadFormDialogState extends State<DownloadFormDialog> {
     );
   }
 
-  TextStyle getTextStyle() {
-    return const TextStyle(
-        color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold);
+  TextStyle getTextStyle(bool isDarkMode) {
+    return  TextStyle(
+        color:isDarkMode? Color(0xFF121C4A):Color(0xFFFFFFFF), fontSize: 12, fontWeight: FontWeight.bold);
   }
 
   Color? getColor(Set<MaterialState> states) {

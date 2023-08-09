@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_sedes_bloc.dart';
@@ -45,6 +46,11 @@ class FilterDialogState extends State<FilterDialog> {
 
  bool isDarkMode =false;
 
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
   @override
   void initState() {
     
@@ -70,9 +76,17 @@ class FilterDialogState extends State<FilterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    
+
+                themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     return AlertDialog(
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: Theme.of(context).primaryColor, width: 3),
+            side: BorderSide(color:isDarkMode?Color(0x00000000):Color(0xFF121C4A), width: 3),
             borderRadius: BorderRadius.all(Radius.circular(32.0))),
         content: SingleChildScrollView(
           child: Container(
@@ -109,15 +123,15 @@ class FilterDialogState extends State<FilterDialog> {
                             decoration: BoxDecoration(
                               gradient:
                                    RadialGradient(radius: 1.5, colors: [
-                                    Color(0xff216278),
-                                    Color(isDarkMode?0xFFFCDC4D:0xff121C4A)
+                                     isDarkMode? Color(0xFFFFFFFF):Color(0xff216278),
+                                   isDarkMode? Color(0xFFFFFFFF): Color(0xff121C4A)
                               ]),
                               borderRadius: BorderRadius.circular(5),
-                              color: Theme.of(context).primaryColor,
+                              color: isDarkMode?Color(0xFFA6AABB):Color(0xFFFFFFFF),
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                       Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                                       Color(0xff121C4A).withOpacity(0.3),
                                   spreadRadius: 3,
                                   blurRadius: 10,
                                   offset: const Offset(5, 5),
@@ -125,12 +139,12 @@ class FilterDialogState extends State<FilterDialog> {
                               ],
                             ),
                             child: Row(
-                              children: const [
+                              children:  [
                                 Text(
                                   "Borrar Filtros",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                      color:isDarkMode?Color(0xFF121C4A): Colors.white,
                                       fontSize: 16),
                                 )
                               ],
@@ -145,18 +159,18 @@ class FilterDialogState extends State<FilterDialog> {
                                 left: 30, right: 30, top: 10, bottom: 10),
                             margin: const EdgeInsets.only(left: 55),
                             decoration: BoxDecoration(
-                              gradient: const RadialGradient(
+                              gradient:  RadialGradient(
                                   radius: 0.5,
                                   colors: [
-                                    Color(0xffFEE781),
-                                    Color(0xffFFCC17 )
+                                  isDarkMode?Color(0xFF121C4A):  Color(0xffFEE781),
+                                  isDarkMode?Color(0xFF121C4A):  Color(0xffFFCC17 )
                                   ]),
                               borderRadius: BorderRadius.circular(5),
                               color: Theme.of(context).primaryColor,
                               boxShadow: [
                                 BoxShadow(
                                   color:
-                                       Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                                       Color(0xff121C4A).withOpacity(0.3),
                                   spreadRadius: 3,
                                   blurRadius: 10,
                                   offset: const Offset(5, 5),
@@ -169,7 +183,7 @@ class FilterDialogState extends State<FilterDialog> {
                                   "Buscar",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
+                                      color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                                       fontSize: 16),
                                 )
                               ],
@@ -191,12 +205,12 @@ class FilterDialogState extends State<FilterDialog> {
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: DropdownButton<int>(
+                    child: DropdownButton<int>(dropdownColor: Colors.white,
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueSedes,
                       icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,
+                        Icons.keyboard_arrow_down_outlined,color: Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -214,7 +228,7 @@ class FilterDialogState extends State<FilterDialog> {
                           child:
                             Container(
                             padding: const EdgeInsets.only(top: 9),
-                          child:Text(listSedes[value]!))
+                          child:Text(listSedes[value]!,style: TextStyle(color:Color(0xFF121C4A)) ))
                         );
                       }).toList(),
                     ),
@@ -235,12 +249,12 @@ class FilterDialogState extends State<FilterDialog> {
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: DropdownButton<String>(
+                    child: DropdownButton<String>(dropdownColor: Colors.white,
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueCanales,
                       icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,
+                        Icons.keyboard_arrow_down_outlined,color:Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -268,7 +282,7 @@ class FilterDialogState extends State<FilterDialog> {
                           child:
                             Container(
                             padding: const EdgeInsets.only(top: 9),
-                          child: Text(listCanales[value]!)
+                          child: Text(listCanales[value]!,style: TextStyle(color:Color(0xFF121C4A)) )
                             )
                         );
                       }).toList(),
@@ -292,12 +306,12 @@ class FilterDialogState extends State<FilterDialog> {
                       borderRadius: BorderRadius.circular(4),
 
                     ),
-                    child: DropdownButton<String>(
+                    child: DropdownButton<String>(dropdownColor: Colors.white,
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueAreas,
                       icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,
+                        Icons.keyboard_arrow_down_outlined,color:Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -315,7 +329,7 @@ class FilterDialogState extends State<FilterDialog> {
                           child:
                           Container(
                             padding: const EdgeInsets.only(top: 9),
-                            child: Text(listAreas[value]!),
+                            child: Text(listAreas[value]!,style: TextStyle(color:Color(0xFF121C4A),),),
                           )
                         );
                       }).toList(),
@@ -349,7 +363,7 @@ class FilterDialogState extends State<FilterDialog> {
 
   TextStyle getTextStyle() {
     return  TextStyle(
-        color: Theme.of(context).primaryColor, fontSize: 16, fontWeight: FontWeight.bold
+        color: Color(0xFF121C4A), fontSize: 16, fontWeight: FontWeight.bold
     );
   }
 

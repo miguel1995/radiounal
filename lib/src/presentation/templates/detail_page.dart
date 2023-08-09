@@ -266,11 +266,12 @@ class _DetailPageState extends State<DetailPage> {
     }
 
     return Scaffold(
-        //extendBodyBehindAppBar: true,
+      extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
         appBar: AppBarRadio(enableBack: true),
-        body: DecoratedBox(
-            decoration: BoxDecoration(
+        body: Container(
+          padding: EdgeInsets.only(top: 120),
+            decoration:  BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
                     ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
@@ -364,17 +365,19 @@ class _DetailPageState extends State<DetailPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-          Container(
-            //color: Colors.cyan,
-            //height: MediaQuery.of(context).size.height * 0.1,
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              "${infoModel.count} resultados",
-              style: const TextStyle(
-                color: Color(0xff121C4A),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                decorationColor: Color(0xFFFCDC4D),
+              Container(
+                //color: Colors.cyan,
+                //height: MediaQuery.of(context).size.height * 0.1,
+                padding: const EdgeInsets.only(left: 20),
+                child: Text(
+                  "${infoModel.count} resultados",
+                  style:  TextStyle(
+                    color: isDarkMode?Color(0xFFFFFFFF): Color(0xff121C4A),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    decorationColor: Color(0xFFFCDC4D),
+                  ),
+                ),
               ),
             ),
           ),
@@ -612,7 +615,7 @@ class _RedrawableListViewState extends State<RedrawableListView> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return ListView(padding: EdgeInsets.zero,
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         controller: widget._scrollController,

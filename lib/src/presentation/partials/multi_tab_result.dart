@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -86,6 +87,11 @@ class _MultiTabResultState extends State<MultiTabResult>
   bool enableEmisionesSearch = true;
   bool isDarkMode = false;
 
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
+
   @override
   void initState() {
     var brightness = SchedulerBinding.instance.window.platformBrightness;
@@ -139,6 +145,12 @@ class _MultiTabResultState extends State<MultiTabResult>
 
   @override
   Widget build(BuildContext context) {
+                    themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     return Container(
       padding: EdgeInsets.only(bottom: 10),
       child: Column(
@@ -152,14 +164,14 @@ class _MultiTabResultState extends State<MultiTabResult>
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color: Theme.of(context).primaryColor,
+                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                decorationColor: Color(isDarkMode ? 0x00121C4A : 0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -169,10 +181,10 @@ class _MultiTabResultState extends State<MultiTabResult>
             child: Text(
               query,
               style: TextStyle(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+                color: isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A),
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                decorationColor: isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D),
               ),
             ),
           ),
@@ -181,7 +193,7 @@ class _MultiTabResultState extends State<MultiTabResult>
             child: Text(
               filterString ?? "",
               style: TextStyle(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+                color:isDarkMode ? Color( 0xFFFFFFFF) :  Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -409,7 +421,7 @@ class _MultiTabResultState extends State<MultiTabResult>
             child: Text(
               "${infoModel.count} resultados",
               style: TextStyle(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+                color:isDarkMode ? Color( 0xFFFFFFFF) :  Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -462,7 +474,7 @@ class _MultiTabResultState extends State<MultiTabResult>
       cardList = cardListEmisiones;
     }
 
-    return ListView(
+    return ListView(padding: EdgeInsets.zero,
         shrinkWrap: true, controller: scrollController, children: cardList);
   }
 
@@ -518,7 +530,7 @@ class _MultiTabResultState extends State<MultiTabResult>
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                        color: Color( 0xff121C4A)
                             .withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
@@ -545,7 +557,7 @@ class _MultiTabResultState extends State<MultiTabResult>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                     drawCategoryTitle(element),
-                    Container(
+                    Container(color: Color(0xFFFCDC4D),
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
                         element.title,
@@ -553,6 +565,7 @@ class _MultiTabResultState extends State<MultiTabResult>
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
+                          color: Color(0xFF121C4A)
                         ),
                       ),
                     ),
@@ -562,7 +575,7 @@ class _MultiTabResultState extends State<MultiTabResult>
                         site,
                         style: TextStyle(
                             fontSize: 11,
-                            color: Theme.of(context).primaryColor,
+                            color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
                             fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -594,7 +607,7 @@ class _MultiTabResultState extends State<MultiTabResult>
             color: Theme.of(context).appBarTheme.foregroundColor,
             boxShadow: [
               BoxShadow(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                color:  Color(0xff121C4A)
                     .withOpacity(0.3),
                 spreadRadius: 3,
                 blurRadius: 10,

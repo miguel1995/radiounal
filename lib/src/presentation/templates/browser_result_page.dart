@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -63,6 +64,12 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   int totalPages = 0;
   bool isLoading = false;
   bool isDarkMode = false;
+
+
+Future<AdaptiveThemeMode?> themeMethod() async {
+  final savedThemeMode = await AdaptiveTheme.getThemeMode();
+return savedThemeMode;
+}
 
   @override
   void initState() {
@@ -194,15 +201,24 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+                themeMethod().then((value) {
+          setState(() {
+            
+     isDarkMode=value==AdaptiveThemeMode.dark;
+          });
+    });
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
 
     return Scaffold(
-        //extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: true,
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
-        body: DecoratedBox(
-            decoration: BoxDecoration(
+        body: Container(
+          padding: EdgeInsets.only(top: 120),
+            decoration:  BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
                     ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
@@ -301,14 +317,14 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color: Theme.of(context).primaryColor,
+                      color:isDarkMode?Color(0xFFFFFFFF): Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
+                decorationColor:  Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),
@@ -317,8 +333,8 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style: TextStyle(
-                color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A),
+              style:  TextStyle(
+                color: isDarkMode?Color(0xFFFFFFFF):Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -383,7 +399,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
       }
     }
 
-    return GridView.count(
+    return GridView.count(padding: EdgeInsets.zero,
         controller: _scrollController, crossAxisCount: 2, children: cardList);
   }
 
@@ -447,8 +463,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                            .withOpacity(0.3),
+                        color:  Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -477,11 +492,10 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).appBarTheme.foregroundColor,
+                    color: Color(0xFFFCDC4D),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                            .withOpacity(0.3),
+                        color: Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -498,7 +512,10 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold),
+                        fontSize: 12, fontWeight: FontWeight.bold,
+                        color: Color(0xFF121C4A)
+                        
+                        ),
                   ),
                 )
               ],
@@ -510,26 +527,30 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
     var list2 = snapshot.data![1];
     var countEscuchados = list1.length + list2.length;
 
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 20, top: 20),
-            child: Text(
-              message,
-              style: TextStyle(
-                shadows: [
-                  Shadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: const Offset(0, -5))
-                ],
-                color: Colors.transparent,
-                decorationThickness: 2,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                decorationColor: const Color(0xFFFCDC4D),
-                decoration: TextDecoration.underline,
+    return
+      Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Text(
+                message,
+                style: TextStyle(
+                  shadows: [
+                    Shadow(
+                        color:
+                        isDarkMode?
+                        Color(0xFFFFFFFF):Color(0xFF121C4A),
+                        offset: const Offset(0, -5))
+                  ],
+                  color: Colors.transparent,
+                  decorationThickness: 2,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  decorationColor: const Color(0xFFFCDC4D),
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
@@ -629,8 +650,7 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
-                            .withOpacity(0.3),
+                        color:  Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
