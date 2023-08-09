@@ -379,8 +379,8 @@ class _DetailPageState extends State<DetailPage> {
                   ),
                 ),
               ),
-            ),
-          ),
+
+
           /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
