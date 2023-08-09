@@ -409,7 +409,7 @@ return savedThemeMode;
                     _launchURL("https://www.facebook.com/RadioUNAL/");
                   },
                   child: SvgPicture.asset(
-                    'assets/icons/icono_facebook.svg',
+                    isDarkMode?'assets/icons/facebook 1.svg': 'assets/icons/icono_facebook.svg',
                     width: MediaQuery.of(context).size.width * 0.14,
                   )),
               InkWell(
@@ -417,13 +417,13 @@ return savedThemeMode;
                     _launchURL("https://www.instagram.com/radiounal/");
                   },
                   child: SvgPicture.asset(
-                      'assets/icons/icono_instagram_svg.svg',
+                      isDarkMode?'assets/icons/instagram 1.svg': 'assets/icons/icono_instagram_svg.svg',
                       width: MediaQuery.of(context).size.width * 0.14,)),
               InkWell(
                   onTap: () {
                     _launchURL("https://twitter.com/radiounal");
                   },
-                  child: SvgPicture.asset('assets/icons/icono_twitter.svg',
+                  child: SvgPicture.asset(isDarkMode?'assets/icons/twitter 1.svg': 'assets/icons/icono_twitter.svg',
                       width: MediaQuery.of(context).size.width * 0.14,))
             ],
           )
