@@ -78,29 +78,33 @@ class _TabMenuPageState extends State<TabMenuPage>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TabBar(
-                    unselectedLabelColor: Colors.black,
-                    indicatorColor:
-                        Theme.of(context).appBarTheme.foregroundColor,
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Favoritos",
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16),
-                        ),
-                      ),
-                      Tab(
-                        child: Text("Siguiendo",
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16)),
-                      )
-                    ],
+                    unselectedLabelColor: Colors.transparent,
+                    labelColor: Colors.transparent,
+                    indicatorColor: Colors.transparent,
+                    labelStyle: TextStyle(
+                      shadows: [
+                        Shadow(
+                            color: Theme.of(context).primaryColor,
+                            offset: const Offset(0, -5))
+                      ],
+                      color: Colors.transparent,
+                      decorationThickness: 2,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      decorationColor: const Color(0xFFFCDC4D),
+                      decoration: TextDecoration.underline,
+                    ),
+                    unselectedLabelStyle: TextStyle(shadows: [
+                      Shadow(
+                          color: Theme.of(context).primaryColor,
+                          offset: const Offset(0, -5))
+                    ], color: Colors.transparent, fontSize: 13),
                     controller: _tabController,
                     indicatorSize: TabBarIndicatorSize.tab,
+                    tabs: const [
+                      Tab(child: Text("Favoritos")),
+                      Tab(child: Text("Siguiendo"))
+                    ],
                   ),
                   Expanded(
                     child: TabBarView(
