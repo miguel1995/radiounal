@@ -209,8 +209,9 @@ return savedThemeMode;
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueSedes,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,color: Color(0xFF121C4A),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color:isPodcast?Color(0x3C000000):Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -228,7 +229,11 @@ return savedThemeMode;
                           child:
                             Container(
                             padding: const EdgeInsets.only(top: 9),
-                          child:Text(listSedes[value]!,style: TextStyle(color:Color(0xFF121C4A)) ))
+                          child:Text(listSedes[value]!,
+                              style:
+                              TextStyle(
+                                  color:isPodcast?Color(0x3C000000):Color(0xFF121C4A),
+                              ) ))
                         );
                       }).toList(),
                     ),
@@ -253,8 +258,9 @@ return savedThemeMode;
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueCanales,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,color:Color(0xFF121C4A),
+                      icon:  const Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color:Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -310,8 +316,9 @@ return savedThemeMode;
                       isExpanded: true,
                       isDense: true,
                       value: dropdownValueAreas,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_outlined,color:Color(0xFF121C4A),
+                      icon: Icon(
+                        Icons.keyboard_arrow_down_outlined,
+                        color:isPodcast?Color(0x3C000000):Color(0xFF121C4A),
                         size: 40,
                       ),
                       underline: Container(
@@ -329,7 +336,10 @@ return savedThemeMode;
                           child:
                           Container(
                             padding: const EdgeInsets.only(top: 9),
-                            child: Text(listAreas[value]!,style: TextStyle(color:Color(0xFF121C4A),),),
+                            child: Text(listAreas[value]!,
+                              style: TextStyle(
+                                color:isPodcast?Color(0x3C000000):Color(0xFF121C4A),
+                              ),),
                           )
                         );
                       }).toList(),

@@ -557,15 +557,15 @@ return savedThemeMode;
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                     drawCategoryTitle(element),
-                    Container(color: Color(0xFFFCDC4D),
+                    Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
                         element.title,
                         maxLines: 5,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF121C4A)
+                          color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A)
                         ),
                       ),
                     ),
@@ -591,7 +591,8 @@ return savedThemeMode;
     try {
       return Text(
         "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
-        style: const TextStyle(fontSize: 10, color: Color(0xff666666)),
+        style:  TextStyle(fontSize: 10,
+            color: isDarkMode?Color(0xFFFFFFFF):Color(0xff666666)),
       );
     } catch (e) {}
     return Text('');
@@ -604,7 +605,7 @@ return savedThemeMode;
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
           decoration: BoxDecoration(
-            color: Theme.of(context).appBarTheme.foregroundColor,
+            color: Color(0xFFFCDC4D),
             boxShadow: [
               BoxShadow(
                 color:  Color(0xff121C4A)
@@ -617,7 +618,9 @@ return savedThemeMode;
           ),
           child: Text(
             element.categoryTitle,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 12,
+                color: Color(0xFF121C4A),
+                fontWeight: FontWeight.bold),
           ),
         );
       }
