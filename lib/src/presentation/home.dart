@@ -2,6 +2,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/app.dart';
@@ -59,9 +60,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() { 
-    print('=====================home');
     super.initState();
-
 
     themeMethod().then((value) {
      isDarkMode=value==AdaptiveThemeMode.dark;
@@ -102,8 +101,6 @@ Future<AdaptiveThemeMode?> themeMethod() async {
 return savedThemeMode;
 }
 
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -117,7 +114,8 @@ return savedThemeMode;
 
 
 
-    return Scaffold(
+    return
+      Scaffold(
         extendBodyBehindAppBar: true,
         endDrawer:  const Menu(),
         appBar:  AppBarRadio(enableBack:false),

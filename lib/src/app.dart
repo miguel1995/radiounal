@@ -79,6 +79,7 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -138,7 +139,10 @@ class _MyAppState extends State<MyApp> {
                  DrawerThemeData(backgroundColor: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
-          return MaterialApp(
+          return
+
+
+            MaterialApp(
             theme: theme,
             //Tema Oscuro, se usa cuando se activa el modo oscuro
             darkTheme: darkTheme,
@@ -160,7 +164,14 @@ class _MyAppState extends State<MyApp> {
             onGenerateRoute: (settings) {
               if (settings.name == '/') {
                 return MaterialPageRoute(builder: (context) {
-                  return Home(keyPlayer.currentState?.playMusic);
+                  return
+                    WillPopScope(
+                        onWillPop: () async {
+                          // Devuelve un valor "false" para deshabilitar el botón de retroceso
+                          return Future.value(false);
+                        },
+                    child:
+                  Home(keyPlayer.currentState?.playMusic));
                 });
               } else if (settings.name == '/browser') {
                 return MaterialPageRoute(builder: (context) {
