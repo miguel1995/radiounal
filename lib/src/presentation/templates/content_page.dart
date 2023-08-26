@@ -1,16 +1,12 @@
-import 'dart:math';
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/business_logic/bloc/podcast_series_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programas_bloc.dart';
 import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
-import 'package:radiounal/src/presentation/partials/confirm_dialog.dart';
 import 'package:radiounal/src/presentation/partials/menu.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -59,7 +55,6 @@ class _ContentPageState extends State<ContentPage> {
 
   @override
   void initState() {
-    print('=====================content_page');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
     super.initState();
@@ -181,8 +176,7 @@ class _ContentPageState extends State<ContentPage> {
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor:
-                    isDarkMode ? Color(0x00121C4A) : Color(0xFFFCDC4D),
+                decorationColor: const Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),

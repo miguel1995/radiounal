@@ -17,7 +17,7 @@ class BrowserPage extends StatefulWidget {
 class _BrowserPageState extends State<BrowserPage> {
   final TextEditingController _controllerQuery = TextEditingController();
   bool isFiltro = false;
- bool isDarkMode =false;
+  bool isDarkMode = false;
 
   @override
   void dispose() {
@@ -25,71 +25,69 @@ class _BrowserPageState extends State<BrowserPage> {
     super.dispose();
   }
 
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
-
-
-
-@override
-  void initState() {print('=====================browser_page');
-    // TODO: implement initState
+  @override
+  void initState() {
     var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
+    isDarkMode = brightness == Brightness.dark;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-            themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     return Scaffold(
-      backgroundColor: Color(0x00000000),       
-    
-    
-    extendBodyBehindAppBar: true,
+      backgroundColor: Color(0x00000000),
+
+      extendBodyBehindAppBar: true,
 
       // extendBodyBehindAppBar: true,
       endDrawer: Menu(),
       appBar: AppBarRadio(enableBack: true),
-      body:
-
-      Container(
-        // padding: EdgeInsets.only(top: 100),
-          decoration:  BoxDecoration(
+      body: Container(
+          // padding: EdgeInsets.only(top: 100),
+          decoration: BoxDecoration(
             image: DecorationImage(
-              image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
+              image: AssetImage(isDarkMode
+                  ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                  : "assets/images/fondo_blanco_amarillo.png"),
               fit: BoxFit.cover,
             ),
           ),
-          child: Container(//color: Colors.purple,
-        
+          child: Container(
+            //color: Colors.purple,
+
             padding: EdgeInsets.only(left: 20, right: 20, top: 120),
             child: Column(children: [
               drawSearchField(),
               Container(
                 //color: Colors.red,
-                height: MediaQuery.of(context).size.height*0.05,
+                height: MediaQuery.of(context).size.height * 0.05,
                 alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(top: 30, bottom:0),
+                margin: const EdgeInsets.only(top: 30, bottom: 0),
                 child: Text(
                   "Explorando el contenido",
                   style: TextStyle(
                     shadows: [
                       Shadow(
-                          color:isDarkMode? Color(0xFFFFFFFF):Color(0xFF121C4A),
+                          color: isDarkMode
+                              ? Color(0xFFFFFFFF)
+                              : Color(0xFF121C4A),
                           offset: const Offset(0, -5))
                     ],
                     color: Colors.transparent,
                     decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
+                    decorationColor: const Color(0xFFFCDC4D),
                     decoration: TextDecoration.underline,
                   ),
                 ),
@@ -105,18 +103,15 @@ return savedThemeMode;
       children: [
         Expanded(
             child: TextField(
-
-                controller: _controllerQuery,
-                onChanged: (String value) async {
-                  setState(() {
-                    isFiltro = value.isNotEmpty;
-                  });
-                },
-                decoration: getFieldDecoration("Ingrese su busqueda"),
-                style: TextStyle(
-                  color: Color(0xFF121C4A)
-                ),
-                )),
+          controller: _controllerQuery,
+          onChanged: (String value) async {
+            setState(() {
+              isFiltro = value.isNotEmpty;
+            });
+          },
+          decoration: getFieldDecoration("Ingrese su busqueda"),
+          style: TextStyle(color: Color(0xFF121C4A)),
+        )),
         if (isFiltro)
           Container(
               margin: EdgeInsets.only(left: 5),
@@ -142,12 +137,14 @@ return savedThemeMode;
 
   Widget drawMainFilters() {
     return Expanded(
-      child: GridView.count(padding: EdgeInsets.zero,
+      child: GridView.count(
+          padding: const EdgeInsets.only(bottom: 100),
           childAspectRatio: (1 / 0.5),
+
           crossAxisCount: 2,
           children: [
-            drawFrecuenciaBtn(
-                "Series Podcast", {"query": "", "numColumn":2, "contentType": "SERIES"}),
+            drawFrecuenciaBtn("Series Podcast",
+                {"query": "", "numColumn": 2, "contentType": "SERIES"}),
             drawFrecuenciaBtn("Programas Bogotá 98.5 fm", {
               "query": "",
               "sede": 0,
@@ -270,8 +267,9 @@ return savedThemeMode;
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide:
-              BorderSide(width: 3, color:isDarkMode? Color(0x00FF0000):Color(0xFF121C4A)),
+          borderSide: BorderSide(
+              width: 3,
+              color: isDarkMode ? Color(0x00FF0000) : Color(0xFF121C4A)),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10));
   }
@@ -286,7 +284,6 @@ return savedThemeMode;
   }
 
   callBackDialog(int sede, String canal, String area, String filterString) {
-
     Navigator.pushNamed(context, "/browser-result",
         arguments: ScreenArguments('NONE', 'Resultados', 1, element: {
           "query": _controllerQuery.value.text,
@@ -296,12 +293,7 @@ return savedThemeMode;
           "contentType": "ELASTIC",
           "numColumn": 1,
           "filterString": filterString
-        }
-
-        ));
-
-
-
+        }));
   }
 
   Widget drawFrecuenciaBtn(String texto, Map<String, dynamic> mapFilter) {
@@ -319,14 +311,13 @@ return savedThemeMode;
                     left: 20, right: 20, top: 10, bottom: 10),
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  gradient:  RadialGradient(
-                      radius: 1,
-                      colors: [
-                         isDarkMode?Color(0xFFFCDC4D):Color(0xff216278),
-                         isDarkMode?Color(0xFFFFCC17):Color(0xff121C4A)]),
+                  gradient: RadialGradient(radius: 1, colors: [
+                    isDarkMode ? Color(0xFFFCDC4D) : Color(0xff216278),
+                    isDarkMode ? Color(0xFFFFCC17) : Color(0xff121C4A)
+                  ]),
                   boxShadow: [
                     BoxShadow(
-                      color:  Color(0xff121C4A).withOpacity(0.3),
+                      color: Color(0xff121C4A).withOpacity(0.3),
                       spreadRadius: 3,
                       blurRadius: 10,
                       offset:
@@ -337,7 +328,9 @@ return savedThemeMode;
                 ),
                 child: Text(
                   texto,
-                  style:  TextStyle(color:isDarkMode?Color(0xFF121C4A): Colors.white, fontSize: 15),
+                  style: TextStyle(
+                      color: isDarkMode ? Color(0xFF121C4A) : Colors.white,
+                      fontSize: 15),
                   textAlign: TextAlign.center,
                 ))));
   }

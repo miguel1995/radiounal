@@ -97,9 +97,8 @@ class _ContactPageState extends State<ContactsPage> {
                     decorationThickness: 2,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    decorationColor:
-                        Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
-                    decoration: TextDecoration.underline,
+                    decorationColor: const Color(0xFFFCDC4D),
+                  decoration: TextDecoration.underline,
                   ),
                 ),
               ),
@@ -179,7 +178,7 @@ class _ContactPageState extends State<ContactsPage> {
                             fontWeight: FontWeight.bold)),
                     TextSpan(
                       text: 'aquí',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                       ),

@@ -324,7 +324,7 @@ return savedThemeMode;
                 decorationThickness: 2,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                decorationColor:  Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
+                decorationColor: const Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),

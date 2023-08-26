@@ -42,13 +42,13 @@ class _AppBarRadioState extends State<AppBarRadio> {
       });
     });
     return AppBar(
-        backgroundColor: isDarkMode ? Color(0x00000000) : Color(0xff121C4A),
+        backgroundColor: isDarkMode ? const Color(0xFFFCDC4D) : const Color(0xff121C4A),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(20))),
         leading: (widget.enableBack)
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_outlined,
-                    color: Color(0xFFFCDC4D)),
+                icon:  Icon(Icons.arrow_back_ios_new_outlined,
+                    color: isDarkMode?const Color(0xff121C4A):const Color(0xFFFCDC4D)),
                 onPressed: () => Navigator.pop(context))
             : null,
         title: Container(
@@ -60,7 +60,9 @@ class _AppBarRadioState extends State<AppBarRadio> {
               },
               child: SvgPicture.asset(
                   "assets/icons/identificador_radioUNAL.svg",
-                  color: Color(0xFFFCDC4D))),
+                color: isDarkMode?const Color(0xff121C4A):const Color(0xFFFCDC4D),
+
+              )),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -75,7 +77,7 @@ class _AppBarRadioState extends State<AppBarRadio> {
                   child: SvgPicture.asset(
                     'assets/icons/icono_lupa_buscador.svg',
                     width: 25,
-                    color: Color(0xFFFCDC4D),
+                    color: isDarkMode?const Color(0xff121C4A):const Color(0xFFFCDC4D),
                   ))),
           InkWell(
               onTap: () {
@@ -83,7 +85,11 @@ class _AppBarRadioState extends State<AppBarRadio> {
               },
               child: Container(
                   margin: EdgeInsets.only(right: 10),
-                  child: Icon(Icons.more_vert, color: Color(0xFFFCDC4D))))
+                  child:
+                  Icon(Icons.more_vert,
+                    color: isDarkMode?const Color(0xff121C4A):const Color(0xFFFCDC4D),
+              )
+              ))
         ]);
   }
 

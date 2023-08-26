@@ -380,7 +380,6 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ),
 
-
           /*Container(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
@@ -765,8 +764,7 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                 decorationThickness: 2,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                decorationColor:
-                    isDarkMode ? Color(0x00FFFFFF) : Color(0xFFFCDC4D),
+                decorationColor: const Color(0xFFFCDC4D),
                 decoration: TextDecoration.underline,
               ),
             ),

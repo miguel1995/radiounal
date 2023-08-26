@@ -202,7 +202,7 @@ return savedThemeMode;
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
+                  decorationColor: Color(0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -254,7 +254,7 @@ return savedThemeMode;
               Navigator.pushNamed(context, '/favourites',
                   arguments: ScreenArguments('NONE', 'NONE', 0));
             },
-            label: Text("Favoritos",
+            label: const Text("Favoritos",
                 style: TextStyle(
                     fontSize: 16,
                     color: Color(0xff121C4A),
@@ -288,13 +288,13 @@ return savedThemeMode;
                         shadows: [
                           Shadow(
                               color: isDarkMode?Colors.white:Color(0xff121C4A),
-                              offset: Offset(0, -5))
+                              offset: const Offset(0, -5))
                         ],
                         color: Colors.transparent,
                         decorationThickness: 2,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        decorationColor: isDarkMode?Color(0x00121C4A):Color(0xFFFCDC4D),
+                        decorationColor: const Color(0xFFFCDC4D),
                         decoration: TextDecoration.underline,
 
                       ),
@@ -339,7 +339,7 @@ return savedThemeMode;
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(isDarkMode?0x00121C4A:0xFFFCDC4D),
+                  decorationColor: const Color(0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -393,7 +393,7 @@ return savedThemeMode;
                   decorationThickness: 2,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                  decorationColor: const Color(0xFFFCDC4D),
                   decoration: TextDecoration.underline,
                 ),
               ),
