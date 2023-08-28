@@ -92,7 +92,6 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   initState() {
-    print('=====================detail_page');
     super.initState();
 
     initPlatformState();

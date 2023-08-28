@@ -91,9 +91,7 @@ return savedThemeMode;
 
   @override
   void initState() {
-    
-print('=====================item_page');
-   
+
     super.initState();
     initPlatformState();
 
@@ -106,11 +104,6 @@ print('=====================item_page');
     message = widget.message;
     uid = widget.uid;
     from = widget.from;
-
-    print(title);
-    print(message);
-    print(uid);
-    print(from);
 
     favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
 
@@ -312,7 +305,7 @@ print('=====================item_page');
               child: Text(
                 (element != null) ? element.categoryTitle : "",
                 style:
-                     TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
+                     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
                     color:  Color(0xFF121C4A)
                     ),
               ),
@@ -416,8 +409,6 @@ print('=====================item_page');
             child: InkWell(
                 onTap: () {
 
-                  print(element.audio);
-
                   if (element != null) {
                     if (element.audio != null) {
                       widget.callBackPlayMusic!(
@@ -444,14 +435,14 @@ print('=====================item_page');
                         left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
                       gradient: RadialGradient(radius: 2, colors: [
-                       isDarkMode?Color(0xFFFCDC4D): Color(0xff216278),
-                        isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A)
+                       isDarkMode?const Color(0xFFFCDC4D): const Color(0xff216278),
+                        isDarkMode ? const Color(0xFFFCDC4D) : const Color(0xff121C4A)
                       ]),
                       borderRadius: BorderRadius.circular(5),
                       color: Theme.of(context).primaryColor,
                       boxShadow: [
                         BoxShadow(
-                          color: Color( 0xff121C4A)
+                          color: const Color( 0xff121C4A)
                               .withOpacity(0.3),
                           spreadRadius: 3,
                           blurRadius: 10,
@@ -463,14 +454,14 @@ print('=====================item_page');
                       children:  [
                         Icon(
                           Icons.play_arrow,
-                          color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
+                          color: isDarkMode?const Color(0xFF121C4A):const Color(0xFFFFFFFF),
                           size: 30,
                         ),
                         Text(
                           "Reproducir",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
+                              color: isDarkMode?const Color(0xFF121C4A):const Color(0xFFFFFFFF),
                               fontSize: 16),
                         )
                       ],
@@ -495,10 +486,10 @@ print('=====================item_page');
                               radius: 0.8,
                               colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
                           borderRadius: BorderRadius.circular(5),
-                          color:Color(0xFF121C4A),
+                          color:const Color(0xFF121C4A),
                           boxShadow: [
                             BoxShadow(
-                              color: Color( 0xff121C4A)
+                              color: const Color( 0xff121C4A)
                                   .withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,

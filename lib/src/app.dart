@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
+import 'package:radiounal/src/business_logic/bloc/isFirebase_bloc.dart';
 import 'package:radiounal/src/presentation/home.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -21,11 +24,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:radiounal/src/presentation/splash.dart';
 import 'package:radiounal/src/presentation/templates/tab_menu.dart';
 import '../firebase_options.dart';
+import 'business_logic/bloc/radio_programacion_bloc.dart';
 import 'business_logic/firebase/push_notifications.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'business_logic/firebase/firebaseLogic.dart';
+import 'data/models/programa_model.dart';
+import 'data/models/programacion_model.dart';
 
 
-Function? resetH;
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -37,12 +43,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   GlobalKey<BottomNavigationBarRadioState> keyPlayer = GlobalKey();
  bool isDarkMode =false;
+  late FirebaseLogic firebaseLogic;
+
+  List<ProgramacionModel> pragramacionList = [];
+
+  final blocRadioProgramacion = RadioProgramacionBloc();
+
+
   @override
-  void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
-  isDarkMode = brightness == Brightness.dark;
-    Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    ).then((value) => {initPushNotifications()});
+  void initState() {
+
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    isDarkMode = brightness == Brightness.dark;
+
+
+    initPushNotifications();
+
 
   }
 
@@ -117,19 +133,19 @@ class _MyAppState extends State<MyApp> {
             // Define the default font family.
             fontFamily: 'AncizarSans',
             textTheme:  TextTheme(
-                headline1: TextStyle(
+                headline1: const TextStyle(
                     // fontSize: 72.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.red),
-                headline2: TextStyle(color: Colors.red),
-                headline3: TextStyle(color: Colors.red),
-                headline4: TextStyle(color: Colors.red),
-                headline5: TextStyle(color: Colors.red),
-                headline6: TextStyle(
+                headline2: const TextStyle(color: Colors.red),
+                headline3: const TextStyle(color: Colors.red),
+                headline4: const TextStyle(color: Colors.red),
+                headline5: const TextStyle(color: Colors.red),
+                headline6: const TextStyle(
                     // fontSize: 36.0,
                     fontStyle: FontStyle.italic,
                     color: Colors.red),
-                bodyText1: TextStyle(color: Colors.red),
+                bodyText1: const TextStyle(color: Colors.red),
                 bodyText2: TextStyle(
                     // fontSize: 14.0,
                     color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
@@ -163,15 +179,19 @@ class _MyAppState extends State<MyApp> {
             initialRoute: "/",
             onGenerateRoute: (settings) {
               if (settings.name == '/') {
-                return MaterialPageRoute(builder: (context) {
-                  return
-                    WillPopScope(
+                return MaterialPageRoute(
+
+                    builder: (context) {
+                  return Home(keyPlayer.currentState?.playMusic, pragramacionList);
+
+
+                    /*WillPopScope(
                         onWillPop: () async {
                           // Devuelve un valor "false" para deshabilitar el botón de retroceso
-                          return Future.value(false);
+                           return Future.value(false);
                         },
                     child:
-                  Home(keyPlayer.currentState?.playMusic));
+                  Home(keyPlayer.currentState?.playMusic, pragramacionList));*/
                 });
               } else if (settings.name == '/browser') {
                 return MaterialPageRoute(builder: (context) {

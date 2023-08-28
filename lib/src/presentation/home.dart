@@ -7,9 +7,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/app.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
+import 'package:radiounal/src/business_logic/bloc/isFirebase_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
+import 'package:radiounal/src/data/models/programa_model.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
@@ -23,7 +25,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../business_logic/bloc/podcast_masescuchados_bloc.dart';
 import '../business_logic/bloc/radio_masescuchados_bloc.dart';
-import '../business_logic/firebase/firebaseLogic.dart';
+
+
 
 class Home extends StatefulWidget {
 
@@ -39,9 +42,9 @@ class Home extends StatefulWidget {
       dynamic urlParam,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
+      List<ProgramacionModel> pragramacionList;
 
-
-  Home( this.callBackPlayMusic, {Key? key}) : super(key: key);
+  Home( this.callBackPlayMusic, this.pragramacionList, {Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -53,8 +56,9 @@ class _HomeState extends State<Home> {
   final blocRadioProgramacion = RadioProgramacionBloc();
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
+  final blocIsFirebase = IsFirebaseBloc();
   String potcastRandom = "";
- bool isDarkMode =false;
+  bool isDarkMode =false;
 
 
 
@@ -62,11 +66,6 @@ class _HomeState extends State<Home> {
   void initState() { 
     super.initState();
 
-    themeMethod().then((value) {
-     isDarkMode=value==AdaptiveThemeMode.dark;
-    });
-    var brightness = SchedulerBinding.instance.window.platformBrightness;
- isDarkMode = brightness == Brightness.dark;
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -74,13 +73,10 @@ class _HomeState extends State<Home> {
     blocRadioDestacados.fetchDestacados();
     blocPodcastDestacados.fetchDestacados();
     blocRadioProgramacion.fetchProgramacion();
-
     blocRadioMasEscuchados.fetchMasEscuchados();
     blocPodcastMasEscuchados.fetchMasEscuchados();
 
     blocPodcastDestacados.subject.stream.listen((event) {
-
-
       //Actualiza la transmision de podcast random
       EpisodioModel randomItem = (event..shuffle()).first;
 
@@ -90,6 +86,8 @@ class _HomeState extends State<Home> {
 
 
     });
+
+
 
 
 
@@ -110,9 +108,6 @@ return savedThemeMode;
       });
         
     });
-
-
-
 
     return
       Scaffold(
@@ -564,8 +559,8 @@ return savedThemeMode;
                   radius: 1, colors: [
 
 
-                   isDarkMode? Color(0xffFEE781):Color( 0xff216278), 
-                   isDarkMode?Color(0xffFFCC17):Color(0xff121C4A)
+                   isDarkMode? const Color(0xffFEE781):const Color( 0xff216278),
+                   isDarkMode?const Color(0xffFFCC17):const Color(0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
@@ -600,13 +595,13 @@ return savedThemeMode;
         width: widthBox * 4,
         decoration:  BoxDecoration(
           color: isDarkMode? Color(0xFFA6AABB):Color(0xFFCFCFCF),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         ),
         child: Center(
             child: Text(
               formatted[0].toUpperCase() + formatted.substring(1),
-          style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
+          style:  const TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
           color: Color(0xff121C4A)
           ),
         ))));
@@ -615,7 +610,7 @@ return savedThemeMode;
       Container(
         padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Color(0xfffcdc4d),
+        color: const Color(0xfffcdc4d),
         width: widthBox,
         child: const Text(
           "",
@@ -625,7 +620,7 @@ return savedThemeMode;
       Container(
         padding: EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Color(0xff121C4A),
+        color: const Color(0xff121C4A),
         width: widthBox,
         child: const Text(
           "Ahora",
@@ -633,9 +628,9 @@ return savedThemeMode;
         ),
       ),
       Container(
-        padding: EdgeInsets.only(top: 3, bottom: 3),
+        padding: const EdgeInsets.only(top: 3, bottom: 3),
         alignment: Alignment.center,
-        color: Color(0xfffcdc4d),
+        color: const Color(0xfffcdc4d),
         width: widthBox,
         child: const Text("Siguiente",
             style: TextStyle(fontWeight: FontWeight.bold,
@@ -643,9 +638,9 @@ return savedThemeMode;
             )),
       ),
       Container(
-          padding: EdgeInsets.only(top: 3, bottom: 3),
+          padding: const EdgeInsets.only(top: 3, bottom: 3),
           alignment: Alignment.center,
-          color: Color(0xff121C4A),
+          color: const Color(0xff121C4A),
           width: widthBox,
           child: const Text(
             "Más Tarde",
@@ -662,13 +657,13 @@ return savedThemeMode;
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
-              color: Color(0xfffcdc4d),
+              color: const Color(0xfffcdc4d),
               borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular((i == 2) ? 30 : 0)),
             ),
             child: Text(
               "${list![i].emisora}\n${list[i].frecuencia}",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                   color: Color(0xff121C4A),
                   fontWeight: FontWeight.bold),
@@ -679,12 +674,12 @@ return savedThemeMode;
             alignment: Alignment.centerLeft,
             width: widthBox,
             height: widthBox * 0.80,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xff121C4A),
             ),
             child: Text(
               "${list[i].ahorPrograma}\n${list[i].ahorHorario}",
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             )),
         Container(
             margin: const EdgeInsets.only(bottom: 1),
@@ -692,10 +687,10 @@ return savedThemeMode;
             alignment: Alignment.centerLeft,
             width: widthBox,
             height: widthBox * 0.80,
-            color: Color(0xffFCDC4D),
+            color: const Color(0xffFCDC4D),
             child: Text(
                 "${list[i].siguientePrograma}\n${list[i].siguienteHorario}",
-                style: TextStyle(color: Color(0xff121C4A)))),
+                style: const TextStyle(color: Color(0xff121C4A)))),
         Container(
             margin: const EdgeInsets.only(bottom: 1),
             padding: const EdgeInsets.only(left: 10, right: 10),
@@ -703,13 +698,13 @@ return savedThemeMode;
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
-              color: Color(0xff121C4A),
+              color: const Color(0xff121C4A),
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular((i == 2) ? 30 : 0)),
             ),
             child: Text(
                 "${list[i].masTardePrograma}\n${list[i].masTardeHorario}",
-                style: TextStyle(color: Colors.white)))
+                style: const TextStyle(color: Colors.white)))
       ]));
     }
 
@@ -722,7 +717,7 @@ return savedThemeMode;
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(0xff121C4A).withOpacity(0.3),
+                        color:  const Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:

@@ -4,8 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 class FirebaseLogic {
   late final FirebaseFirestore db; //Gestiona el uso de firestore database
-  late final FirebaseMessaging
-      _fcm; // Gestiona el uso de FirebaseMessagin (push notifications)
+  late final FirebaseMessaging _fcm; // Gestiona el uso de FirebaseMessagin (push notifications)
 
   FirebaseLogic() {
     db = FirebaseFirestore.instance;
@@ -113,6 +112,24 @@ class FirebaseLogic {
         );
 
     return listDocs;
+  }
+
+  Future<dynamic> findProgramacion() async {
+    var doc;
+
+    //Busca la programacion mini
+    await db
+        .collection("programacion").doc("programacion_unic_id")
+        .get()
+        .then(
+          (snapshot) async =>
+              {
+                doc = snapshot.data()
+              },
+          onError: (e) => print("Error completing: $e")
+        );
+
+    return doc;
   }
 
   Future<bool> agregarSeguido(uid, message, tipo, userId) async {
