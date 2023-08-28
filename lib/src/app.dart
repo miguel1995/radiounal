@@ -182,16 +182,14 @@ class _MyAppState extends State<MyApp> {
                 return MaterialPageRoute(
 
                     builder: (context) {
-                  return Home(keyPlayer.currentState?.playMusic, pragramacionList);
-
-
-                    /*WillPopScope(
+                  return
+                    WillPopScope(
                         onWillPop: () async {
                           // Devuelve un valor "false" para deshabilitar el botón de retroceso
                            return Future.value(false);
                         },
                     child:
-                  Home(keyPlayer.currentState?.playMusic, pragramacionList));*/
+                  Home(keyPlayer.currentState?.playMusic, pragramacionList));
                 });
               } else if (settings.name == '/browser') {
                 return MaterialPageRoute(builder: (context) {
