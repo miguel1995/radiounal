@@ -84,6 +84,8 @@ class _DetailPageState extends State<DetailPage> {
   bool isListLoading = false;
 
   IsSeguidoBloc blocIsSeguido = IsSeguidoBloc();
+  final GlobalKey _topKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
+  var topPadding = 0.0;
 
   Future<AdaptiveThemeMode?> themeMethod() async {
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
@@ -119,8 +121,6 @@ class _DetailPageState extends State<DetailPage> {
         _isSeguido = event;
       });
 
-
-
     });
 
     if (message == "RADIO") {
@@ -136,7 +136,6 @@ class _DetailPageState extends State<DetailPage> {
         blocRadioProgramasYEmisiones.subject.stream.listen((event) {
           if (event["programas"] != null) {
             if (event["programas"].length > 0) {
-              print(event["programas"][0]);
               setState(() {
                 elementContent = event["programas"][0];
               });
@@ -166,22 +165,18 @@ class _DetailPageState extends State<DetailPage> {
           _scrollControllerSilver.offset) {
         if (page < totalPages) {
           page++;
-          print("listener -> page: $page");
           setState(() {
             isLoading = true;
-            //reloadlist!=null?reloadlist!():{};
           });
-          Future.delayed(Duration(milliseconds: 10000), () {
+          Future.delayed(const Duration(milliseconds: 10000), () {
             setState(() {
               globalCallbackRedrawableListView!();
               isLoading = false;
             });
           });
           if (message == "RADIO") {
-            print("fetch emisiones");
             blocRadioEmisiones.fetchEmisiones(uid, page);
           } else {
-            print("fetch episodios");
             blocPodcastEpisodios.fetchEpisodios(uid, page);
           }
         }
@@ -264,12 +259,20 @@ class _DetailPageState extends State<DetailPage> {
       return sliverList;
     }
 
+    final appBarRenderBox = _topKey.currentContext?.findRenderObject() as RenderBox?;
+    if (appBarRenderBox != null) {
+      topPadding = appBarRenderBox.size.height;
+    }
+
+
     return Scaffold(
-      extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: true,
         endDrawer: const Menu(),
-        appBar: AppBarRadio(enableBack: true),
+        appBar: AppBarRadio(
+            key: _topKey,
+            enableBack: true),
         body: Container(
-          padding: EdgeInsets.only(top: 120),
+            padding:  EdgeInsets.only(top: topPadding),
             decoration:  BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
@@ -359,22 +362,19 @@ class _DetailPageState extends State<DetailPage> {
     totalPages = infoModel.pages;
 
     return Container(
-        //color: Colors.green,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                //color: Colors.cyan,
-                //height: MediaQuery.of(context).size.height * 0.1,
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
                   "${infoModel.count} resultados",
                   style:  TextStyle(
-                    color: isDarkMode?Color(0xFFFFFFFF): Color(0xff121C4A),
+                    color: isDarkMode?const Color(0xFFFFFFFF): const Color(0xff121C4A),
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    decorationColor: Color(0xFFFCDC4D),
+                    decorationColor: const Color(0xFFFCDC4D),
                   ),
                 ),
               ),
@@ -401,7 +401,6 @@ class _DetailPageState extends State<DetailPage> {
           ,
           if (isLoading)
             Container(
-              //color: Colors.white,
               height: MediaQuery.of(context).size.height * 0.1,
               child: const Center(
                   child: SpinKitFadingCircle(

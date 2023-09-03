@@ -21,7 +21,7 @@ class _TabMenuPageState extends State<TabMenuPage>
   late TabController _tabController;
   int tabIndex = 0;
   bool isDarkMode = false;
-  GlobalKey _topKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
+  final GlobalKey _topKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
   var topPadding = 0.0;
 
   Future<AdaptiveThemeMode?> themeMethod() async {

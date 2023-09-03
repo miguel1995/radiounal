@@ -7,7 +7,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:radiounal/src/app.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
-import 'package:radiounal/src/business_logic/bloc/isFirebase_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_destacados_bloc.dart';
 import 'package:radiounal/src/business_logic/bloc/radio_programacion_bloc.dart';
 import 'package:radiounal/src/data/models/episodio_model.dart';
@@ -56,7 +55,6 @@ class _HomeState extends State<Home> {
   final blocRadioProgramacion = RadioProgramacionBloc();
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
-  final blocIsFirebase = IsFirebaseBloc();
   String potcastRandom = "";
   bool isDarkMode =false;
 
