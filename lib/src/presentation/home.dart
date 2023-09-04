@@ -38,6 +38,7 @@ class Home extends StatefulWidget {
       dynamic dateParam,
       dynamic durationParam,
       dynamic typeParam,
+      dynamic tipoParam,
       dynamic urlParam,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
@@ -533,6 +534,7 @@ return savedThemeMode;
               "",
               "",
               texto,
+              "",
               "",
               "",
               "",

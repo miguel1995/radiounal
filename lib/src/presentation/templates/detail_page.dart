@@ -108,7 +108,9 @@ class _DetailPageState extends State<DetailPage> {
     uid = widget.uid;
     page = 1;
     elementContent = widget.elementContent;
-    favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
+    favoritoBtn = FavoritoBtn(uid: uid, message: message,
+        tipo: (message == "RADIO") ? "PROGRAMA" : "SERIE",
+        isPrimaryColor: true);
 
     /*print(title);
     print(message);
@@ -715,8 +717,8 @@ class _CustomHeaderDelegate extends SliverPersistentHeaderDelegate {
                       child: SvgPicture.asset(
                           'assets/icons/icono_compartir_redes.svg',
                           color: isDarkMode
-                              ? Color(0xFFFCDC4D)
-                              : Color(0xFF121C4A))))
+                              ? const Color(0xFFFCDC4D)
+                              : const Color(0xFF121C4A))))
             ]),
           ),
           Container(

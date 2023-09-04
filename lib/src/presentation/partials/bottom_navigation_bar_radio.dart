@@ -107,7 +107,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     audioPlayer.setVolume(currentVolumen);
     audioPlayer.setPlaybackRate(dropDownValue);
 
-    myFavoritoBtn = FavoritoBtn(uid: uid, message: type, isPrimaryColor: false);
+    myFavoritoBtn = FavoritoBtn(uid: uid, message: type,
+        tipo:(type == "RADIO") ? "EMISION" : "EPISODIO",
+        isPrimaryColor: false);
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -564,6 +566,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
       dateParam,
       durationParam,
       typeParam,
+      tipoParam,
       urlParam,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn) {
@@ -603,7 +606,11 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
       });
     }
 
-    myFavoritoBtn = FavoritoBtn(uid: uid, message: type, isPrimaryColor: false);
+    myFavoritoBtn = FavoritoBtn(
+        uid: uid,
+        message: type,
+        tipo: tipoParam,
+        isPrimaryColor: false);
 
     setState(() {
       audioUrl = audioUrlParam;

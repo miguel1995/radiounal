@@ -39,14 +39,15 @@ class FirebaseLogic {
   final _subjectFavorite = BehaviorSubject<bool>();
   BehaviorSubject<bool> get subjectFavorite => _subjectFavorite;
 
-  validateFavorite(uid, userId) async {
+  validateFavorite(uid, userId, tipo) async {
     // Verifica si ya se encuentra en el listado de mis favoritos en Firebase
     bool flag = false;
 
     final docRef = db
         .collection("favoritos")
         .where("uid", isEqualTo: uid)
-        .where("userId", isEqualTo: userId);
+        .where("userId", isEqualTo: userId)
+        .where("tipo", isEqualTo: tipo);
 
     docRef.snapshots().listen(
         (event) => {

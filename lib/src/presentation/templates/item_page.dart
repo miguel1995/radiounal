@@ -41,6 +41,7 @@ class ItemPage extends StatefulWidget {
       dynamic dateParam,
       dynamic durationParam,
       dynamic typeParam,
+      dynamic tipoParam,
       dynamic typeUrl,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
@@ -61,6 +62,7 @@ class ItemPage extends StatefulWidget {
 class _ItemPageState extends State<ItemPage> {
   late String title;
   late String message;
+  late String tipo;
   late int uid;
   late String from;
 
@@ -105,7 +107,11 @@ return savedThemeMode;
     uid = widget.uid;
     from = widget.from;
 
-    favoritoBtn = FavoritoBtn(uid: uid, message: message, isPrimaryColor: true);
+    favoritoBtn = FavoritoBtn(
+        uid: uid,
+        message: message,
+        tipo:(message == "RADIO") ? "EMISION" : "EPISODIO",
+        isPrimaryColor: true);
 
     firebaseLogic
         .validateEstadistica(uid, _deviceId, message.toUpperCase(),
@@ -423,6 +429,9 @@ return savedThemeMode;
                         element.date,
                         element.duration,
                         message,
+                        (message == "RADIO")
+                            ? "EMISION"
+                            : "EPISODIO",
                         element.url,
                         false,
                         favoritoBtn,

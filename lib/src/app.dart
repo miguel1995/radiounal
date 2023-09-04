@@ -62,16 +62,6 @@ class _MyAppState extends State<MyApp> {
     //Cuando el usuario presiona la push Notification se llema este bloque de código
     // Llega el Uid de la serie o programa enviado desde el backend de radio y podcast
     pushNotification.mensajes.listen((data) {
-      print("MI NOOTIFICACION:: ");
-      print(data);
-
-      /*
-       title: args.title,
-                        message: args.message,
-                        uid: args.number,
-                        from: args.from,
-      *
-      * */
 
       if (data != null) {
         var messageStr = data['site'];

@@ -11,12 +11,14 @@ import '../../business_logic/bloc/favorito_bloc.dart';
 class FavoritoBtn extends StatefulWidget {
   final int uid; //Indica el id del episodio de podcast o emisora de radio
   final String message;
+  final String tipo;
   final bool isPrimaryColor;
 
   const FavoritoBtn(
       {Key? key,
       required this.uid,
       required this.message,
+      required this.tipo,
       required this.isPrimaryColor})
       : super(key: key);
 
@@ -30,6 +32,7 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
   late FirebaseLogic firebaseLogic;
   late int uid; //Indica el id del episodio de podcast o emisora de radio
   late String message;
+  late String tipo;
   late bool isPrimaryColor;
 
   FavoritoBloc blocFavorito = FavoritoBloc();
@@ -41,6 +44,7 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
  isDarkMode = brightness == Brightness.dark;
     uid = widget.uid;
     message = widget.message;
+    tipo = widget.tipo;
     isPrimaryColor = widget.isPrimaryColor;
 
     firebaseLogic = FirebaseLogic();
@@ -66,7 +70,7 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
       _deviceId = deviceId;
     });
 
-    blocFavorito.validateFavorite(uid, _deviceId);
+    blocFavorito.validateFavorite(uid, _deviceId, tipo);
     blocFavorito.subject.stream.listen((event) {
       setState(() => {_isFavorito = event});
     });
@@ -90,7 +94,7 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
             });
             firebaseLogic
                 .agregarFavorito(uid, message,
-                    (message == "RADIO") ? "EMISION" : "EPISODIO", _deviceId)
+                    tipo, _deviceId)
                 .then((value) => {
                       if (value != true)
                         {

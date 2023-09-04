@@ -8,8 +8,8 @@ class FavoritoBloc{
   final _subject = BehaviorSubject<bool>();
   FirebaseLogic firebaseLogic = FirebaseLogic();
 
-  validateFavorite(dynamic uid, dynamic _deviceId) async {
-    firebaseLogic.validateFavorite(uid, _deviceId);
+  validateFavorite(dynamic uid, dynamic _deviceId, String tipo) async {
+    firebaseLogic.validateFavorite(uid, _deviceId, tipo);
     firebaseLogic.subjectFavorite.stream.listen((event) {
       _subject.sink.add(event);
     });
