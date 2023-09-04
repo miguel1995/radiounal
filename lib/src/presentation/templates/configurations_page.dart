@@ -26,7 +26,7 @@ Future<AdaptiveThemeMode?> themeMethod() async {
 return savedThemeMode;
 }
 @override
-  void initState() {print('=====================configurations_page');
+  void initState() {
     // TODO: implement initState
     var brightness = SchedulerBinding.instance.window.platformBrightness;
   isDarkMode = brightness == Brightness.dark;
@@ -40,13 +40,14 @@ return savedThemeMode;
      isDarkMode=value==AdaptiveThemeMode.dark;
           });
     });
-    return Scaffold(backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xff121C4A),
+    return Scaffold(
+      backgroundColor: isDarkMode ? const Color(0xFF121C4A) : const Color(0xFFFFFFFF),
       //extendBodyBehindAppBar: true,
-      endDrawer: Menu(),
+      endDrawer: const Menu(),
       appBar:  AppBarRadio(enableBack:true),
       body: Container(
-        color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
-        padding: EdgeInsets.only(top: 20,bottom: 20),
+        color: isDarkMode?const Color(0xFF121C4A):const Color(0xFFFFFFFF),
+        padding: const EdgeInsets.only(top: 20,bottom: 20),
         child: SingleChildScrollView(
           child: Column(
             children: [drawConfiguracion(), drawAcerca()],
@@ -195,7 +196,7 @@ return savedThemeMode;
               decorationThickness: 2,
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              decorationColor: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+              decorationColor: const Color(0xFFFCDC4D),
               decoration: TextDecoration.underline,
             ),
           ),

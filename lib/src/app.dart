@@ -30,8 +30,6 @@ import 'business_logic/firebase/firebaseLogic.dart';
 import 'data/models/programa_model.dart';
 import 'data/models/programacion_model.dart';
 
-
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -40,28 +38,22 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   GlobalKey<BottomNavigationBarRadioState> keyPlayer = GlobalKey();
- bool isDarkMode =false;
+  bool isDarkMode = false;
   late FirebaseLogic firebaseLogic;
 
   List<ProgramacionModel> pragramacionList = [];
 
   final blocRadioProgramacion = RadioProgramacionBloc();
 
-
   @override
   void initState() {
-
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
 
-
     initPushNotifications();
-
-
   }
-
-
 
   void initPushNotifications() {
     final pushNotification = new PushNotification();
@@ -69,69 +61,68 @@ class _MyAppState extends State<MyApp> {
 
     //Cuando el usuario presiona la push Notification se llema este bloque de código
     // Llega el Uid de la serie o programa enviado desde el backend de radio y podcast
-    pushNotification.mensajes.listen((uid) {
+    pushNotification.mensajes.listen((data) {
+      print("MI NOOTIFICACION:: ");
+      print(data);
 
-      print(uid);
+      /*
+       title: args.title,
+                        message: args.message,
+                        uid: args.number,
+                        from: args.from,
+      *
+      * */
 
+      if (data != null) {
+        var messageStr = data['site'];
+        var redirectTo = "/item";
+        var uid = int.parse(data['uid'].toString());
 
-/*
-      if (eventUid != null) {
-        blocDetail.getEventById(int.parse(eventUid));
-
-        bool firstTime = true;
-
-        blocDetail.circularEventSubject.stream.listen((event) {
-          if (event != null) {
-            if (firstTime) {
-              firstTime = false;
-
-              navigatorKey.currentState.push(MaterialPageRoute(
-                  builder: (context) => EventDetailPage(circularEvent: event)));
-            }
-          }
-        });
-      }*/
+        navigatorKey.currentState?.pushNamed(redirectTo,
+            arguments: ScreenArguments("SITE", messageStr, uid,
+                from: "BROWSER_RESULT_PAGE"));
+      }
     });
   }
-
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(
         dark: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.red,
-          primaryColor: Color(0xFFFCDC4D),
-          primaryColorDark: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D),
+            brightness: Brightness.dark,
+            primarySwatch: Colors.red,
+            primaryColor: Color(0xFFFCDC4D),
+            primaryColorDark:
+                isDarkMode ? const Color(0xff121C4A) : const Color(0xFFFCDC4D),
             fontFamily: 'AncizarSans',
-          textTheme: const TextTheme(
+            textTheme: const TextTheme(
               // bodyText2: TextStyle(
               //     // fontSize: 14.0,
               //       fontWeight: FontWeight.bold,
               //     color: Colors.white),
               headline1: TextStyle(
                   // fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.bold,
                   color: Colors.white),
-                  ),
-            appBarTheme:  AppBarTheme(
+            ),
+            appBarTheme: AppBarTheme(
                 color: Color(0xFFFCDC4D), foregroundColor: Color(0xff121C4A)
-                //color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D), 
+                //color: Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                 // backgroundColor: Color(isDarkMode?:0xFFFCDC4D:0xff121C4A),
                 // foregroundColor:Color(isDarkMode?0xff121C4A:0xFFFCDC4D)
-                ), 
-                 drawerTheme:
-                 DrawerThemeData(backgroundColor: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A))),
-        
+                ),
+            drawerTheme: DrawerThemeData(
+                backgroundColor:
+                    isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A))),
         light: ThemeData(
             // Define the default brightness and colors.
             brightness: Brightness.light,
-            primaryColor:  Color(0xff121C4A),
+            primaryColor: Color(0xff121C4A),
 
             // Define the default font family.
             fontFamily: 'AncizarSans',
-            textTheme:  TextTheme(
+            textTheme: TextTheme(
                 headline1: const TextStyle(
                     // fontSize: 72.0,
                     fontWeight: FontWeight.bold,
@@ -147,17 +138,18 @@ class _MyAppState extends State<MyApp> {
                 bodyText1: const TextStyle(color: Colors.red),
                 bodyText2: TextStyle(
                     // fontSize: 14.0,
-                    color: Color(isDarkMode?0xFFFCDC4D:0xff121C4A))),
-            appBarTheme:  AppBarTheme(
-                color: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A), foregroundColor: isDarkMode?Color(0xff121C4A):Color(0xFFFCDC4D)),
-            drawerTheme:
-                 DrawerThemeData(backgroundColor: isDarkMode?Color(0xFFFCDC4D):Color(0xff121C4A))),
+                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A))),
+            appBarTheme: AppBarTheme(
+                color: isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A),
+                foregroundColor:
+                    isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D)),
+            drawerTheme: DrawerThemeData(
+                backgroundColor:
+                    isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A))),
         initial: AdaptiveThemeMode.light,
         builder: (theme, darkTheme) {
-          return
-
-
-            MaterialApp(
+          return MaterialApp(
+            navigatorKey: navigatorKey,
             theme: theme,
             //Tema Oscuro, se usa cuando se activa el modo oscuro
             darkTheme: darkTheme,
@@ -172,23 +164,20 @@ class _MyAppState extends State<MyApp> {
                       child: childElement),
                 Positioned(
                     bottom: 0, child: BottomNavigationBarRadio(key: keyPlayer)),
-                    Splash()
+                Splash()
               ]));
             },
             initialRoute: "/",
             onGenerateRoute: (settings) {
               if (settings.name == '/') {
-                return MaterialPageRoute(
-
-                    builder: (context) {
-                  return
-                    WillPopScope(
-                        onWillPop: () async {
-                          // Devuelve un valor "false" para deshabilitar el botón de retroceso
-                           return Future.value(false);
-                        },
-                    child:
-                  Home(keyPlayer.currentState?.playMusic, pragramacionList));
+                return MaterialPageRoute(builder: (context) {
+                  return WillPopScope(
+                      onWillPop: () async {
+                        // Devuelve un valor "false" para deshabilitar el botón de retroceso
+                        return Future.value(false);
+                      },
+                      child: Home(
+                          keyPlayer.currentState?.playMusic, pragramacionList));
                 });
               } else if (settings.name == '/browser') {
                 return MaterialPageRoute(builder: (context) {
@@ -287,6 +276,4 @@ class _MyAppState extends State<MyApp> {
           );
         });
   }
-
-
 }

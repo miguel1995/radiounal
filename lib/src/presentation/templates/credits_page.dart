@@ -133,9 +133,12 @@ class _CreditsPageState extends State<CreditsPage> {
                             )),
                           ],
                         )),
-                    const Divider(
-                      color: Color(0xFFFCDC4D),
-                      thickness: 1,
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.80,
+                      child:  const Divider(
+                        color: Color(0xFFFCDC4D),
+                        thickness: 1,
+                      )
                     ),
                     Container(
                         margin: const EdgeInsets.only(top: 20),
@@ -398,9 +401,12 @@ class _CreditsPageState extends State<CreditsPage> {
                             )),
                           ],
                         )),
-                    const Divider(
-                      color: Color(0xFFFCDC4D),
-                      thickness: 1,
+                    SizedBox(
+                        width: MediaQuery.sizeOf(context).width * 0.80,
+                        child:  const Divider(
+                          color: Color(0xFFFCDC4D),
+                          thickness: 1,
+                        )
                     ),
                     Container(
                         margin: const EdgeInsets.only(top: 20),

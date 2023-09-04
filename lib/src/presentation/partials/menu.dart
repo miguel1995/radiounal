@@ -50,6 +50,7 @@ class _MenuState extends State<Menu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: const Color(0xff121C4A),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.horizontal(left: Radius.circular(40))),
         child: SingleChildScrollView(

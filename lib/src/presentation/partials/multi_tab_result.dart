@@ -87,10 +87,10 @@ class _MultiTabResultState extends State<MultiTabResult>
   bool enableEmisionesSearch = true;
   bool isDarkMode = false;
 
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   void initState() {
@@ -145,11 +145,10 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-                    themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     return Container(
       padding: EdgeInsets.only(bottom: 10),
@@ -164,7 +163,7 @@ return savedThemeMode;
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                      color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
@@ -184,7 +183,8 @@ return savedThemeMode;
                 color: isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A),
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                decorationColor: isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D),
+                decorationColor:
+                    isDarkMode ? Color(0xff121C4A) : Color(0xFFFCDC4D),
               ),
             ),
           ),
@@ -193,7 +193,7 @@ return savedThemeMode;
             child: Text(
               filterString ?? "",
               style: TextStyle(
-                color:isDarkMode ? Color( 0xFFFFFFFF) :  Color(0xff121C4A),
+                color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -300,7 +300,7 @@ return savedThemeMode;
             _scrollControllerSeries.offset) {
           if (pageSeries < totalPagesSeries) {
             setState(() {
-              pageSeries+=1;
+              pageSeries += 1;
               isLoadingSeries = true;
             });
 
@@ -315,7 +315,7 @@ return savedThemeMode;
             _scrollControllerEpisodios.offset) {
           if (pageEpisodios < totalPagesEpisodios) {
             setState(() {
-              pageEpisodios+=1;
+              pageEpisodios += 1;
               isLoadingEpisodios = true;
             });
 
@@ -330,14 +330,14 @@ return savedThemeMode;
             _scrollControllerProgramas.offset) {
           if (pageProgramas < totalPagesProgramas) {
             setState(() {
-              pageProgramas+=1;
+              pageProgramas += 1;
               isLoadingProgramas = true;
             });
 
             blocRadioProgramasSearch.fetchSearch(
                 query,
                 pageProgramas,
-                0, //Buca en todas las sedes
+                0, //Busca en todas las sedes
                 "TODOS",
                 "TODOS",
                 "PROGRAMAS");
@@ -421,7 +421,7 @@ return savedThemeMode;
             child: Text(
               "${infoModel.count} resultados",
               style: TextStyle(
-                color:isDarkMode ? Color( 0xFFFFFFFF) :  Color(0xff121C4A),
+                color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -474,8 +474,11 @@ return savedThemeMode;
       cardList = cardListEmisiones;
     }
 
-    return ListView(padding: EdgeInsets.zero,
-        shrinkWrap: true, controller: scrollController, children: cardList);
+    return ListView(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        controller: scrollController,
+        children: cardList);
   }
 
   Widget buildCardForVerticalList(element, String tipo) {
@@ -515,9 +518,7 @@ return savedThemeMode;
         onTap: () {
           Navigator.pushNamed(context, redirectTo,
               arguments: ScreenArguments("SITE", messageStr, element.uid,
-                  element: element,
-                  from: "BROWSER_RESULT_PAGE"
-              ));
+                  element: element, from: "BROWSER_RESULT_PAGE"));
         },
         child: Container(
             padding:
@@ -530,8 +531,7 @@ return savedThemeMode;
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Color( 0xff121C4A)
-                            .withOpacity(0.3),
+                        color: Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -562,11 +562,12 @@ return savedThemeMode;
                       child: Text(
                         element.title,
                         maxLines: 5,
-                        style:  TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A)
-                        ),
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: isDarkMode
+                                ? Color(0xFFFFFFFF)
+                                : Color(0xFF121C4A)),
                       ),
                     ),
                     Container(
@@ -575,7 +576,9 @@ return savedThemeMode;
                         site,
                         style: TextStyle(
                             fontSize: 11,
-                            color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                            color: isDarkMode
+                                ? Color(0xFFFFFFFF)
+                                : Color(0xFF121C4A),
                             fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -591,11 +594,13 @@ return savedThemeMode;
     try {
       return Text(
         "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
-        style:  TextStyle(fontSize: 10,
-            color: isDarkMode?Color(0xFFFFFFFF):Color(0xff666666)),
+        style: TextStyle(
+            fontSize: 10,
+            color:
+                isDarkMode ? const Color(0xFFFFFFFF) : const Color(0xff666666)),
       );
     } catch (e) {}
-    return Text('');
+    return const Text('');
   }
 
   Container drawCategoryTitle(element) {
@@ -608,8 +613,7 @@ return savedThemeMode;
             color: Color(0xFFFCDC4D),
             boxShadow: [
               BoxShadow(
-                color:  Color(0xff121C4A)
-                    .withOpacity(0.3),
+                color: Color(0xff121C4A).withOpacity(0.3),
                 spreadRadius: 3,
                 blurRadius: 10,
                 offset: const Offset(5, 5), // changes position of shadow
@@ -618,7 +622,8 @@ return savedThemeMode;
           ),
           child: Text(
             element.categoryTitle,
-            style: const TextStyle(fontSize: 12,
+            style: const TextStyle(
+                fontSize: 12,
                 color: Color(0xFF121C4A),
                 fontWeight: FontWeight.bold),
           ),
@@ -662,28 +667,26 @@ return savedThemeMode;
     list?.forEach((element) => {
           if (tipo == "SERIES")
             {
-
               if (!elementListSeries.contains(element))
                 {
                   setFalseLoadig().then((value) => {
-                    setState(() {
-                      isLoadingSeries = false;
-                    })
-                  }),
+                        setState(() {
+                          isLoadingSeries = false;
+                        })
+                      }),
                   cardListSeries.add(buildCardForVerticalList(element, tipo)),
                   elementListSeries.add(element)
                 }
             }
           else if (tipo == "EPISODIOS")
             {
-
               if (!elementListEpisodios.contains(element))
                 {
                   setFalseLoadig().then((value) => {
-                    setState(() {
-                      isLoadingEpisodios = false;
-                    })
-                  }),
+                        setState(() {
+                          isLoadingEpisodios = false;
+                        })
+                      }),
                   cardListEpisodios
                       .add(buildCardForVerticalList(element, tipo)),
                   elementListEpisodios.add(element)
@@ -693,13 +696,11 @@ return savedThemeMode;
             {
               if (!elementListProgramas.contains(element))
                 {
-
                   setFalseLoadig().then((value) => {
-                    setState(() {
-                      isLoadingProgramas = false;
-                    })
-                  }),
-
+                        setState(() {
+                          isLoadingProgramas = false;
+                        })
+                      }),
                   cardListProgramas
                       .add(buildCardForVerticalList(element, tipo)),
                   elementListProgramas.add(element)

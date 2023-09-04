@@ -35,7 +35,6 @@ return savedThemeMode;
   @override
   void initState() { var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
-print('=====================switch_button');
 
     initializePreference();
 

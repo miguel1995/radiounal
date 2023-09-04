@@ -65,15 +65,13 @@ class _BrowserResultPageState extends State<BrowserResultPage> {
   bool isLoading = false;
   bool isDarkMode = false;
 
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   void initState() {
-    print('=====================browser_result_page');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
     title = widget.title;
@@ -201,13 +199,10 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-
-
-                themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
     size = MediaQuery.of(context).size;
     paddingTop = size.width * 0.30;
@@ -217,8 +212,8 @@ return savedThemeMode;
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
         body: Container(
-          padding: EdgeInsets.only(top: 120),
-            decoration:  BoxDecoration(
+            padding: EdgeInsets.only(top: 120),
+            decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
                     ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
@@ -317,7 +312,7 @@ return savedThemeMode;
               style: TextStyle(
                 shadows: [
                   Shadow(
-                      color:isDarkMode?Color(0xFFFFFFFF): Color(0xFF121C4A),
+                      color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
                       offset: const Offset(0, -5))
                 ],
                 color: Colors.transparent,
@@ -333,8 +328,8 @@ return savedThemeMode;
             padding: const EdgeInsets.only(left: 20),
             child: Text(
               "${infoModel.count} resultados",
-              style:  TextStyle(
-                color: isDarkMode?Color(0xFFFFFFFF):Color(0xff121C4A),
+              style: TextStyle(
+                color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xff121C4A),
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
                 decorationColor: Color(isDarkMode ? 0xff121C4A : 0xFFFCDC4D),
@@ -399,8 +394,11 @@ return savedThemeMode;
       }
     }
 
-    return GridView.count(padding: EdgeInsets.zero,
-        controller: _scrollController, crossAxisCount: 2, children: cardList);
+    return GridView.count(
+        padding: EdgeInsets.zero,
+        controller: _scrollController,
+        crossAxisCount: 2,
+        children: cardList);
   }
 
   Widget buildVerticalList(AsyncSnapshot<dynamic> snapshot) {
@@ -419,11 +417,11 @@ return savedThemeMode;
         });
 
     return ListView(
+      padding: EdgeInsets.only(top: 0),
         shrinkWrap: true, controller: _scrollController, children: cardList);
   }
 
   Widget buildCardForGridList(element) {
-    var w = MediaQuery.of(context).size.width;
 
     return InkWell(
         onTap: () {
@@ -463,7 +461,7 @@ return savedThemeMode;
                     borderRadius: BorderRadius.circular(30),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(0xff121C4A).withOpacity(0.3),
+                        color: Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -492,10 +490,10 @@ return savedThemeMode;
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   margin: const EdgeInsets.only(top: 20),
                   decoration: BoxDecoration(
-                    color: Color(0xFFFCDC4D),
+                    color: const Color(0xFFFCDC4D),
                     boxShadow: [
                       BoxShadow(
-                        color: Color(0xff121C4A).withOpacity(0.3),
+                        color: const Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
@@ -512,10 +510,9 @@ return savedThemeMode;
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold,
-                        color: Color(0xFF121C4A)
-                        
-                        ),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF121C4A)),
                   ),
                 )
               ],
@@ -527,33 +524,29 @@ return savedThemeMode;
     var list2 = snapshot.data![1];
     var countEscuchados = list1.length + list2.length;
 
-    return
-      Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(left: 20, top: 20),
-              child: Text(
-                message,
-                style: TextStyle(
-                  shadows: [
-                    Shadow(
-                        color:
-                        isDarkMode?
-                        Color(0xFFFFFFFF):Color(0xFF121C4A),
-                        offset: const Offset(0, -5))
-                  ],
-                  color: Colors.transparent,
-                  decorationThickness: 2,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  decorationColor: const Color(0xFFFCDC4D),
-                  decoration: TextDecoration.underline,
-                ),
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 20, top: 20),
+            child: Text(
+              message,
+              style: TextStyle(
+                shadows: [
+                  Shadow(
+                      color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
+                      offset: const Offset(0, -5))
+                ],
+                color: Colors.transparent,
+                decorationThickness: 2,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                decorationColor: const Color(0xFFFCDC4D),
+                decoration: TextDecoration.underline,
               ),
             ),
-
+          ),
           Container(
             padding: const EdgeInsets.only(left: 20),
             child: Text(
@@ -583,6 +576,7 @@ return savedThemeMode;
     list2?.forEach(
         (element) => {cardList.add(buildCardForVerticalList(element))});
     return ListView(
+      padding: const EdgeInsets.only(top:0),
         shrinkWrap: true, controller: _scrollController, children: cardList);
     // return GridView.count(
     //     controller: _scrollController, crossAxisCount: 2, children: cardList);
@@ -650,7 +644,7 @@ return savedThemeMode;
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color:  Color(0xff121C4A).withOpacity(0.3),
+                        color: const Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset: const Offset(5, 5),
@@ -676,16 +670,6 @@ return savedThemeMode;
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                     drawCategoryTitle(element),
-                        Container(
-                          margin: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            site,
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: Theme.of(context).primaryColor,
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ),
                     Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
@@ -695,6 +679,16 @@ return savedThemeMode;
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: Text(
+                        site,
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Color(isDarkMode ? 0xFFFFFFFF : 0xff121C4A),
+                            fontStyle: FontStyle.italic),
                       ),
                     ),
                     Container(
@@ -709,7 +703,8 @@ return savedThemeMode;
     try {
       return Text(
         "$formatted ${(element != null && element.duration != null && element.duration != "") ? formatDurationString(element.duration) : ''}",
-        style: const TextStyle(fontSize: 10, color: Color(0xff666666)),
+        style: TextStyle(
+            fontSize: 10, color: Color(isDarkMode ? 0xFFFFFFFF : 0xff666666)),
       );
     } catch (e) {}
     return Text('');
@@ -722,7 +717,7 @@ return savedThemeMode;
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
           decoration: BoxDecoration(
-            color: Theme.of(context).appBarTheme.foregroundColor,
+            color: const Color(0xFFFCDC4D),
             boxShadow: [
               BoxShadow(
                 color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
@@ -735,7 +730,10 @@ return savedThemeMode;
           ),
           child: Text(
             element.categoryTitle,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: Color(0xff121C4A)),
           ),
         );
       }

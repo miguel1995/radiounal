@@ -18,7 +18,6 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
 
   @override
   void initState() { 
-    print('=====================confirm_dialog');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
  isDarkMode = brightness == Brightness.dark;
     tipo = widget.tipo;

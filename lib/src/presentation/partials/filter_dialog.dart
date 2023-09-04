@@ -55,7 +55,6 @@ class FilterDialogState extends State<FilterDialog> {
 
   @override
   void initState() {
-    print('=====================filter_dialog');
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
 

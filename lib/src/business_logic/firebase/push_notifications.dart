@@ -32,15 +32,30 @@ class PushNotification {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
 
       print(">>>  Oprimir Push: ");
-      print(message);
+      print(message.data['uid']);
+      print(message.data['site']);
+
+
+      /*
+       title: args.title,
+                        message: args.message,
+                        uid: args.number,
+                        from: args.from,
+      *
+      * */
 
       if (Platform.isAndroid) {
         if (message != null) {
           if (message.data != null) {
             if (message.data['uid'] != null) {
               var uid = message.data['uid'];
+              var site = message.data['site'];
 
-              _mensajesStreamController.sink.add(uid);
+              _mensajesStreamController.sink.add(
+                  {
+                  'uid':uid,
+                    'site':site
+                  });
             }
           }
         }

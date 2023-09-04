@@ -668,7 +668,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
   }
 
   Widget getImageExpand() {
-    Widget widget;
     Widget widgetImg;
 
     if (imagenUrl != "") {

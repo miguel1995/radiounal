@@ -240,9 +240,7 @@ class _FollowedPageState extends State<FollowedPage> {
                             height: w * 0.25,
                             color: Theme.of(context).primaryColor,
                             child: Image.asset(
-                                isDarkMode
-                                    ? 'assets/images/logo_dark.png'
-                                    : "assets/images/logo.png",
+                                'assets/images/default.png',
                                 color: Color(
                                     isDarkMode ? 0xff121C4A : 0xFFFCDC4D))),
                       )),
