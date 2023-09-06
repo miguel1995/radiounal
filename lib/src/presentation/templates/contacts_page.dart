@@ -74,7 +74,7 @@ class _ContactPageState extends State<ContactsPage> {
           key: _topKey,
           enableBack: true),
       body: Container(
-        color: isDarkMode ? Color(0xFF121C4A) : Color(0xFFFFFFFF),
+        color: isDarkMode ? const Color(0xFF121C4A) : const Color(0xFFFFFFFF),
         padding:  EdgeInsets.only(
             left: 20, right: 20, top: topPadding, bottom: 10),
         child: SingleChildScrollView(
@@ -115,7 +115,11 @@ class _ContactPageState extends State<ContactsPage> {
                   }
                   return null;
                 },
-              ),
+                  onChanged: (value) {
+                    setState(() {
+                      nombre = value;
+                    });
+                  }),
               Container(
                   margin: EdgeInsets.only(top: 10),
                   child: const Text("Correo Electrónico*")),

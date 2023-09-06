@@ -5,6 +5,8 @@ import 'package:radiounal/src/data/models/info_model.dart';
 import 'package:radiounal/src/data/models/programa_model.dart';
 import 'package:radiounal/src/data/models/programacion_model.dart';
 
+import '../../business_logic/EncryptUtils.dart';
+
 class RadioProvider {
   final _hostDomain = "radio.unal.edu.co/";
   final _urlDestacados = "rest/noticias/app/destacados/";
@@ -19,6 +21,8 @@ class RadioProvider {
   final _urlDescarga = "rest/noticias/app/descarga";
   final _urlSedes = "rest/noticias/app/sedes";
   final _urlSearch = "rest/noticias/app/search";
+
+  EncryptUtils encryptUtils = EncryptUtils();
 
 
   List<EmisionModel> parseEmisiones(String responseBody) {
@@ -216,15 +220,18 @@ class RadioProvider {
     var url = Uri.parse('http://$_hostDomain$_urlContactoEmail');
     Map<String, dynamic> map = {};
     // Await the http get response, then decode the json-formatted response.
-    var body = jsonEncode(<String, dynamic>{
+    var items = jsonEncode(<String, dynamic>{
       "nombre":nombre,
       "email":email,
       "telefono":telefono,
       "mensaje":mensaje
     });
 
-    /*print(">>> URL: ${url}");
-    print(">>> Body: ${body}");*/
+    var itemsStrEncrypt = encryptUtils.encryp(items.toString());
+
+    var body = jsonEncode(<String, dynamic>{
+      "body":itemsStrEncrypt
+    });
 
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
@@ -265,7 +272,7 @@ class RadioProvider {
     var url = Uri.parse('http://$_hostDomain$_urlEstadistica');
     String string = "";
     // Await the http get response, then decode the json-formatted response.
-    var body = jsonEncode(<String, dynamic>{
+    var items = jsonEncode(<String, dynamic>{
       "itemUid":itemUid,
       "nombre":nombre,
       "sitio":sitio,
@@ -274,6 +281,11 @@ class RadioProvider {
       "date":date
     });
 
+    var itemsStrEncrypt = encryptUtils.encryp(items.toString());
+
+    var body = jsonEncode(<String, dynamic>{
+      "body":itemsStrEncrypt
+    });
     // Await the http get response, then decode the json-formatted response.
     var response = await http.post(
         url,
@@ -316,14 +328,19 @@ class RadioProvider {
     var url = Uri.parse('http://$_hostDomain$_urlDescarga');
     String string = "";
     // Await the http get response, then decode the json-formatted response.
-    var body = jsonEncode(<String, dynamic>{
+    var items = jsonEncode(<String, dynamic>{
       "nombre":nombre,
       "edad":edad,
-      "genero":genero,
       "pais":pais,
       "departamento":departamento,
       "ciudad":ciudad,
       "email":email
+    });
+
+    var itemsStrEncrypt = encryptUtils.encryp(items.toString());
+
+    var body = jsonEncode(<String, dynamic>{
+      "body":itemsStrEncrypt
     });
 
     // Await the http get response, then decode the json-formatted response.

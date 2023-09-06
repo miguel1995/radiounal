@@ -58,6 +58,7 @@ dependencies:
   adaptive_theme: ^3.2.0 # Permite la funcionalidad de cambiar entre Tema claro y tema oscuro
   flutter_spinkit: ^5.1.0 #Agrega indicadores de carga
   flutter_local_notifications: ^15.1.0+1 #Agrega una notificación fija para mostrar un minireproductor
+  encrypt: ^5.0.1
 
 
 dev_dependencies:
