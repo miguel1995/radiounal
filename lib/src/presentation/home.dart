@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -397,8 +399,27 @@ return savedThemeMode;
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               InkWell(
-                  onTap: () {
-                    _launchURL("https://www.facebook.com/RadioUNAL/");
+                  onTap: () async {
+
+                    String fbProtocolUrl;
+                    if (Platform.isIOS) {
+                      fbProtocolUrl = 'fb://profile/208310195874854';
+                    } else {
+                      fbProtocolUrl = 'fb://page/208310195874854';
+                    }
+
+                    String fallbackUrl = 'https://www.facebook.com/RadioUNAL/';
+
+                    try {
+                      bool launched = await launch(fbProtocolUrl, forceSafariVC: false);
+
+                      if (!launched) {
+                        await launch(fallbackUrl, forceSafariVC: false);
+                      }
+                    } catch (e) {
+                      await launch(fallbackUrl, forceSafariVC: false);
+                    }
+
                   },
                   child: SvgPicture.asset(
                     isDarkMode?'assets/icons/facebook 1.svg': 'assets/icons/icono_facebook.svg',
@@ -473,7 +494,7 @@ return savedThemeMode;
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color:  Color(0xff121C4A).withOpacity(0.3),
+                    color:  const Color(0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(10, 10), // changes position of shadow
@@ -510,11 +531,15 @@ return savedThemeMode;
                               style: const TextStyle(color: Colors.white),
                             )),
                         Container(
-                          padding: EdgeInsets.only(left: 2, right: 2),
+                          padding: const EdgeInsets.only(left: 2, right: 2),
                           color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
                           child: Text(
                             element.categoryTitle,
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                            style:  const TextStyle(fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              color: Color(0xff121C4A),
+
+                          ),
                           ),
                         )
                       ],

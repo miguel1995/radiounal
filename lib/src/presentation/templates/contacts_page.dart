@@ -40,7 +40,6 @@ class _ContactPageState extends State<ContactsPage> {
   GlobalKey _topKey = GlobalKey(); // Usa una GlobalKey sin tipo específico
   var topPadding = 0.0;
 
-
   Future<AdaptiveThemeMode?> themeMethod() async {
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
     return savedThemeMode;
@@ -61,7 +60,8 @@ class _ContactPageState extends State<ContactsPage> {
       });
     });
 
-    final appBarRenderBox = _topKey.currentContext?.findRenderObject() as RenderBox?;
+    final appBarRenderBox =
+        _topKey.currentContext?.findRenderObject() as RenderBox?;
     if (appBarRenderBox != null) {
       topPadding = appBarRenderBox.size.height;
     }
@@ -70,13 +70,11 @@ class _ContactPageState extends State<ContactsPage> {
       backgroundColor: isDarkMode ? Color(0xFF121C4A) : Color(0xFFFFFFFF),
       extendBodyBehindAppBar: true,
       endDrawer: Menu(),
-      appBar: AppBarRadio(
-          key: _topKey,
-          enableBack: true),
+      appBar: AppBarRadio(key: _topKey, enableBack: true),
       body: Container(
         color: isDarkMode ? const Color(0xFF121C4A) : const Color(0xFFFFFFFF),
-        padding:  EdgeInsets.only(
-            left: 20, right: 20, top: topPadding, bottom: 10),
+        padding:
+            EdgeInsets.only(left: 20, right: 20, top: topPadding, bottom: 10),
         child: SingleChildScrollView(
             child: Form(
           key: _formKey,
@@ -98,23 +96,28 @@ class _ContactPageState extends State<ContactsPage> {
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     decorationColor: const Color(0xFFFCDC4D),
-                  decoration: TextDecoration.underline,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),
               Container(
                   margin: EdgeInsets.only(top: 10),
-                  child: const Text("Nombre*")),
+                  child: Text("Nombre*",
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? const Color(0xFFFFFFFF)
+                            : const Color(0xFF121C4A),
+                      ))),
               TextFormField(
-                decoration:
-                    getFieldDecoration("Ingrese sus Nombres y Apellidos"),
-                style: TextStyle(decoration: TextDecoration.none),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingrese un texto';
-                  }
-                  return null;
-                },
+                  decoration:
+                      getFieldDecoration("Ingrese sus Nombres y Apellidos"),
+                  style: TextStyle(decoration: TextDecoration.none),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, ingrese un texto';
+                    }
+                    return null;
+                  },
                   onChanged: (value) {
                     setState(() {
                       nombre = value;
@@ -122,7 +125,12 @@ class _ContactPageState extends State<ContactsPage> {
                   }),
               Container(
                   margin: EdgeInsets.only(top: 10),
-                  child: const Text("Correo Electrónico*")),
+                  child: Text("Correo Electrónico*",
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? const Color(0xFFFFFFFF)
+                            : const Color(0xFF121C4A),
+                      ))),
               TextFormField(
                   decoration:
                       getFieldDecoration("Ingrese su correo electrónico"),
@@ -139,7 +147,12 @@ class _ContactPageState extends State<ContactsPage> {
                   }),
               Container(
                   margin: const EdgeInsets.only(top: 10),
-                  child: const Text("Número de contacto")),
+                  child: Text("Número de contacto",
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? const Color(0xFFFFFFFF)
+                            : const Color(0xFF121C4A),
+                      ))),
               TextFormField(
                   decoration:
                       getFieldDecoration("Ingrese su número de contacto"),
@@ -154,7 +167,12 @@ class _ContactPageState extends State<ContactsPage> {
                   }),
               Container(
                   margin: const EdgeInsets.only(top: 10),
-                  child: const Text("Mensaje*")),
+                  child: Text("Mensaje*",
+                      style: TextStyle(
+                        color: isDarkMode
+                            ? const Color(0xFFFFFFFF)
+                            : const Color(0xFF121C4A),
+                      ))),
               TextFormField(
                   decoration: getFieldDecoration("Escriba su mensaje"),
                   maxLines: 5,
@@ -234,9 +252,13 @@ class _ContactPageState extends State<ContactsPage> {
                     color: Colors.red,
                   ),
                 ),
-              const Text(
+              Text(
                   "DE ACUERDO CON LA LEY 1581 DE 2012 DE PROTECCIÓN DE DATOS PERSONALES, HE LEÍDO Y ACEPTO LOS TERMINOS DESCRITOS EN LA POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES",
-                  style: TextStyle(fontSize: 12)),
+                  style: TextStyle(
+                      color: isDarkMode
+                          ? const Color(0xFFFFFFFF)
+                          : const Color(0xFF121C4A),
+                      fontSize: 12)),
               Container(
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 10),

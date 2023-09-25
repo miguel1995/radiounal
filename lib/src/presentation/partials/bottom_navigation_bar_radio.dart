@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 
 import '../../business_logic/firebase/firebaseLogic.dart';
 import 'favorito_btn.dart';
@@ -48,13 +50,13 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
 
   late AudioPlayer audioPlayer;
   bool isPlaying = false;
+  bool   _interrupted = false;
   bool isLoading = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
   bool showVolumenSlider = false;
   bool showSpeedList = false;
   double currentVolumen = 1.0;
-
   String currentSpeedText = "1.0";
   List<String> listSpeedText = ['0.5', '1.0', '1.5', '2.0'];
 
@@ -156,7 +158,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
     //firebaseLogic = FirebaseLogic();
   }
 
-  @override
+    @override
   void dispose() {
     audioPlayer.dispose();
     _controller.dispose();
