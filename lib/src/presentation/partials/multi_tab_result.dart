@@ -482,6 +482,7 @@ class _MultiTabResultState extends State<MultiTabResult>
   }
 
   Widget buildCardForVerticalList(element, String tipo) {
+
     var site = "";
     var width = MediaQuery.of(context).size.width;
     DateTime now;
@@ -577,8 +578,8 @@ class _MultiTabResultState extends State<MultiTabResult>
                         style: TextStyle(
                             fontSize: 11,
                             color: isDarkMode
-                                ? Color(0xFFFFFFFF)
-                                : Color(0xFF121C4A),
+                                ? const Color(0xFFFFFFFF)
+                                : const Color(0xFF121C4A),
                             fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -610,10 +611,10 @@ class _MultiTabResultState extends State<MultiTabResult>
           padding: const EdgeInsets.only(left: 10, right: 10),
           margin: const EdgeInsets.only(left: 20, bottom: 10),
           decoration: BoxDecoration(
-            color: Color(0xFFFCDC4D),
+            color: const Color(0xFFFCDC4D),
             boxShadow: [
               BoxShadow(
-                color: Color(0xff121C4A).withOpacity(0.3),
+                color: const Color(0xff121C4A).withOpacity(0.3),
                 spreadRadius: 3,
                 blurRadius: 10,
                 offset: const Offset(5, 5), // changes position of shadow

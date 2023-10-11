@@ -84,16 +84,13 @@ class _ItemPageState extends State<ItemPage> {
   bool isDarkMode = false;
   bool showReproducirBtn = false;
 
-
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   void initState() {
-
     super.initState();
     initPlatformState();
 
@@ -110,7 +107,7 @@ return savedThemeMode;
     favoritoBtn = FavoritoBtn(
         uid: uid,
         message: message,
-        tipo:(message == "RADIO") ? "EMISION" : "EPISODIO",
+        tipo: (message == "RADIO") ? "EMISION" : "EPISODIO",
         isPrimaryColor: true);
 
     firebaseLogic
@@ -132,9 +129,9 @@ return savedThemeMode;
           element = event[0];
         });
 
-        if(event[0] !=  null){
-          if(event[0].audio !=  null) {
-            if(event[0].audio !=  "") {
+        if (event[0] != null) {
+          if (event[0].audio != null) {
+            if (event[0].audio != "") {
               setState(() {
                 showReproducirBtn = true;
               });
@@ -149,20 +146,17 @@ return savedThemeMode;
           element = event[0];
         });
 
-        if(event[0] !=  null){
-          if(event[0].audio !=  null) {
-            if(event[0].audio !=  "") {
+        if (event[0] != null) {
+          if (event[0].audio != null) {
+            if (event[0].audio != "") {
               setState(() {
                 showReproducirBtn = true;
               });
             }
           }
         }
-
       });
     }
-
-
 
     if (Platform.isAndroid) {
       platform = TargetPlatform.android;
@@ -193,16 +187,17 @@ return savedThemeMode;
 
   @override
   Widget build(BuildContext context) {
-        themeMethod().then((value) {
-          setState(() {
-            
-     isDarkMode=value==AdaptiveThemeMode.dark;
-          });
+    themeMethod().then((value) {
+      setState(() {
+        isDarkMode = value == AdaptiveThemeMode.dark;
+      });
     });
-    return Scaffold(extendBodyBehindAppBar: true,
+    return Scaffold(
+        extendBodyBehindAppBar: true,
         endDrawer: Menu(),
         appBar: AppBarRadio(enableBack: true),
-        body: Container(padding: EdgeInsets.only(top: 120),
+        body: Container(
+            padding: EdgeInsets.only(top: 120),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(isDarkMode
@@ -247,9 +242,9 @@ return savedThemeMode;
               child: Container(
                   padding: const EdgeInsets.only(left: 3, right: 3),
                   child: SvgPicture.asset(
-                      'assets/icons/icono_compartir_redes.svg',
-                      color: isDarkMode?Color(0xFFfcdf4d):Color(0xFF121C4A),
-                      )))
+                    'assets/icons/icono_compartir_redes.svg',
+                    color: isDarkMode ? Color(0xFFfcdf4d) : Color(0xFF121C4A),
+                  )))
         ]),
       ),
       Container(
@@ -284,8 +279,7 @@ return savedThemeMode;
             size: 50.0,
           )),
           errorWidget: (context, url, error) => Container(
-              width: w * 0.40, child: Image.asset("assets/images/default.png")
-          ),
+              width: w * 0.40, child: Image.asset("assets/images/default.png")),
         ),
       ),
       if (element != null &&
@@ -300,8 +294,7 @@ return savedThemeMode;
                 color: Color(0xFFFCDC4D),
                 boxShadow: [
                   BoxShadow(
-                    color: Color( 0xff121C4A)
-                        .withOpacity(0.3),
+                    color: Color(0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(5, 5), // changes position of shadow
@@ -310,10 +303,10 @@ return savedThemeMode;
               ),
               child: Text(
                 (element != null) ? element.categoryTitle : "",
-                style:
-                     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold,
-                    color:  Color(0xFF121C4A)
-                    ),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF121C4A)),
               ),
             )),
       Container(
@@ -332,7 +325,9 @@ return savedThemeMode;
         margin: const EdgeInsets.only(left: 20),
         child: Text(
           "$formatted ${(element != null && element.duration != null) ? formatDurationString(element.duration) : ''}",
-          style:  TextStyle(fontSize: 11, color: isDarkMode? Color(0xFF989FBA) :Color(0xff666666)),
+          style: TextStyle(
+              fontSize: 11,
+              color: isDarkMode ? Color(0xFF989FBA) : Color(0xff666666)),
         ),
       ),
       Container(
@@ -342,7 +337,7 @@ return savedThemeMode;
           (message == "RADIO") ? "Radio" : "Podcast",
           style: TextStyle(
             fontSize: 15,
-            color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+            color: isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.bold,
           ),
@@ -403,78 +398,81 @@ return savedThemeMode;
   }
 
   Widget drawContentBtns(dynamic element) {
-
     //print("element.audio ${element.audio}");
 
     return Column(children: [
       Row(children: [
-    if (showReproducirBtn)
-      Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
-            child: InkWell(
-                onTap: () {
-
-                  if (element != null) {
-                    if (element.audio != null) {
-                      widget.callBackPlayMusic!(
-                        element.uid,
-                        element.audio,
-                        element.imagen,
-                        element.categoryTitle,
-                        element.title,
-                        (message == "RADIO")
-                            ? element.bodytext
-                            : element.teaser,
-                        element.date,
-                        element.duration,
-                        message,
-                        (message == "RADIO")
-                            ? "EMISION"
-                            : "EPISODIO",
-                        element.url,
-                        false,
-                        favoritoBtn,
-                      );
+        if (showReproducirBtn)
+          Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+              child: InkWell(
+                  onTap: () {
+                    if (element != null) {
+                      if (element.audio != null) {
+                        widget.callBackPlayMusic!(
+                          element.uid,
+                          element.audio,
+                          element.imagen,
+                          element.categoryTitle,
+                          element.title,
+                          (message == "RADIO")
+                              ? element.bodytext
+                              : element.teaser,
+                          element.date,
+                          element.duration,
+                          message,
+                          (message == "RADIO") ? "EMISION" : "EPISODIO",
+                          element.url,
+                          false,
+                          favoritoBtn,
+                        );
+                      }
                     }
-                  }
-                },
-                child: Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 5, bottom: 5),
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(radius: 2, colors: [
-                       isDarkMode?const Color(0xFFFCDC4D): const Color(0xff216278),
-                        isDarkMode ? const Color(0xFFFCDC4D) : const Color(0xff121C4A)
-                      ]),
-                      borderRadius: BorderRadius.circular(5),
-                      color: Theme.of(context).primaryColor,
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color( 0xff121C4A)
-                              .withOpacity(0.3),
-                          spreadRadius: 3,
-                          blurRadius: 10,
-                          offset: const Offset(5, 5),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children:  [
-                        Icon(
-                          Icons.play_arrow,
-                          color: isDarkMode?const Color(0xFF121C4A):const Color(0xFFFFFFFF),
-                          size: 30,
-                        ),
-                        Text(
-                          "Reproducir",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: isDarkMode?const Color(0xFF121C4A):const Color(0xFFFFFFFF),
-                              fontSize: 16),
-                        )
-                      ],
-                    ))))
+                  },
+                  child: Container(
+                      padding: const EdgeInsets.only(
+                          left: 10, right: 10, top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(radius: 2, colors: [
+                          isDarkMode
+                              ? const Color(0xFFFCDC4D)
+                              : const Color(0xff216278),
+                          isDarkMode
+                              ? const Color(0xFFFCDC4D)
+                              : const Color(0xff121C4A)
+                        ]),
+                        borderRadius: BorderRadius.circular(5),
+                        color: Theme.of(context).primaryColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff121C4A).withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 10,
+                            offset: const Offset(5, 5),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.play_arrow,
+                            color: isDarkMode
+                                ? const Color(0xFF121C4A)
+                                : const Color(0xFFFFFFFF),
+                            size: 30,
+                          ),
+                          Text(
+                            "Reproducir",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isDarkMode
+                                    ? const Color(0xFF121C4A)
+                                    : const Color(0xFFFFFFFF),
+                                fontSize: 16),
+                          )
+                        ],
+                      ))))
       ]),
       Container(
         margin: const EdgeInsets.only(top: 20),
@@ -495,11 +493,10 @@ return savedThemeMode;
                               radius: 0.8,
                               colors: [Color(0xffFEE781), Color(0xffFFCC17)]),
                           borderRadius: BorderRadius.circular(5),
-                          color:const Color(0xFF121C4A),
+                          color: const Color(0xFF121C4A),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color( 0xff121C4A)
-                                  .withOpacity(0.3),
+                              color: const Color(0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -524,18 +521,17 @@ return savedThemeMode;
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 0.8, colors: [
                             (message == "PODCAST")
-                                ? Color( 0xFFFCDC4D)
+                                ? Color(0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
                             Color((message == "PODCAST")
                                 ? 0xffFFCC17
-                                :  0x68FFFFFF)
+                                : 0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Color(0xFF121C4A),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0xff121C4A)
-                                  .withOpacity(0.3),
+                              color: Color(0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -553,26 +549,23 @@ return savedThemeMode;
                         downloadFile(element.pdf, "transcripcion", "pdf");
                       }
                     },
-                    child:
-
-                    Container(
+                    child: Container(
                         padding: const EdgeInsets.only(
                             top: 5, bottom: 5, left: 10, right: 10),
                         decoration: BoxDecoration(
                           gradient: RadialGradient(radius: 1.5, colors: [
                             (message == "PODCAST")
-                                ? Color( 0xFFFCDC4D)
+                                ? Color(0xFFFCDC4D)
                                 : Colors.white54.withOpacity(0.3),
                             (message == "PODCAST")
-                                ?Color( 0xffFFCC17)
-                                : Color( 0x68FFFFFF)
+                                ? Color(0xffFFCC17)
+                                : Color(0x68FFFFFF)
                           ]),
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).appBarTheme.foregroundColor,
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0xff121C4A)
-                                  .withOpacity(0.3),
+                              color: Color(0xff121C4A).withOpacity(0.3),
                               spreadRadius: 3,
                               blurRadius: 10,
                               offset: const Offset(5, 5),
@@ -587,9 +580,9 @@ return savedThemeMode;
                             const Text(
                               "  Transcripción",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 17,
-                                  color: Color(0xFF121C4A)
-                                  ),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: Color(0xFF121C4A)),
                             )
                           ],
                         )))),
@@ -621,15 +614,14 @@ return savedThemeMode;
                           left: 10, right: 10, top: 5, bottom: 5),
                       decoration: BoxDecoration(
                         gradient: RadialGradient(radius: 2, colors: [
-                         isDarkMode ? Color(0xFFFCDC4D) : Color(0xff216278),
-                          isDarkMode ? Color(0xFFFCDC4D) :Color( 0xff121C4A)
+                          isDarkMode ? Color(0xFFFCDC4D) : Color(0xff216278),
+                          isDarkMode ? Color(0xFFFCDC4D) : Color(0xff121C4A)
                         ]),
                         borderRadius: BorderRadius.circular(5),
                         color: Theme.of(context).primaryColor,
                         boxShadow: [
                           BoxShadow(
-                            color: Color( 0xff121C4A)
-                                .withOpacity(0.3),
+                            color: Color(0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(5, 5),
@@ -638,18 +630,22 @@ return savedThemeMode;
                       ),
                       child: Row(
                         children: [
-                           Icon(
+                          Icon(
                             Icons.arrow_back_ios_new,
-                            color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
+                            color: isDarkMode
+                                ? Color(0xFF121C4A)
+                                : Color(0xFFFFFFFF),
                             size: 20,
                           ),
                           Container(
                               margin: EdgeInsets.only(left: 5),
-                              child:  Text(
+                              child: Text(
                                 "Más episodios",
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: isDarkMode?Color(0xFF121C4A):Color(0xFFFFFFFF),
+                                    color: isDarkMode
+                                        ? Color(0xFF121C4A)
+                                        : Color(0xFFFFFFFF),
                                     fontSize: 16),
                               ))
                         ],
