@@ -262,6 +262,7 @@ return savedThemeMode;
   }
 
   Widget drawProgramacion() {
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10, top: 10),
       padding: const EdgeInsets.only(bottom: 10, top: 10),
@@ -532,7 +533,7 @@ return savedThemeMode;
                             )),
                         Container(
                           padding: const EdgeInsets.only(left: 2, right: 2),
-                          color:  Color(isDarkMode?0xff121C4A:0xFFFCDC4D),
+                          color:  const Color(0xFFFCDC4D),
                           child: Text(
                             element.categoryTitle,
                             style:  const TextStyle(fontSize: 10,
@@ -724,12 +725,13 @@ return savedThemeMode;
             height: widthBox * 0.80,
             decoration: BoxDecoration(
               color: const Color(0xff121C4A),
-              borderRadius: BorderRadius.only(
+    borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular((i == 2) ? 30 : 0)),
             ),
             child: Text(
                 "${list[i].masTardePrograma}\n${list[i].masTardeHorario}",
-                style: const TextStyle(color: Colors.white)))
+                style: const TextStyle(color: Colors.white)
+            ))
       ]));
     }
 
@@ -737,7 +739,10 @@ return savedThemeMode;
         scrollDirection: Axis.horizontal,
         child: Container(
             padding: const EdgeInsets.only(left: 40, right: 40, bottom: 40),
-            child: Container(
+            child:
+
+
+            Container(
                 decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     boxShadow: [
@@ -749,7 +754,8 @@ return savedThemeMode;
                             const Offset(10, 10), // changes position of shadow
                       ),
                     ]),
-                child: Column(children: rowList))));
+                child: Column(children: rowList)))
+    );
   }
 
   Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {

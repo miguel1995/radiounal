@@ -12,8 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:audio_service/audio_service.dart';
-import 'package:audio_session/audio_session.dart';
 
 import '../../business_logic/firebase/firebaseLogic.dart';
 import 'favorito_btn.dart';
@@ -655,7 +653,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
           ))
       );
     } else {
-      widgetImg = Image.asset('assets/images/default.png');
+      widgetImg = Image.asset(isDarkMode?'assets/images/default_dark.png':'assets/images/default.png');
     }
 
     widget = Container(
