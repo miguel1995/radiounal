@@ -327,7 +327,7 @@ class _ItemPageState extends State<ItemPage> {
           "$formatted ${(element != null && element.duration != null) ? formatDurationString(element.duration) : ''}",
           style: TextStyle(
               fontSize: 11,
-              color: isDarkMode ? Color(0xFF989FBA) : Color(0xff666666)),
+              color: isDarkMode ? Colors.white : Color(0xff666666)),
         ),
       ),
       Container(

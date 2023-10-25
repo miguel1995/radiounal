@@ -27,11 +27,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../business_logic/bloc/podcast_masescuchados_bloc.dart';
 import '../business_logic/bloc/radio_masescuchados_bloc.dart';
 
-
-
 class Home extends StatefulWidget {
-
-  late Function(dynamic uidParam,
+  late Function(
+      dynamic uidParam,
       dynamic audioUrlParam,
       dynamic imagenUrlParam,
       dynamic textParentParam,
@@ -44,9 +42,10 @@ class Home extends StatefulWidget {
       dynamic urlParam,
       bool isFrecuencia,
       FavoritoBtn? favoritoBtn)? callBackPlayMusic;
-      List<ProgramacionModel> pragramacionList;
+  List<ProgramacionModel> pragramacionList;
 
-  Home( this.callBackPlayMusic, this.pragramacionList, {Key? key}) : super(key: key);
+  Home(this.callBackPlayMusic, this.pragramacionList, {Key? key})
+      : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -59,14 +58,11 @@ class _HomeState extends State<Home> {
   final blocRadioMasEscuchados = RadioMasEscuchadosBloc();
   final blocPodcastMasEscuchados = PodcastMasEscuchadosBloc();
   String potcastRandom = "";
-  bool isDarkMode =false;
-
-
+  bool isDarkMode = false;
 
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-
 
     initializeDateFormatting('es_ES');
     Intl.defaultLocale = 'es_ES';
@@ -81,44 +77,35 @@ class _HomeState extends State<Home> {
       //Actualiza la transmision de podcast random
       EpisodioModel randomItem = (event..shuffle()).first;
 
-      setState((){
+      setState(() {
         potcastRandom = randomItem.audio;
       });
-
-
     });
-
-
-
-
-
   }
 
-
-Future<AdaptiveThemeMode?> themeMethod() async {
-  final savedThemeMode = await AdaptiveTheme.getThemeMode();
-return savedThemeMode;
-}
+  Future<AdaptiveThemeMode?> themeMethod() async {
+    final savedThemeMode = await AdaptiveTheme.getThemeMode();
+    return savedThemeMode;
+  }
 
   @override
   Widget build(BuildContext context) {
-
     themeMethod().then((value) {
       setState(() {
-     isDarkMode=value==AdaptiveThemeMode.dark;
+        isDarkMode = value == AdaptiveThemeMode.dark;
       });
-        
     });
 
-    return
-      Scaffold(
+    return Scaffold(
         extendBodyBehindAppBar: true,
-        endDrawer:  const Menu(),
-        appBar:  AppBarRadio(enableBack:false),
+        endDrawer: const Menu(),
+        appBar: AppBarRadio(enableBack: false),
         body: DecoratedBox(
-            decoration:  BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(isDarkMode?"assets/images/FONDO_AZUL_REPRODUCTOR.png":"assets/images/fondo_blanco_amarillo.png"),
+                image: AssetImage(isDarkMode
+                    ? "assets/images/FONDO_AZUL_REPRODUCTOR.png"
+                    : "assets/images/fondo_blanco_amarillo.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -132,10 +119,7 @@ return savedThemeMode;
                 drawMasEscuchado(),
                 drawSiguenos()
               ],
-
-
-            )))
-    );
+            ))));
   }
 
   @override
@@ -149,7 +133,6 @@ return savedThemeMode;
   }
 
   Widget drawDestacados() {
-
     return Container(
       margin: const EdgeInsets.only(bottom: 20, top: 140),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
@@ -178,7 +161,7 @@ return savedThemeMode;
   Widget drawFrecuencias() {
     return Container(
       padding: const EdgeInsets.only(left: 0),
-      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
+      color: Color(isDarkMode ? 0x00000000 : 0xFFFFFFFF),
       child: Column(
         children: [
           Align(
@@ -191,7 +174,7 @@ return savedThemeMode;
                   shadows: [
                     Shadow(
                         // color:Color(isDarkMode?0xFFFCDC4D:0xff121C4A),
-                        color:Color(isDarkMode?0xFFFFFFFF:0xff121C4A),
+                        color: Color(isDarkMode ? 0xFFFFFFFF : 0xff121C4A),
                         offset: const Offset(0, -5))
                   ],
                   color: Colors.transparent,
@@ -205,11 +188,14 @@ return savedThemeMode;
             ),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            drawFrecuenciaBtn("Bogotá\n98.5 fm", "http://streaming.unradio.unal.edu.co:8010/;stream.mp3"),
-            drawFrecuenciaBtn("Medellín\n100.4 fm", "http://streaming.unradio.unal.edu.co:8012/;stream.mp3"),
+            drawFrecuenciaBtn("Bogotá\n98.5 fm",
+                "http://streaming.unradio.unal.edu.co:8010/;stream.mp3"),
+            drawFrecuenciaBtn("Medellín\n100.4 fm",
+                "http://streaming.unradio.unal.edu.co:8012/;stream.mp3"),
           ]),
           Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            drawFrecuenciaBtn("Radio web", "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
+            drawFrecuenciaBtn("Radio web",
+                "http://streaming.unradio.unal.edu.co:8014/;stream.mp3"),
             drawFrecuenciaBtn("Podcast", potcastRandom),
           ])
         ],
@@ -220,32 +206,33 @@ return savedThemeMode;
   Widget drawFavouriteBtn() {
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 20),
-      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
+      color: Color(isDarkMode ? 0x00000000 : 0xFFFFFFFF),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
-
-              gradient:   RadialGradient(radius: 3, colors: [
-                isDarkMode?Color(0xffa6aabb):Color(0xffFEE781),
-                isDarkMode? Color(0xffa6aabb):Color(0xffFFCC17)
-                
+              gradient: RadialGradient(radius: 3, colors: [
+                isDarkMode ? Color(0xffa6aabb) : Color(0xffFEE781),
+                isDarkMode ? Color(0xffa6aabb) : Color(0xffFFCC17)
               ]),
-
               boxShadow: [
-            BoxShadow(
-              color:  Color(0xff121C4A).withOpacity(0.3),
-              spreadRadius: 3,
-              blurRadius: 10,
-              offset: const Offset(10, 10), // changes position of shadow
-            ),
-          ], borderRadius: const BorderRadius.all(Radius.circular(5))),
+                BoxShadow(
+                  color: Color(0xff121C4A).withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 10,
+                  offset: const Offset(10, 10), // changes position of shadow
+                ),
+              ],
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 foregroundColor: Color(0xff121C4A)),
-            icon: const Icon(Icons.favorite,color: Color(0xff121C4A),),
+            icon: const Icon(
+              Icons.favorite,
+              color: Color(0xff121C4A),
+            ),
             onPressed: () async {
               Navigator.pushNamed(context, '/favourites',
                   arguments: ScreenArguments('NONE', 'NONE', 0));
@@ -262,7 +249,6 @@ return savedThemeMode;
   }
 
   Widget drawProgramacion() {
-
     return Container(
       margin: const EdgeInsets.only(bottom: 10, top: 10),
       padding: const EdgeInsets.only(bottom: 10, top: 10),
@@ -279,12 +265,13 @@ return savedThemeMode;
                   child: Container(
                     margin:
                         const EdgeInsets.only(top: 20, bottom: 20, left: 20),
-                    child:  Text(
+                    child: Text(
                       "Programación",
                       style: TextStyle(
                         shadows: [
                           Shadow(
-                              color: isDarkMode?Colors.white:Color(0xff121C4A),
+                              color:
+                                  isDarkMode ? Colors.white : Color(0xff121C4A),
                               offset: const Offset(0, -5))
                         ],
                         color: Colors.transparent,
@@ -293,7 +280,6 @@ return savedThemeMode;
                         fontWeight: FontWeight.bold,
                         decorationColor: const Color(0xFFFCDC4D),
                         decoration: TextDecoration.underline,
-
                       ),
                     ),
                   ),
@@ -315,7 +301,7 @@ return savedThemeMode;
 
   Widget drawMasEscuchado() {
     return Container(
-      color:  Color(isDarkMode?0x00000000:0xFFFFFFFF),
+      color: Color(isDarkMode ? 0x00000000 : 0xFFFFFFFF),
       margin: const EdgeInsets.only(bottom: 20, top: 20),
       padding: const EdgeInsets.only(bottom: 20, top: 20),
       child: Column(
@@ -329,7 +315,7 @@ return savedThemeMode;
                 style: TextStyle(
                   shadows: [
                     Shadow(
-                        color: isDarkMode?Colors.white:Color(0xFF121C4A),
+                        color: isDarkMode ? Colors.white : Color(0xFF121C4A),
                         offset: Offset(0, -5))
                   ],
                   color: Colors.transparent,
@@ -371,19 +357,20 @@ return savedThemeMode;
     var marginBottom = MediaQuery.of(context).size.height.toDouble() * 0.10;
 
     return Container(
-        margin:  EdgeInsets.only(bottom: marginBottom, top: 10),
+        margin: EdgeInsets.only(bottom: marginBottom, top: 10),
         padding: const EdgeInsets.only(bottom: 10, top: 10),
         child: Column(children: [
           Align(
             alignment: Alignment.centerLeft,
             child: Container(
               margin: const EdgeInsets.only(left: 20, bottom: 10),
-              child:  Text(
+              child: Text(
                 "Síguenos",
                 style: TextStyle(
                   shadows: [
                     Shadow(
-                        color:isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                        color:
+                            isDarkMode ? Color(0xFFFFFFFF) : Color(0xFF121C4A),
                         offset: Offset(0, -5))
                   ],
                   color: Colors.transparent,
@@ -401,7 +388,6 @@ return savedThemeMode;
             children: [
               InkWell(
                   onTap: () async {
-
                     String fbProtocolUrl;
                     if (Platform.isIOS) {
                       fbProtocolUrl = 'fb://profile/208310195874854';
@@ -412,7 +398,8 @@ return savedThemeMode;
                     String fallbackUrl = 'https://www.facebook.com/RadioUNAL/';
 
                     try {
-                      bool launched = await launch(fbProtocolUrl, forceSafariVC: false);
+                      bool launched =
+                          await launch(fbProtocolUrl, forceSafariVC: false);
 
                       if (!launched) {
                         await launch(fallbackUrl, forceSafariVC: false);
@@ -420,10 +407,11 @@ return savedThemeMode;
                     } catch (e) {
                       await launch(fallbackUrl, forceSafariVC: false);
                     }
-
                   },
                   child: SvgPicture.asset(
-                    isDarkMode?'assets/icons/facebook 1.svg': 'assets/icons/icono_facebook.svg',
+                    isDarkMode
+                        ? 'assets/icons/facebook 1.svg'
+                        : 'assets/icons/icono_facebook.svg',
                     width: MediaQuery.of(context).size.width * 0.14,
                   )),
               InkWell(
@@ -431,14 +419,21 @@ return savedThemeMode;
                     _launchURL("https://www.instagram.com/radiounal/");
                   },
                   child: SvgPicture.asset(
-                      isDarkMode?'assets/icons/instagram 1.svg': 'assets/icons/icono_instagram_svg.svg',
-                      width: MediaQuery.of(context).size.width * 0.14,)),
+                    isDarkMode
+                        ? 'assets/icons/instagram 1.svg'
+                        : 'assets/icons/icono_instagram_svg.svg',
+                    width: MediaQuery.of(context).size.width * 0.14,
+                  )),
               InkWell(
                   onTap: () {
                     _launchURL("https://twitter.com/radiounal");
                   },
-                  child: SvgPicture.asset(isDarkMode?'assets/icons/twitter 1.svg': 'assets/icons/icono_twitter.svg',
-                      width: MediaQuery.of(context).size.width * 0.14,))
+                  child: SvgPicture.asset(
+                    isDarkMode
+                        ? 'assets/icons/twitter 1.svg'
+                        : 'assets/icons/icono_twitter.svg',
+                    width: MediaQuery.of(context).size.width * 0.14,
+                  ))
             ],
           )
         ]));
@@ -495,7 +490,7 @@ return savedThemeMode;
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color:  const Color(0xff121C4A).withOpacity(0.3),
+                    color: const Color(0xff121C4A).withOpacity(0.3),
                     spreadRadius: 3,
                     blurRadius: 10,
                     offset: const Offset(10, 10), // changes position of shadow
@@ -513,7 +508,8 @@ return savedThemeMode;
                   width: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    color:  Color(isDarkMode?0xFFFCDC4D:0xff121C4A).withOpacity(0.3),
+                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                        .withOpacity(0.3),
                   ),
                 ),
                 Positioned(
@@ -533,14 +529,14 @@ return savedThemeMode;
                             )),
                         Container(
                           padding: const EdgeInsets.only(left: 2, right: 2),
-                          color:  const Color(0xFFFCDC4D),
+                          color: const Color(0xFFFCDC4D),
                           child: Text(
                             element.categoryTitle,
-                            style:  const TextStyle(fontSize: 10,
-                                fontWeight: FontWeight.bold,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
                               color: Color(0xff121C4A),
-
-                          ),
+                            ),
                           ),
                         )
                       ],
@@ -553,25 +549,9 @@ return savedThemeMode;
     var widthBox = MediaQuery.of(context).size.width * 0.35;
     return InkWell(
         onTap: () {
-
-          widget.callBackPlayMusic!(
-            0,
-              urlFrecuencia,
-              "",
-              "",
-              texto,
-              "",
-              "",
-              "",
-              "",
-              "",
-              "",
-              true,
-              null
-          );
-
+          widget.callBackPlayMusic!(0, urlFrecuencia, "", "", texto, "", "", "",
+              "", "", "", true, null);
         },
-
         child: Container(
             alignment: Alignment.center,
             width: widthBox,
@@ -581,16 +561,13 @@ return savedThemeMode;
             margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              gradient:  RadialGradient(
-                  radius: 1, colors: [
-
-
-                   isDarkMode? const Color(0xffFEE781):const Color( 0xff216278),
-                   isDarkMode?const Color(0xffFFCC17):const Color(0xff121C4A)
+              gradient: RadialGradient(radius: 1, colors: [
+                isDarkMode ? const Color(0xffFEE781) : const Color(0xff216278),
+                isDarkMode ? const Color(0xffFFCC17) : const Color(0xff121C4A)
               ]),
               boxShadow: [
                 BoxShadow(
-                  color:  Color(0xff121C4A).withOpacity(0.3),
+                  color: Color(0xff121C4A).withOpacity(0.3),
                   spreadRadius: 3,
                   blurRadius: 10,
                   offset: const Offset(10, 10), // changes position of shadow
@@ -600,9 +577,10 @@ return savedThemeMode;
             ),
             child: Text(
               texto,
-              style:  TextStyle(color: isDarkMode?Colors.black:Colors.white, fontSize: 15),
-            )
-        ));
+              style: TextStyle(
+                  color: isDarkMode ? Colors.black : Colors.white,
+                  fontSize: 15),
+            )));
   }
 
   Widget buildTableProgramacion(
@@ -617,19 +595,20 @@ return savedThemeMode;
     var widthBox = 144.0;
 
     rowList.add(Container(
-      padding: const EdgeInsets.only(top:5, bottom: 5),
+        padding: const EdgeInsets.only(top: 5, bottom: 5),
         width: widthBox * 4,
-        decoration:  BoxDecoration(
-          color: isDarkMode? Color(0xFFA6AABB):Color(0xFFCFCFCF),
+        decoration: BoxDecoration(
+          color: isDarkMode ? Color(0xFFA6AABB) : Color(0xFFCFCFCF),
           borderRadius: const BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         ),
         child: Center(
             child: Text(
-              formatted[0].toUpperCase() + formatted.substring(1),
-          style:  const TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
-          color: Color(0xff121C4A)
-          ),
+          formatted[0].toUpperCase() + formatted.substring(1),
+          style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Color(0xff121C4A)),
         ))));
 
     rowList.add(Row(children: [
@@ -659,9 +638,8 @@ return savedThemeMode;
         color: const Color(0xfffcdc4d),
         width: widthBox,
         child: const Text("Siguiente",
-            style: TextStyle(fontWeight: FontWeight.bold,
-            color: Color(0xff121C4A)
-            )),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: Color(0xff121C4A))),
       ),
       Container(
           padding: const EdgeInsets.only(top: 3, bottom: 3),
@@ -675,9 +653,10 @@ return savedThemeMode;
     ]));
 
     for (int i = 0; i < 3; i++) {
-      rowList.add(Row(children: [
+      rowList.add(
+          Row(children: [
         Container(
-            margin: const EdgeInsets.only(bottom: 1),
+            margin:  EdgeInsets.only(bottom: (i<2)?1:0),
             padding: const EdgeInsets.only(left: 10, right: 10),
             alignment: Alignment.center,
             width: widthBox,
@@ -690,12 +669,12 @@ return savedThemeMode;
             child: Text(
               "${list![i].emisora}\n${list[i].frecuencia}",
               style: const TextStyle(
-                fontSize: 16,
+                  fontSize: 16,
                   color: Color(0xff121C4A),
                   fontWeight: FontWeight.bold),
             )),
         Container(
-            margin: const EdgeInsets.only(bottom: 1),
+            margin:  EdgeInsets.only(bottom: (i<2)?1:0),
             padding: const EdgeInsets.only(left: 10, right: 10),
             alignment: Alignment.centerLeft,
             width: widthBox,
@@ -708,7 +687,7 @@ return savedThemeMode;
               style: const TextStyle(color: Colors.white),
             )),
         Container(
-            margin: const EdgeInsets.only(bottom: 1),
+            margin:  EdgeInsets.only(bottom: (i<2)?1:0),
             padding: const EdgeInsets.only(left: 10, right: 10),
             alignment: Alignment.centerLeft,
             width: widthBox,
@@ -718,20 +697,19 @@ return savedThemeMode;
                 "${list[i].siguientePrograma}\n${list[i].siguienteHorario}",
                 style: const TextStyle(color: Color(0xff121C4A)))),
         Container(
-            margin: const EdgeInsets.only(bottom: 1),
+            margin:  EdgeInsets.only(bottom: (i<2)?1:0),
             padding: const EdgeInsets.only(left: 10, right: 10),
             alignment: Alignment.centerLeft,
             width: widthBox,
             height: widthBox * 0.80,
             decoration: BoxDecoration(
               color: const Color(0xff121C4A),
-    borderRadius: BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular((i == 2) ? 30 : 0)),
             ),
             child: Text(
                 "${list[i].masTardePrograma}\n${list[i].masTardeHorario}",
-                style: const TextStyle(color: Colors.white)
-            ))
+                style: const TextStyle(color: Colors.white)))
       ]));
     }
 
@@ -739,28 +717,23 @@ return savedThemeMode;
         scrollDirection: Axis.horizontal,
         child: Container(
             padding: const EdgeInsets.only(left: 40, right: 40, bottom: 40),
-            child:
-
-
-            Container(
+            child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    color: isDarkMode?Colors.white:Colors.transparent,
+                    borderRadius: const BorderRadius.all(Radius.circular(30)),
                     boxShadow: [
                       BoxShadow(
-                        color:  const Color(0xff121C4A).withOpacity(0.3),
+                        color: const Color(0xff121C4A).withOpacity(0.3),
                         spreadRadius: 3,
                         blurRadius: 10,
                         offset:
                             const Offset(10, 10), // changes position of shadow
                       ),
                     ]),
-                child: Column(children: rowList)))
-    );
+                child: Column(children: rowList))));
   }
 
   Widget buildListEscuchados(AsyncSnapshot<List<dynamic>> snapshot1) {
-
-
     var list1 = snapshot1.data![0];
     var list2 = snapshot1.data![1];
 
@@ -776,8 +749,9 @@ return savedThemeMode;
     // Mezcla listas
     List<Widget> listaMezclada = [];
 
-
-    int longitudMaxima = cardList1.length > cardList2.length ? cardList1.length : cardList2.length;
+    int longitudMaxima = cardList1.length > cardList2.length
+        ? cardList1.length
+        : cardList2.length;
 
     for (int i = 0; i < longitudMaxima; i++) {
       if (i < cardList1.length) {
@@ -798,7 +772,6 @@ return savedThemeMode;
   }
 
   Widget buildCardEscuchados(element, String site) {
-
     final DateTime now =
         DateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(element.date);
     final DateFormat formatter = DateFormat('dd MMMM yyyy');
@@ -822,7 +795,7 @@ return savedThemeMode;
                       decoration: BoxDecoration(
                         boxShadow: [
                           BoxShadow(
-                            color:  Color(0xff121C4A).withOpacity(0.3),
+                            color: Color(0xff121C4A).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 10,
                             offset: const Offset(
@@ -841,9 +814,10 @@ return savedThemeMode;
                     color: Color(0xFFFCDC4D),
                     child: Text(
                       element.categoryTitle,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold,
-                      color: Color(0xFF121C4A)
-                      ),
+                      style: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF121C4A)),
                     ),
                   ),
                   SizedBox(
@@ -853,23 +827,29 @@ return savedThemeMode;
                           maxLines: 5,
                           style: TextStyle(
                               fontSize: 14,
-                              color: isDarkMode?Color(0xFFFFFFFF):Color(0xFF121C4A),
+                              color: isDarkMode
+                                  ? Color(0xFFFFFFFF)
+                                  : Color(0xFF121C4A),
                               fontWeight: FontWeight.bold))),
                   Container(
                     child: Text(
                       site,
                       style: TextStyle(
                           fontSize: 11,
-                          color: isDarkMode?Color(0xFF989FBA):Color(0xFF121C4A),
+                          color: isDarkMode
+                              ? Colors.white
+                              : Color(0xFF121C4A),
                           fontStyle: FontStyle.italic),
                     ),
                   ),
-
                   Container(
                     child: Text(
                       "$formatted ${formatDurationString(element.duration)}",
-                      style:  TextStyle(
-                          fontSize: 9, color:isDarkMode? Color(0xFF989FBA):Color(0xFF121C4A)),
+                      style: TextStyle(
+                          fontSize: 9,
+                          color: isDarkMode
+                              ? Colors.white
+                              : Color(0xFF121C4A)),
                     ),
                   ),
                 ],
@@ -887,16 +867,14 @@ return savedThemeMode;
 
   String formatDurationString(String duration) {
     String formatted = "";
-    if(duration != null && duration.trim() != ""){
-      if(duration.substring(0,2) == "00"){
+    if (duration != null && duration.trim() != "") {
+      if (duration.substring(0, 2) == "00") {
         formatted = "| " + duration.substring(3);
-      }else{
+      } else {
         formatted = "| " + duration;
       }
-
     }
 
     return formatted;
   }
-
 }

@@ -517,8 +517,8 @@ class _DetailPageState extends State<DetailPage> {
                       margin: const EdgeInsets.only(left: 20),
                       child: Text(
                         "$formatted ${(element != null && element.duration != null && element.duration != '') ? formatDurationString(element.duration) : ''}",
-                        style: const TextStyle(
-                            fontSize: 10, color: Color(0xff666666)),
+                        style:   TextStyle(
+                            fontSize: 10, color: isDarkMode?Colors.white:Color(0xff666666)),
                       ),
                     )
                   ]))
