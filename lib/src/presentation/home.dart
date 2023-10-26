@@ -508,7 +508,7 @@ class _HomeState extends State<Home> {
                   width: MediaQuery.of(context).size.width * 0.5,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    color: Color(isDarkMode ? 0xFFFCDC4D : 0xff121C4A)
+                    color: const Color(0xff121C4A)
                         .withOpacity(0.3),
                   ),
                 ),
