@@ -7,6 +7,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
+
+  FlutterError.onError = (FlutterErrorDetails details) {
+    print("[OMD] Error: ${details.exception}");
+    print("[OMD] Stack trace:\n${details.stack}");
+
+     };
+
   // We need to call it manually,
   // because we going to call setPreferredOrientations()
   // before the runApp() call

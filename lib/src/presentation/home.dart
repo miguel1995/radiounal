@@ -62,6 +62,8 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
+    print("===>>> en HOME");
+
     super.initState();
 
     initializeDateFormatting('es_ES');

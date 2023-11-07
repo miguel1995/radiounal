@@ -1,11 +1,8 @@
-import 'dart:convert';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:radiounal/src/business_logic/ScreenArguments.dart';
 import 'package:radiounal/src/presentation/home.dart';
-import 'package:radiounal/src/presentation/partials/app_bar_radio.dart';
 import 'package:radiounal/src/presentation/partials/bottom_navigation_bar_radio.dart';
 import 'package:radiounal/src/presentation/templates/about_page.dart';
 import 'package:radiounal/src/presentation/templates/browser_page.dart';
@@ -15,22 +12,19 @@ import 'package:radiounal/src/presentation/templates/contacts_page.dart';
 import 'package:radiounal/src/presentation/templates/content_page.dart';
 import 'package:radiounal/src/presentation/templates/credits_page.dart';
 import 'package:radiounal/src/presentation/templates/detail_page.dart';
-import 'package:radiounal/src/presentation/templates/favourites_page.dart';
-import 'package:radiounal/src/presentation/templates/followed_page.dart';
 import 'package:radiounal/src/presentation/templates/item_page.dart';
 import 'package:radiounal/src/presentation/templates/politics_page.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:radiounal/src/presentation/splash.dart';
 import 'package:radiounal/src/presentation/templates/tab_menu.dart';
-import '../firebase_options.dart';
 import 'business_logic/bloc/radio_programacion_bloc.dart';
 import 'business_logic/firebase/push_notifications.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'business_logic/firebase/firebaseLogic.dart';
-import 'data/models/programa_model.dart';
 import 'data/models/programacion_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class MyApp extends StatefulWidget {
+
   const MyApp({Key? key}) : super(key: key);
 
   @override
@@ -49,6 +43,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    print("===>>> en APP");
+
     var brightness = SchedulerBinding.instance.window.platformBrightness;
     isDarkMode = brightness == Brightness.dark;
 
@@ -266,4 +262,12 @@ class _MyAppState extends State<MyApp> {
           );
         });
   }
+
+  @override
+  void dispose() {
+    // Limpia la instancia de FirebaseApp cuando la aplicación se destruye.
+    Firebase.app().delete();
+    super.dispose();
+  }
+
 }

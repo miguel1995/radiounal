@@ -75,6 +75,9 @@ class FilterDialogState extends State<FilterDialog> {
 
   @override
   Widget build(BuildContext context) {
+    String _selectedValue = 'Opción 1';
+
+
     themeMethod().then((value) {
       setState(() {
         isDarkMode = value == AdaptiveThemeMode.dark;
@@ -121,11 +124,11 @@ class FilterDialogState extends State<FilterDialog> {
                             decoration: BoxDecoration(
                               gradient: RadialGradient(radius: 1.5, colors: [
                                 isDarkMode
-                                    ? Color(0xFFFFFFFF)
-                                    : Color(0xff216278),
+                                    ? const Color(0xFFFFFFFF)
+                                    : const Color(0xff216278),
                                 isDarkMode
-                                    ? Color(0xFFFFFFFF)
-                                    : Color(0xff121C4A)
+                                    ? const Color(0xFFFFFFFF)
+                                    : const Color(0xff121C4A)
                               ]),
                               borderRadius: BorderRadius.circular(5),
                               color: isDarkMode
@@ -217,6 +220,7 @@ class FilterDialogState extends State<FilterDialog> {
                       ),
                       borderRadius: BorderRadius.circular(4),
                     ),
+
                     child: DropdownButton<int>(
                       dropdownColor: Colors.white,
                       isExpanded: true,
@@ -229,7 +233,7 @@ class FilterDialogState extends State<FilterDialog> {
                         size: 40,
                       ),
                       underline: Container(
-                        color: Colors.white,
+                        color: Colors.white
                       ),
                       onChanged: (isPodcast)
                           ? null
@@ -247,11 +251,11 @@ class FilterDialogState extends State<FilterDialog> {
                                 child: Text(listSedes[value]!,
                                     style: TextStyle(
                                       color: isPodcast
-                                          ? Color(0x3C000000)
-                                          : Color(0xFF121C4A),
+                                          ? const Color(0x3C000000)
+                                          : const Color(0xFF121C4A),
                                     ))));
                       }).toList(),
-                    ),
+                    )
                   ),
                   Container(
                       margin: const EdgeInsets.only(top: 30),
