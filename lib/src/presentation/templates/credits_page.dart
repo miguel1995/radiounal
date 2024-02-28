@@ -134,7 +134,7 @@ class _CreditsPageState extends State<CreditsPage> {
                           ],
                         )),
                     SizedBox(
-                      width: MediaQuery.sizeOf(context).width * 0.80,
+                      width: MediaQuery.of(context).size.width * 0.80,
                       child:  const Divider(
                         color: Color(0xFFFCDC4D),
                         thickness: 1,
@@ -402,7 +402,7 @@ class _CreditsPageState extends State<CreditsPage> {
                           ],
                         )),
                     SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.80,
+                        width: MediaQuery.of(context).size.width * 0.80,
                         child:  const Divider(
                           color: Color(0xFFFCDC4D),
                           thickness: 1,

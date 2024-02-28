@@ -42,7 +42,7 @@ dependencies:
   connectivity_plus: ^3.0.2 #verifica la coneccion a internet
   rxdart: ^0.27.7 # Permite el manejo de datos de forma asincrona
   carousel_slider: ^4.2.1 # Slider usado para mostrar el listado de contenidos destacados en Home
-  cached_network_image: ^3.2.3 # Manejo de errores en caso de no encontrar un imagen desde url
+  cached_network_image: ^3.3.1 # Manejo de errores en caso de no encontrar un imagen desde url
   flutter_svg: ^1.1.6 # Permite el manejo de imagenes con formato SVG
   flutter_rating_bar: ^4.0.1 # Muestra un calificador de estrellas para el uso de estadisticas
   share_plus: ^6.3.0

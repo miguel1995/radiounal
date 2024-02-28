@@ -54,8 +54,12 @@ class PodcastProvider {
   //consume todos los cintenidos de http://podcastradio.unal.edu.co/rest/noticias/app/destacados/page/1
   Future<List<EpisodioModel>> getDestacados() async {
     var url = Uri.parse('http://$_hostDomain$_urlDestacados');
+    print("url destacados podcast");
+    print(url);
+
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
+    print(response.body);
 
     if (response.statusCode == 200) {
       return parseEpisodios(utf8.decode(response.bodyBytes));

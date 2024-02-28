@@ -525,6 +525,7 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
                   if (isPlaying) {
                     await audioPlayer.pause();
                   } else {
+
                     await audioPlayer.play(audioUrl);
                   }
                 },
@@ -611,6 +612,9 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         message: type,
         tipo: tipoParam,
         isPrimaryColor: false);
+
+    print(">> URL");
+    print(audioUrlParam);
 
     setState(() {
       audioUrl = audioUrlParam;
