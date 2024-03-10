@@ -613,9 +613,6 @@ class BottomNavigationBarRadioState extends State<BottomNavigationBarRadio>
         tipo: tipoParam,
         isPrimaryColor: false);
 
-    print(">> URL");
-    print(audioUrlParam);
-
     setState(() {
       audioUrl = audioUrlParam;
     });

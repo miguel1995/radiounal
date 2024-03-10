@@ -127,8 +127,8 @@ return savedThemeMode;
   }
 
   subscribeAllTopics(){
-    print(listSeriesIds);
-    print(listProgramasIds);
+    //print(listSeriesIds);
+    //print(listProgramasIds);
 
     for (var uid in listSeriesIds) {
       pushNotification.addNotificationItem("PODCAST-$uid");

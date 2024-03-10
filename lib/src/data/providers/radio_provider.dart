@@ -75,8 +75,7 @@ class RadioProvider {
   Future<List<EmisionModel>> getDestacados() async {
 
     var url = Uri.parse('https://$_hostDomain$_urlDestacados');
-    print(">>> URL destacados ");
-    print(url);
+
 
     // Await the http get response, then decode the json-formatted response.
     //var response = await http.get(url);
@@ -85,8 +84,8 @@ class RadioProvider {
     http.Response response = await ioClient.get(url);
 
 
-    print(response);
-    print(response.body);
+    //print(response);
+    //print(response.body);
 
     if (response.statusCode == 200) {
       return parseEmisiones(utf8.decode(response.bodyBytes));

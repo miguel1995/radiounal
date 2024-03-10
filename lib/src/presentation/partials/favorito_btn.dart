@@ -81,14 +81,12 @@ class _FavoritoBtnState extends State<FavoritoBtn> {
     return InkWell(
         onTap: () {
           if (_isFavorito == true) {
-            print(">> Quiero ELIMINAR a ${uid} - ${_deviceId}");
             firebaseLogic.eliminarFavorite(uid, _deviceId).then((value) => {
                   setState(() {
                     _isFavorito = false;
                   })
                 });
           } else {
-            print(">> Quiero agregar a ${uid} - ${_deviceId}");
             setState(() {
               _isFavorito = true;
             });

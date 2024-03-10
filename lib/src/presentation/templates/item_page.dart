@@ -676,7 +676,7 @@ class _ItemPageState extends State<ItemPage> {
 
       try {
         localPathName = "$_localPath/radiounal_$media${element.uid}.$extension";
-        print(urlFile);
+        //print(urlFile);
         await Dio().download(urlFile, localPathName);
         final snackBar = SnackBar(
           content: Text('Archivo ${extension.toString()} descargado'),

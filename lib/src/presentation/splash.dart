@@ -9,14 +9,6 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
 
-  _SplashState(){
-
-    print("===>>> en SPLASH");
-    Future.delayed(const Duration(milliseconds: 4000),(){
-      Navigator.pop(context);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
