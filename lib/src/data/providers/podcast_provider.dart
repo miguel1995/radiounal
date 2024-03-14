@@ -53,7 +53,7 @@ class PodcastProvider {
 
   //consume todos los cintenidos de http://podcastradio.unal.edu.co/rest/noticias/app/destacados/page/1
   Future<List<EpisodioModel>> getDestacados() async {
-    var url = Uri.parse('http://$_hostDomain$_urlDestacados');
+    var url = Uri.parse('https://$_hostDomain$_urlDestacados');
     //print("url destacados podcast");
     //print(url);
 
@@ -69,9 +69,9 @@ class PodcastProvider {
     }
   }
 
-  //consume todos los cintenidos de http://podcastradio.unal.edu.co/rest/noticias/app/mas-escuchado/page/1
+  //consume todos los cintenidos de https://podcastradio.unal.edu.co/rest/noticias/app/mas-escuchado/page/1
   Future<List<EpisodioModel>> getMasEscuchados() async {
-    var url = Uri.parse('http://$_hostDomain$_urlMasEscuchados');
+    var url = Uri.parse('https://$_hostDomain$_urlMasEscuchados');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
@@ -83,9 +83,9 @@ class PodcastProvider {
     }
   }
 
-  //consume todos los contenidos de http://podcastradio.unal.edu.co/rest/noticias/app/series/page/3
+  //consume todos los contenidos de https://podcastradio.unal.edu.co/rest/noticias/app/series/page/3
   Future<Map<String, dynamic>> getSeries(int page) async {
-    var url = Uri.parse('http://$_hostDomain$_urlSeries${page.toString()}');
+    var url = Uri.parse('https://$_hostDomain$_urlSeries${page.toString()}');
     Map<String, dynamic> map = {};
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
@@ -105,9 +105,9 @@ class PodcastProvider {
     }
   }
 
-  //consume todos los contenidos de http://podcastradio.unal.edu.co/rest/noticias/app/episodiosBySerie
+  //consume todos los contenidos de https://podcastradio.unal.edu.co/rest/noticias/app/episodiosBySerie
   Future<Map<String, dynamic>> getEpisodios(int uid, int page) async {
-    var url = Uri.parse('http://$_hostDomain$_urlEpisodios');
+    var url = Uri.parse('https://$_hostDomain$_urlEpisodios');
     Map<String, dynamic> map = {};
     var body = jsonEncode(<String, dynamic>{'serie': uid, 'page': page});
 
@@ -137,9 +137,9 @@ class PodcastProvider {
     }
   }
 
-  //consume todos los contenidos de http://podcastradio.unal.edu.co/rest/noticias/app/episodio/583
+  //consume todos los contenidos de https://podcastradio.unal.edu.co/rest/noticias/app/episodio/583
   Future<List<EpisodioModel>> getEpisodio(int uid) async {
-    var url = Uri.parse('http://$_hostDomain$_urlEpisodio${uid.toString()}');
+    var url = Uri.parse('https://$_hostDomain$_urlEpisodio${uid.toString()}');
     // Await the http get response, then decode the json-formatted response.
     var response = await http.get(url);
 
@@ -151,9 +151,9 @@ class PodcastProvider {
     }
   }
 
-  //consume todos los contenidos de http://podcastradio.unal.edu.co/rest/noticias/app/seriesyepisodios
+  //consume todos los contenidos de https://podcastradio.unal.edu.co/rest/noticias/app/seriesyepisodios
   Future<Map<String, dynamic>> getSeriesYEpisodios(List<int> seriesUidList, List<int> episodiosUidList) async {
-    var url = Uri.parse('http://$_hostDomain$_urlSeriesYEpisodios');
+    var url = Uri.parse('https://$_hostDomain$_urlSeriesYEpisodios');
     Map<String, dynamic> map = {};
     // Await the http get response, then decode the json-formatted response.
     var body = jsonEncode(<String, dynamic>{'seriesUidList': seriesUidList, 'episodiosUidList': episodiosUidList});
@@ -175,13 +175,13 @@ class PodcastProvider {
     }
   }
 
-  //http://podcastradio.unal.edu.co/rest/noticias/app/search
+  //https://podcastradio.unal.edu.co/rest/noticias/app/search
   Future<Map<String, dynamic>> getSearch(
       String query,
       int page,
       String contentType
       ) async {
-    var url = Uri.parse('http://$_hostDomain$_urlSearch');
+    var url = Uri.parse('https://$_hostDomain$_urlSearch');
     Map<String, dynamic> map = {};
 
     var body = jsonEncode(<String, dynamic>{
